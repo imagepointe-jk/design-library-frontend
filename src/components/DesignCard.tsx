@@ -6,7 +6,7 @@ type DesignCardProps = {
 
 export function DesignCard({ designId }: DesignCardProps) {
   return (
-    <Link className="design-card" to={`/${designId}`}>
+    <Link className="design-card" to={`/designs/${designId}`}>
       <div className="design-card"></div>
     </Link>
   );

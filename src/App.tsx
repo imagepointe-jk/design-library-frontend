@@ -6,7 +6,8 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/:designId?" element={<DesignLibrary />} />
+        <Route path="/designs/:designId?" element={<DesignLibrary />} />
+        <Route path="/designs" element={<DesignLibrary />} />
       </Routes>
     </>
   );

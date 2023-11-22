@@ -1,37 +1,41 @@
-// @ts-ignore
-const accessToken = import.meta.env.VITE_DROPBOX_ACCESS_TOKEN;
-if (!accessToken) {
-  console.error("Could not find Dropbox access token!");
-}
-const apiUrl = "https://content.dropboxapi.com/2/files/download";
+import { DesignQueryParams } from "./types";
+import { validateDesignsJson } from "./validations";
 
-export async function getDropboxFileUrl(filePath: string) {
-  const storedUrl = localStorage.getItem(filePath);
-  if (storedUrl) return storedUrl;
+export async function getDesigns(queryParamsString: string) {
+  //@ts-ignore
+  const mode = import.meta.env.MODE;
+  const serverURL =
+    mode === "development" ? "http://localhost:3000" : "<PRODUCTION URL HERE>";
 
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Authorization", `Bearer ${accessToken}`);
-
-  const raw = JSON.stringify({
-    path: filePath,
-  });
-
-  const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: raw,
-  };
-
-  const response = await fetch(apiUrl, requestOptions);
-  const status = response.status;
+  const response = await fetch(`${serverURL}/designs?${queryParamsString}`);
   const json = await response.json();
   if (!response.ok) {
-    console.error(`Error ${status}`, json);
-    throw new Error("Error getting file link");
+    console.error(
+      `Error ${response.status} while retrieving designs. Message: ${json.message}`
+    );
+    throw new Error();
   }
+  return validateDesignsJson(json);
+}
 
-  const url = json.link as string;
-  localStorage.setItem(filePath, url);
-  return url;
+function buildDesignQueryParams(params: DesignQueryParams) {
+  const tagsParam = params.tags ? `tags=${params.tags.join(",")}` : "";
+  const subcategoriesParam = params.subcategories
+    ? `subcategories=${params.subcategories.join(",")}`
+    : "";
+  const keywordsParam = params.keywords
+    ? `keywords=${params.keywords.join(",")}`
+    : "";
+  const screenPrintParam =
+    params.screenPrint !== undefined ? `screenprint=${params.screenPrint}` : "";
+  const embroideryParam =
+    params.embroidery !== undefined ? `embroidery=${params.embroidery}` : "";
+
+  return [
+    tagsParam,
+    subcategoriesParam,
+    keywordsParam,
+    screenPrintParam,
+    embroideryParam,
+  ].join("&");
 }

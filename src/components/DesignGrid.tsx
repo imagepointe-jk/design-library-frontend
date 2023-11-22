@@ -1,11 +1,15 @@
+import { TempDesign } from "../sharedTypes";
 import { DesignCard } from "./DesignCard";
 
-export function DesignGrid() {
-  const temp = Array.from({ length: 15 }, () => 0);
+type DesignGridProps = {
+  designs: TempDesign[];
+};
+
+export function DesignGrid({ designs }: DesignGridProps) {
   return (
     <div className="design-grid">
-      {temp.map((_, i) => (
-        <DesignCard designId={i + 1} />
+      {designs.map((design, i) => (
+        <DesignCard designId={i + 1} /> //TODO: Make this a real ID
       ))}
     </div>
   );

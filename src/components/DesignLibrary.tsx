@@ -1,19 +1,34 @@
 import { DesignGrid } from "./DesignGrid";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { DesignModal } from "./DesignModal";
+import { useState, useEffect } from "react";
+import { TempDesign } from "../sharedTypes";
+import { getDesigns } from "../fetch";
 
 export function DesignLibrary() {
   const { designId: designIdStr } = useParams();
+  const [searchParams] = useSearchParams();
+
   const designId = designIdStr !== undefined ? +designIdStr : 0;
+  const [designs, setDesigns] = useState<TempDesign[] | undefined>(undefined);
+
+  async function getDesignsToDisplay() {
+    try {
+      const fetchedDesigns = await getDesigns(searchParams.toString());
+      setDesigns(fetchedDesigns);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getDesignsToDisplay();
+  }, []);
 
   return (
     <>
       <h1>Design Library</h1>
-      <img
-        src="https://www.dropbox.com/scl/fi/6st9np65vhxsdp5n5m7do/American-Benchraft-Leather-Tree-Ornament.png?rlkey=jkcprfki2mxdl2gjr7atfeweg&dl=0"
-        alt=""
-      />
-      <DesignGrid />
+      {designs && <DesignGrid designs={designs} />}
       {designId !== undefined && designId > 0 && (
         <DesignModal designId={designId} />
       )}

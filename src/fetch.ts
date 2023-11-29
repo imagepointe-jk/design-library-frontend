@@ -1,13 +1,14 @@
 import { DesignQueryParams } from "./types";
-import { validateDesignsJson } from "./validations";
+import { validateDesignsJson, validateSingleDesignJson } from "./validations";
+
+const serverURL = () =>
+  //@ts-ignore
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000"
+    : "<PRODUCTION URL HERE>";
 
 export async function getDesigns(queryParamsString: string) {
-  //@ts-ignore
-  const mode = import.meta.env.MODE;
-  const serverURL =
-    mode === "development" ? "http://localhost:3000" : "<PRODUCTION URL HERE>";
-
-  const response = await fetch(`${serverURL}/designs?${queryParamsString}`);
+  const response = await fetch(`${serverURL()}/designs?${queryParamsString}`);
   const json = await response.json();
   if (!response.ok) {
     console.error(
@@ -16,6 +17,19 @@ export async function getDesigns(queryParamsString: string) {
     throw new Error();
   }
   return validateDesignsJson(json);
+}
+
+export async function getDesignById(designId: number) {
+  const response = await fetch(`${serverURL()}/designs/${designId}`);
+  const json = await response.json();
+  if (!response.ok) {
+    console.error(
+      `Error ${response.status} while retrieving designs. Message: ${json.message}`
+    );
+    throw new Error();
+  }
+
+  return validateSingleDesignJson(json);
 }
 
 function buildDesignQueryParams(params: DesignQueryParams) {

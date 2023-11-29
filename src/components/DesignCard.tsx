@@ -10,7 +10,7 @@ export function DesignCard({ designId, imgUrl }: DesignCardProps) {
   return (
     <Link className={styles["design-card"]} to={`/designs/${designId}`}>
       <img
-        className={styles["design-img"]}
+        className={"design-img"}
         src={imgUrl}
         alt={`design ${designId}`}
         onError={(e) => {

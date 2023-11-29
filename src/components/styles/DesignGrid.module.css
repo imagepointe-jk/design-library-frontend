@@ -10,10 +10,6 @@
   justify-content: center;
 }
 
-.design-img {
-  width: 320px;
-}
-
 .design-card-id {
   font-size: var(--size-16);
   font-weight: 700;

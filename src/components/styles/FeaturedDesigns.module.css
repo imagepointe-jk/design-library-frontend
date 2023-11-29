@@ -1,0 +1,63 @@
+.main-container {
+  position: relative;
+  width: 900px;
+  margin: auto;
+}
+
+.design-row-container {
+  overflow: hidden;
+  position: relative;
+  height: 200px;
+}
+
+.design-row {
+  position: absolute;
+  width: 10000px;
+  white-space: nowrap;
+  left: 0px;
+}
+
+.design-card {
+  width: 200px;
+}
+
+.left-button,
+.right-button {
+  position: absolute;
+  top: 50%;
+  background-color: var(--color-alpha);
+  border: none;
+  padding: 0 10px;
+  color: white;
+  font-weight: 700;
+  font-size: 50px;
+  cursor: pointer;
+}
+
+.left-button {
+  left: 0;
+  translate: -100% -50%;
+}
+
+.right-button {
+  right: 0;
+  translate: 100% -50%;
+}
+
+@media screen and (max-width: 1024px) {
+  .main-container {
+    width: 600px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-container {
+    width: 300px;
+  }
+
+  .left-button,
+  .right-button {
+    translate: 0 -50%;
+    font-size: 30px;
+  }
+}

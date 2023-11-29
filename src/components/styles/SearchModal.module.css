@@ -1,0 +1,9 @@
+.search-modal {
+  width: 500px;
+}
+
+.radio-buttons-container {
+  margin-top: 50px;
+  display: flex;
+  gap: 50px;
+}

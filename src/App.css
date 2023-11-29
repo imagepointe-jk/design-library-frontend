@@ -1,10 +1,46 @@
+:root {
+  --color-alpha: #0068cb;
+
+  --size-20: 1.25rem;
+}
+
+html {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  box-sizing: border-box;
+}
+
 body {
   max-width: 1024px;
   margin: auto;
+  padding: 0 20px;
 }
 
 h1 {
   text-align: center;
+}
+
+a,
+button {
+  background-color: var(--color-alpha);
+  border-radius: 10px;
+  font-size: var(--size-20);
+  color: white;
+  padding: 20px;
+  border: none;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="search"] {
+  padding: 10px;
+  font-size: var(--size-20);
+  border-radius: 10px;
+}
+
+.link-black {
+  background-color: black;
 }
 
 .design-card {

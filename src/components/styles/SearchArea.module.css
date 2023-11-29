@@ -1,0 +1,26 @@
+.search-row {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  max-width: 600px;
+  margin: auto;
+}
+
+.search-row input {
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-row button {
+  cursor: pointer;
+}
+
+.input-catcher {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+  /* background-color: rgba(0, 0, 0, 0); */
+}

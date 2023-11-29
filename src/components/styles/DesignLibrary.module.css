@@ -1,0 +1,37 @@
+.bg {
+  background-color: lightgray;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.library-text {
+  margin: 30px 0;
+}
+
+.search-container {
+  background-color: white;
+  padding: 10px;
+}
+
+.settings-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.settings-subcontainer {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.settings-button {
+  padding: 10px;
+  font-size: var(--size-16);
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+}

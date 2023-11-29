@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import styles from "./styles/Modal.module.css";
 
 type ModalProps = {
   children?: ReactNode;
@@ -12,11 +13,14 @@ export function Modal({
   modalClassName,
 }: ModalProps) {
   return (
-    <div className="modal-bg absolute-fill">
-      <div className="absolute-fill" onClick={clickAwayFunction}></div>
-      <div className={`modal ${modalClassName}`}>
+    <div className={`${styles["modal-bg"]} ${styles["absolute-fill"]}`}>
+      <div
+        className={styles["absolute-fill"]}
+        onClick={clickAwayFunction}
+      ></div>
+      <div className={`${styles["modal"]} ${modalClassName}`}>
         {children}
-        <div className="modal-x" onClick={clickAwayFunction}>
+        <div className={styles["modal-x"]} onClick={clickAwayFunction}>
           X
         </div>
       </div>

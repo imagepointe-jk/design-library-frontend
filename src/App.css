@@ -1,6 +1,7 @@
 :root {
   --color-alpha: #0068cb;
 
+  --size-16: 1rem;
   --size-20: 1.25rem;
 }
 
@@ -9,10 +10,9 @@ html {
   box-sizing: border-box;
 }
 
-body {
+.inner-body {
   max-width: 1024px;
   margin: auto;
-  padding: 0 20px;
 }
 
 h1 {
@@ -20,9 +20,14 @@ h1 {
 }
 
 a,
+button,
+.button-styled-checkbox + label {
+  border-radius: 10px;
+}
+
+a,
 button {
   background-color: var(--color-alpha);
-  border-radius: 10px;
   font-size: var(--size-20);
   color: white;
   padding: 20px;
@@ -43,45 +48,17 @@ input[type="search"] {
   background-color: black;
 }
 
-.design-card {
-  width: 300px;
-  height: 300px;
-  background-color: gray;
+.button-styled-checkbox {
+  display: none;
 }
 
-.design-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+.button-styled-checkbox + label {
+  padding: 8px;
+  border: 1px solid black;
+  cursor: pointer;
 }
 
-.absolute-fill {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-
-.modal-bg {
-  background-color: rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.modal {
-  background-color: white;
-  max-width: 900px;
-  margin: auto;
-  padding: 50px;
-  position: relative;
-}
-
-.modal-x {
-  text-decoration: none;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+.button-styled-checkbox:checked + label {
+  background-color: black;
+  color: white;
 }

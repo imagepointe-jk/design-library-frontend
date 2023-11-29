@@ -1,0 +1,22 @@
+.design-card {
+  background-color: initial;
+  padding: initial;
+  border-radius: initial;
+}
+
+.design-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.design-img {
+  width: 320px;
+}
+
+.design-card-id {
+  font-size: var(--size-16);
+  font-weight: 700;
+  color: black;
+  text-align: initial;
+}

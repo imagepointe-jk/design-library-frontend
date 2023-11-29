@@ -9,7 +9,7 @@ export function Home() {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className={styles["main"]}>
+    <div className={`inner-body ${styles["main"]}`}>
       <div>
         <h1>Union Designs For Every Occasion</h1>
         <p>

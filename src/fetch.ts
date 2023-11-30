@@ -5,9 +5,11 @@ const serverURL = () =>
   //@ts-ignore
   import.meta.env.MODE === "development"
     ? "http://localhost:3000"
-    : "<PRODUCTION URL HERE>";
+    : //@ts-ignore
+      import.meta.env.SERVER_URL;
 
 export async function getDesigns(queryParamsString: string) {
+  console.log(`using ${serverURL()}`);
   const response = await fetch(`${serverURL()}/designs?${queryParamsString}`);
   const json = await response.json();
   if (!response.ok) {

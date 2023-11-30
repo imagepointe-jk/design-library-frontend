@@ -1,0 +1,8 @@
+.main-flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.main-category-container {
+  display: flex;
+}

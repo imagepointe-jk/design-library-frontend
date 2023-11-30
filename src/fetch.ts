@@ -6,7 +6,7 @@ const serverURL = () =>
   import.meta.env.MODE === "development"
     ? "http://localhost:3000"
     : //@ts-ignore
-      import.meta.env.SERVER_URL;
+      import.meta.env.VITE_SERVER_URL;
 
 export async function getDesigns(queryParamsString: string) {
   console.log(`using ${serverURL()}`);

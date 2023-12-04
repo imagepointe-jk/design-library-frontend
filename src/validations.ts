@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { tempDesignWithImageSchema } from "./sharedTypes";
+import { tempDesignWithImagesSchema } from "./sharedTypes";
 
 export function validateDesignsJson(json: any) {
-  return z.array(tempDesignWithImageSchema).parse(json);
+  return z.array(tempDesignWithImagesSchema).parse(json);
 }
 
 export function validateSingleDesignJson(json: any) {
-  return tempDesignWithImageSchema.parse(json);
+  return tempDesignWithImagesSchema.parse(json);
 }

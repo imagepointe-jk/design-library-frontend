@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "./Modal";
 import styles from "./styles/DesignModal.module.css";
 import { useState, useEffect } from "react";
-import { TempDesignWithImage } from "../sharedTypes";
+import { TempDesignWithImages } from "../sharedTypes";
 import { getDesignById } from "../fetch";
 
 type DesignModalProps = {
@@ -12,7 +12,7 @@ type DesignModalProps = {
 export function DesignModal({ designId }: DesignModalProps) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [design, setDesign] = useState<TempDesignWithImage | undefined>(
+  const [design, setDesign] = useState<TempDesignWithImages | undefined>(
     undefined
   );
   const [bgColor, setBgColor] = useState<string | undefined>(undefined);
@@ -53,8 +53,8 @@ export function DesignModal({ designId }: DesignModalProps) {
             >
               <img
                 className={styles["main-img"]}
-                src={design.ImageURL}
-                alt={`design ${design.ID}`}
+                src={design.ImageURLs[0]}
+                alt={`design ${design.DesignNumber}`}
                 onError={(e) => {
                   (e.target as any).src =
                     "https://placehold.co/300x300?text=Not+Found";
@@ -70,7 +70,7 @@ export function DesignModal({ designId }: DesignModalProps) {
             <div className={styles["gallery-slider-container"]}>
               <div className={styles["gallery-slider"]}>
                 {temp.map(() => (
-                  <img src={design.ImageURL} /> //TODO: Make this an actual gallery of images associated with this design
+                  <img src={design.ImageURLs[0]} /> //TODO: Make this an actual gallery of images associated with this design
                 ))}
               </div>
               <button className={styles["gallery-slider-button"]}>
@@ -82,7 +82,7 @@ export function DesignModal({ designId }: DesignModalProps) {
             <div>
               <h2
                 className={styles["heading"]}
-              >{`${design.Name} (#${design.ID})`}</h2>
+              >{`${design.Name} (#${design.DesignNumber})`}</h2>
               <p className={styles["subheading"]}>
                 Design details and description here
               </p>

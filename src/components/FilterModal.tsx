@@ -71,7 +71,7 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
   return (
     <Modal clickAwayFunction={clickAwayFunction}>
       <h2>Screen Print Design Library Filters</h2>
-      <p>Select a main category on the right and a subcategory below</p>
+      <p>Select a main category on the left and a subcategory below</p>
       <div className={styles["main-flex"]}>
         <div>
           {mainCategories.map((category) => (

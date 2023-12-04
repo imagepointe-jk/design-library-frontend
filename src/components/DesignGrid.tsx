@@ -1,9 +1,9 @@
-import { TempDesignWithImage } from "../sharedTypes";
+import { TempDesignWithImages } from "../sharedTypes";
 import { DesignCard } from "./DesignCard";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignGridProps = {
-  designs: TempDesignWithImage[];
+  designs: TempDesignWithImages[];
 };
 
 export function DesignGrid({ designs }: DesignGridProps) {
@@ -11,9 +11,9 @@ export function DesignGrid({ designs }: DesignGridProps) {
     <div className={styles["design-grid"]}>
       {designs.map((design) => (
         <DesignCard
-          key={design.ID}
-          designId={design.ID}
-          imgUrl={design.ImageURL}
+          key={design.DesignNumber}
+          designNumber={design.DesignNumber}
+          imgUrl={design.ImageURLs[0]}
         />
       ))}
     </div>

@@ -2,25 +2,24 @@ import { DesignGrid } from "./DesignGrid";
 import { useParams, useSearchParams } from "react-router-dom";
 import { DesignModal } from "./DesignModal";
 import { useState, useEffect } from "react";
-import { TempDesignWithImage } from "../sharedTypes";
+import { TempDesignWithImages } from "../sharedTypes";
 import { getDesigns } from "../fetch";
 import styles from "./styles/DesignLibrary.module.css";
 import { FilterModal } from "./FilterModal";
 
 export function DesignLibrary() {
-  const { designId: designIdStr } = useParams();
+  const { designNumber: designNumberStr } = useParams();
   const [searchParams] = useSearchParams();
-  const [designs, setDesigns] = useState<TempDesignWithImage[] | undefined>(
+  const [designs, setDesigns] = useState<TempDesignWithImages[] | undefined>(
     undefined
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
 
-  const designId = designIdStr !== undefined ? +designIdStr : 0;
+  const designId = designNumberStr !== undefined ? +designNumberStr : 0;
 
   async function getDesignsToDisplay() {
     try {
       const fetchedDesigns = await getDesigns(searchParams.toString());
-      console.log(fetchedDesigns);
       setDesigns(fetchedDesigns);
     } catch (error) {
       console.error(error);

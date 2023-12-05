@@ -8,7 +8,7 @@ export const subcategoryDataSchema = z.object({
 });
 
 export type DesignQueryParams = {
-  designType?: DesignType;
+  designType: DesignType;
   category?: string;
   subcategory?: string;
   tags?: string[];

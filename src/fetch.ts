@@ -37,28 +37,6 @@ export async function getDesignById(designId: number) {
   return validateSingleDesignJson(json);
 }
 
-function buildDesignQueryParams(params: DesignQueryParams) {
-  // const tagsParam = params.tags ? `tags=${params.tags.join(",")}` : "";
-  // const subcategoriesParam = params.subcategories
-  //   ? `subcategories=${params.subcategories.join(",")}`
-  //   : "";
-  // const keywordsParam = params.keywords
-  //   ? `keywords=${params.keywords.join(",")}`
-  //   : "";
-  // const screenPrintParam =
-  //   params.screenPrint !== undefined ? `screenprint=${params.screenPrint}` : "";
-  // const embroideryParam =
-  //   params.embroidery !== undefined ? `embroidery=${params.embroidery}` : "";
-  // return [
-  //   tagsParam,
-  //   subcategoriesParam,
-  //   keywordsParam,
-  //   screenPrintParam,
-  //   embroideryParam,
-  // ].join("&");
-  //TODO: Refactor to account for changes in DesignQueryParams
-}
-
 export async function getSubcategories() {
   var requestOptions = {
     method: "GET",

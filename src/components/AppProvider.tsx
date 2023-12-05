@@ -7,6 +7,8 @@ import {
 } from "react";
 import { DesignQueryParams, SubcategoryData } from "../types";
 import { getSubcategories as getSubcategoriesData } from "../fetch";
+import { useSearchParams } from "react-router-dom";
+import { parseSearchParams } from "../validations";
 
 type AppContextType = {
   subcategoriesData: SubcategoryData[] | null;
@@ -26,12 +28,14 @@ export function useApp() {
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const [searchParams] = useSearchParams();
+  const initialQueryParams = parseSearchParams(searchParams);
+
   const [subcategoriesData, setSubcategoriesData] = useState(
     null as SubcategoryData[] | null
   );
-  const [designQueryParams, setDesignQueryParams] = useState(
-    {} as DesignQueryParams
-  );
+  const [designQueryParams, setDesignQueryParams] =
+    useState(initialQueryParams);
 
   async function fetchSubcategories() {
     try {

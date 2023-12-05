@@ -1,5 +1,5 @@
 import { DesignGrid } from "./DesignGrid";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { DesignModal } from "./DesignModal";
 import { useState, useEffect } from "react";
 import { TempDesignWithImages } from "../sharedTypes";
@@ -7,10 +7,10 @@ import { getDesigns } from "../fetch";
 import styles from "./styles/DesignLibrary.module.css";
 import { FilterModal } from "./FilterModal";
 import { useApp } from "./AppProvider";
+import { buildDesignQueryParams } from "../utility";
 
 export function DesignLibrary() {
   const { designNumber: designNumberStr } = useParams();
-  const [searchParams] = useSearchParams();
   const [designs, setDesigns] = useState<TempDesignWithImages[] | undefined>(
     undefined
   );
@@ -20,10 +20,15 @@ export function DesignLibrary() {
   const designId = designNumberStr !== undefined ? +designNumberStr : 0;
   const selectedCategory = designQueryParams?.category;
   const selectedSubcategory = designQueryParams?.subcategory;
+  const selectedDesignType = designQueryParams?.designType;
 
   async function getDesignsToDisplay() {
+    if (!designQueryParams) return;
+
     try {
-      const fetchedDesigns = await getDesigns(searchParams.toString());
+      const fetchedDesigns = await getDesigns(
+        buildDesignQueryParams(designQueryParams)
+      );
       setDesigns(fetchedDesigns);
     } catch (error) {
       console.error(error);
@@ -73,11 +78,39 @@ export function DesignLibrary() {
             <div className={styles["settings-container"]}>
               <div className={styles["settings-subcontainer"]}>
                 <label htmlFor="screen-print">
-                  <input type="radio" name="design-type" id="screen-print" />
+                  <input
+                    type="radio"
+                    name="design-type"
+                    id="screen-print"
+                    checked={selectedDesignType === "Screen Print"}
+                    onChange={(e) => {
+                      if (setDesignQueryParams)
+                        setDesignQueryParams({
+                          ...designQueryParams,
+                          designType: e.target.checked
+                            ? "Screen Print"
+                            : "Embroidery",
+                        });
+                    }}
+                  />
                   Screen Print
                 </label>
                 <label htmlFor="embroidery">
-                  <input type="radio" name="design-type" id="embroidery" />
+                  <input
+                    type="radio"
+                    name="design-type"
+                    id="embroidery"
+                    checked={selectedDesignType === "Embroidery"}
+                    onChange={(e) => {
+                      if (setDesignQueryParams)
+                        setDesignQueryParams({
+                          ...designQueryParams,
+                          designType: e.target.checked
+                            ? "Embroidery"
+                            : "Screen Print",
+                        });
+                    }}
+                  />
                   Embroidery
                 </label>
               </div>

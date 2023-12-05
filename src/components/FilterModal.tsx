@@ -1,3 +1,5 @@
+import { deduplicateStrings } from "../utility";
+import { useApp } from "./AppProvider";
 import { Modal } from "./Modal";
 import styles from "./styles/FilterModal.module.css";
 
@@ -6,89 +8,70 @@ type FilterModalProps = {
 };
 
 export function FilterModal({ clickAwayFunction }: FilterModalProps) {
-  const mainCategories = [
-    {
-      label: "Quick Search",
-      name: "quick-search",
-    },
-    {
-      label: "Event/Awareness",
-      name: "event-awareness",
-    },
-    {
-      label: "Union Specific",
-      name: "union-specific",
-    },
-    {
-      label: "Holidays",
-      name: "holidays",
-    },
-    {
-      label: "Location Specific",
-      name: "location-specific",
-    },
-  ];
+  const { subcategoriesData, selectedCategory, setSelectedCategory } = useApp();
 
-  const subcategories = [
-    {
-      label: "New Designs",
-      name: "new-designs",
-    },
-    {
-      label: "Best Sellers",
-      name: "best-sellers",
-    },
-    {
-      label: "Staff Favorites",
-      name: "staff-favorites",
-    },
-    {
-      label: "Classics",
-      name: "classics",
-    },
-    {
-      label: "Patriotic",
-      name: "patriotic",
-    },
-    {
-      label: "Solidarity",
-      name: "solidarity",
-    },
-    {
-      label: "Economy",
-      name: "economy",
-    },
-    {
-      label: "Ladies",
-      name: "ladies",
-    },
-    {
-      label: "All Designs",
-      name: "all-designs",
-    },
-  ];
+  const parentCategories =
+    subcategoriesData &&
+    deduplicateStrings(
+      subcategoriesData.map((subcategoryData) => subcategoryData.ParentCategory)
+    );
+
+  const subcategoriesToShow =
+    subcategoriesData &&
+    subcategoriesData.filter(
+      (subcategory) => subcategory.ParentCategory === selectedCategory
+    );
+
+  function clickCategory(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!setSelectedCategory) return;
+
+    if (!e.target.checked) setSelectedCategory(null);
+    else {
+      setSelectedCategory(e.target.id);
+    }
+  }
 
   return (
     <Modal clickAwayFunction={clickAwayFunction}>
-      <h2>Screen Print Design Library Filters</h2>
-      <p>Select a main category on the left and a subcategory below</p>
-      <div className={styles["main-flex"]}>
-        <div>
-          {mainCategories.map((category) => (
-            <div>
+      {parentCategories && subcategoriesToShow && (
+        <>
+          <h2>Screen Print Design Library Filters</h2>
+          <p>Select a main category on the left and a subcategory below</p>
+          <div className={styles["main-flex"]}>
+            <div className={styles["parent-category-column"]}>
               <input
                 className="button-styled-checkbox"
                 type="checkbox"
-                name={category.name}
-                id={category.name}
+                name="parent-category"
+                id="Featured"
+                onChange={clickCategory}
+                checked={selectedCategory === "Featured"}
               />
-              <label htmlFor={category.name}>{category.label}</label>
+              <label htmlFor="Featured">Featured</label>
+              {parentCategories.map((category) => (
+                <>
+                  <input
+                    className="button-styled-checkbox"
+                    type="checkbox"
+                    name="parent-category"
+                    id={category}
+                    onChange={clickCategory}
+                    checked={category === selectedCategory}
+                  />
+                  <label htmlFor={category}>{category}</label>
+                </>
+              ))}
+              <button>Apply Filters</button>
+              <button>Clear Selection</button>
             </div>
-          ))}
-          <button>Apply Filters</button>
-          <button>Clear Selection</button>
-        </div>
-      </div>
+            <div>
+              {subcategoriesToShow.map((subcategory) => (
+                <div>{subcategory.Name}</div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </Modal>
   );
 }

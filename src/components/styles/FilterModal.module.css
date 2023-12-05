@@ -6,3 +6,9 @@
 .main-category-container {
   display: flex;
 }
+
+.parent-category-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

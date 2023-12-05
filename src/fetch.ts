@@ -1,5 +1,9 @@
 import { DesignQueryParams } from "./types";
-import { validateDesignsJson, validateSingleDesignJson } from "./validations";
+import {
+  validateDesignsJson,
+  validateSingleDesignJson,
+  validateSubcategories,
+} from "./validations";
 
 const serverURL = () =>
   //@ts-ignore
@@ -53,4 +57,21 @@ function buildDesignQueryParams(params: DesignQueryParams) {
     screenPrintParam,
     embroideryParam,
   ].join("&");
+}
+
+export async function getSubcategories() {
+  var requestOptions = {
+    method: "GET",
+  };
+
+  const response = await fetch(`${serverURL()}/subcategories`, requestOptions);
+  const json = await response.json();
+  if (!response.ok) {
+    console.error(
+      `Error ${response.status} while retrieving subcategories. Message: ${json.message}`
+    );
+    throw new Error();
+  }
+
+  return validateSubcategories(json);
 }

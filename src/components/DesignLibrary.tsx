@@ -6,6 +6,7 @@ import { TempDesignWithImages } from "../sharedTypes";
 import { getDesigns } from "../fetch";
 import styles from "./styles/DesignLibrary.module.css";
 import { FilterModal } from "./FilterModal";
+import { useApp } from "./AppProvider";
 
 export function DesignLibrary() {
   const { designNumber: designNumberStr } = useParams();
@@ -14,6 +15,14 @@ export function DesignLibrary() {
     undefined
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const {
+    selectedCategory,
+    selectedSubcategory,
+    setSelectedCategory,
+    setSelectedSubcategory,
+    clickCategory,
+    clickSubcategory,
+  } = useApp();
 
   const designId = designNumberStr !== undefined ? +designNumberStr : 0;
 
@@ -26,24 +35,33 @@ export function DesignLibrary() {
     }
   }
 
+  function clickQuickFilterButton(
+    e: React.ChangeEvent<HTMLInputElement>,
+    button: string
+  ) {
+    if (
+      !clickCategory ||
+      !clickSubcategory ||
+      !setSelectedCategory ||
+      !setSelectedSubcategory
+    )
+      return;
+
+    setSelectedCategory(null);
+    setSelectedSubcategory(null);
+    if (button === "Featured") clickCategory(e, "Featured");
+    else {
+      setSelectedCategory("Quick Search");
+      clickSubcategory(e, button);
+    }
+  }
+
   useEffect(() => {
     getDesignsToDisplay();
   }, []);
 
-  const checkboxButtons = [
-    {
-      label: "New Designs",
-      name: "new-designs",
-    },
-    {
-      label: "Best Sellers",
-      name: "best-sellers",
-    },
-    {
-      label: "Featured",
-      name: "featured",
-    },
-  ];
+  const buttonIdPrefix = "library-page-filter-button-";
+  const checkboxButtons = ["New Designs", "Best Sellers", "Featured"];
 
   return (
     <>
@@ -73,16 +91,22 @@ export function DesignLibrary() {
                     <input
                       className="button-styled-checkbox"
                       type="checkbox"
-                      name={button.name}
-                      id={button.name}
+                      name={button}
+                      id={`${buttonIdPrefix}${button}`}
+                      checked={
+                        button === selectedCategory ||
+                        button === selectedSubcategory
+                      }
+                      onChange={(e) => clickQuickFilterButton(e, button)}
                     />
-                    <label htmlFor={button.name}>{button.label}</label>
+                    <label htmlFor={`${buttonIdPrefix}${button}`}>
+                      {button}
+                    </label>
                   </>
                 ))}
                 <button
                   className={styles["settings-button"]}
                   onClick={() => {
-                    console.log("click");
                     setShowFilterModal(true);
                   }}
                 >

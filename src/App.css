@@ -49,20 +49,40 @@ input[type="search"] {
   background-color: black;
 }
 
-.button-styled-checkbox {
+.button-styled-checkbox,
+.text-styled-checkbox {
   display: none;
+}
+
+.button-styled-checkbox + label,
+.text-styled-checkbox + label {
+  cursor: pointer;
+  display: block;
 }
 
 .button-styled-checkbox + label {
   padding: 8px;
   border: 1px solid black;
-  cursor: pointer;
-  display: block;
 }
 
 .button-styled-checkbox:checked + label {
   background-color: black;
   color: white;
+}
+
+.text-styled-checkbox:checked + label {
+  font-weight: 700;
+  color: var(--color-alpha);
+}
+
+.text-styled-checkbox:checked + label::before {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  background-color: var(--color-alpha);
+  content: "";
+  border-radius: 50px;
+  margin-right: 2px;
 }
 
 .design-img {

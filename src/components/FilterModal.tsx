@@ -9,13 +9,10 @@ type FilterModalProps = {
 };
 
 export function FilterModal({ clickAwayFunction }: FilterModalProps) {
-  const {
-    subcategoriesData,
-    selectedCategory,
-    selectedSubcategory,
-    clickCategory,
-    clickSubcategory,
-  } = useApp();
+  const { subcategoriesData, designQueryParams, setDesignQueryParams } =
+    useApp();
+  const selectedCategory = designQueryParams?.category;
+  const selectedSubcategory = designQueryParams?.subcategory;
 
   const parentCategories =
     subcategoriesData &&
@@ -26,7 +23,8 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
   const subcategoriesToShow =
     subcategoriesData &&
     subcategoriesData.filter(
-      (subcategory) => subcategory.ParentCategory === selectedCategory
+      (subcategory) =>
+        subcategory.ParentCategory === designQueryParams?.category
     );
 
   const buttonIdPrefix = "filter-modal-filter-button-";
@@ -34,8 +32,8 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
   if (
     !parentCategories ||
     !subcategoriesToShow ||
-    !clickCategory ||
-    !clickSubcategory
+    !designQueryParams ||
+    !setDesignQueryParams
   )
     return (
       <Modal clickAwayFunction={clickAwayFunction}>
@@ -55,7 +53,13 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
               type="checkbox"
               name="parent-category"
               id={`${buttonIdPrefix}Featured`}
-              onChange={(e) => clickCategory(e, "Featured")}
+              onChange={(e) =>
+                setDesignQueryParams({
+                  ...designQueryParams,
+                  category: e.target.checked ? "Featured" : undefined,
+                  subcategory: undefined,
+                })
+              }
               checked={selectedCategory === "Featured"}
             />
             <label htmlFor={`${buttonIdPrefix}Featured`}>Featured</label>
@@ -66,7 +70,13 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
                   type="checkbox"
                   name="parent-category"
                   id={`${buttonIdPrefix}${category}`}
-                  onChange={(e) => clickCategory(e, category)}
+                  onChange={(e) =>
+                    setDesignQueryParams({
+                      ...designQueryParams,
+                      category: e.target.checked ? category : undefined,
+                      subcategory: undefined,
+                    })
+                  }
                   checked={category === selectedCategory}
                 />
                 <label htmlFor={`${buttonIdPrefix}${category}`}>
@@ -85,7 +95,14 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
                   type="checkbox"
                   name="subcategory"
                   id={`${buttonIdPrefix}${subcategory.Name}`}
-                  onChange={(e) => clickSubcategory(e, subcategory.Name)}
+                  onChange={(e) =>
+                    setDesignQueryParams({
+                      ...designQueryParams,
+                      subcategory: e.target.checked
+                        ? subcategory.Name
+                        : undefined,
+                    })
+                  }
                   checked={subcategory.Name === selectedSubcategory}
                 />
                 <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>

@@ -15,16 +15,11 @@ export function DesignLibrary() {
     undefined
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const {
-    selectedCategory,
-    selectedSubcategory,
-    setSelectedCategory,
-    setSelectedSubcategory,
-    clickCategory,
-    clickSubcategory,
-  } = useApp();
+  const { designQueryParams, setDesignQueryParams } = useApp();
 
   const designId = designNumberStr !== undefined ? +designNumberStr : 0;
+  const selectedCategory = designQueryParams?.category;
+  const selectedSubcategory = designQueryParams?.subcategory;
 
   async function getDesignsToDisplay() {
     try {
@@ -37,22 +32,23 @@ export function DesignLibrary() {
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,
-    button: string
+    filterName: string
   ) {
-    if (
-      !clickCategory ||
-      !clickSubcategory ||
-      !setSelectedCategory ||
-      !setSelectedSubcategory
-    )
-      return;
+    if (!designQueryParams || !setDesignQueryParams) return;
+    const isChecked = e.target.checked;
 
-    setSelectedCategory(null);
-    setSelectedSubcategory(null);
-    if (button === "Featured") clickCategory(e, "Featured");
-    else {
-      setSelectedCategory("Quick Search");
-      clickSubcategory(e, button);
+    if (filterName === "Featured") {
+      setDesignQueryParams({
+        ...designQueryParams,
+        category: isChecked ? "Featured" : undefined,
+        subcategory: undefined,
+      });
+    } else {
+      setDesignQueryParams({
+        ...designQueryParams,
+        category: isChecked ? "Quick Search" : undefined,
+        subcategory: isChecked ? filterName : undefined,
+      });
     }
   }
 

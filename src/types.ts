@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DesignType } from "./sharedTypes";
 
 export const subcategoryDataSchema = z.object({
   Name: z.string(),
@@ -7,9 +8,9 @@ export const subcategoryDataSchema = z.object({
 });
 
 export type DesignQueryParams = {
-  screenPrint?: boolean;
-  embroidery?: boolean;
-  subcategories?: string[];
+  designType?: DesignType;
+  category?: string;
+  subcategory?: string;
   tags?: string[];
   keywords?: string[];
   countPerPage?: number;

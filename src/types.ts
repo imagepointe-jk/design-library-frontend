@@ -15,6 +15,7 @@ export type DesignQueryParams = {
   keywords?: string[];
   countPerPage?: number;
   pageNumber?: number;
+  featuredOnly: boolean;
 };
 
 export type SubcategoryData = z.infer<typeof subcategoryDataSchema>;

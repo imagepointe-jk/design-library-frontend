@@ -1,13 +1,14 @@
 import { DesignGrid } from "./DesignGrid";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { DesignModal } from "./DesignModal";
 import { useState, useEffect } from "react";
-import { TempDesignWithImages } from "../sharedTypes";
+import { DesignType, TempDesignWithImages } from "../sharedTypes";
 import { getDesigns } from "../fetch";
 import styles from "./styles/DesignLibrary.module.css";
 import { FilterModal } from "./FilterModal";
 import { useApp } from "./AppProvider";
 import { buildDesignQueryParams } from "../utility";
+import { DesignQueryParams } from "../types";
 
 export function DesignLibrary() {
   const { designNumber: designNumberStr } = useParams();
@@ -16,6 +17,7 @@ export function DesignLibrary() {
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
   const { designQueryParams, setDesignQueryParams } = useApp();
+  const [_, setSearchParams] = useSearchParams();
 
   const designId = designNumberStr !== undefined ? +designNumberStr : 0;
   const selectedCategory = designQueryParams?.category;
@@ -26,14 +28,18 @@ export function DesignLibrary() {
     if (!designQueryParams) return;
 
     try {
+      console.log("getting results for", designQueryParams);
       const fetchedDesigns = await getDesigns(
         buildDesignQueryParams(designQueryParams)
       );
+      console.log("setting new results");
       setDesigns(fetchedDesigns);
     } catch (error) {
       console.error(error);
     }
   }
+
+  function changeQueryAndReload(newQuery: DesignQueryParams) {}
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -43,23 +49,29 @@ export function DesignLibrary() {
     const isChecked = e.target.checked;
 
     if (filterName === "Featured") {
-      setDesignQueryParams({
+      const newParams = {
         ...designQueryParams,
-        category: isChecked ? "Featured" : undefined,
+        category: undefined,
         subcategory: undefined,
-      });
+        featuredOnly: isChecked,
+      };
+      setDesignQueryParams(newParams);
+      setSearchParams(buildDesignQueryParams(newParams));
     } else {
-      setDesignQueryParams({
+      const newParams = {
         ...designQueryParams,
         category: isChecked ? "Quick Search" : undefined,
         subcategory: isChecked ? filterName : undefined,
-      });
+        featuredOnly: false,
+      };
+      setDesignQueryParams(newParams);
+      setSearchParams(buildDesignQueryParams(newParams));
     }
   }
 
   useEffect(() => {
     getDesignsToDisplay();
-  }, []);
+  }, [designQueryParams]);
 
   const buttonIdPrefix = "library-page-filter-button-";
   const checkboxButtons = ["New Designs", "Best Sellers", "Featured"];
@@ -84,13 +96,17 @@ export function DesignLibrary() {
                     id="screen-print"
                     checked={selectedDesignType === "Screen Print"}
                     onChange={(e) => {
-                      if (setDesignQueryParams)
-                        setDesignQueryParams({
+                      if (setDesignQueryParams && designQueryParams) {
+                        const designType: DesignType = e.target.checked
+                          ? "Screen Print"
+                          : "Embroidery";
+                        const newParams = {
                           ...designQueryParams,
-                          designType: e.target.checked
-                            ? "Screen Print"
-                            : "Embroidery",
-                        });
+                          designType,
+                        };
+                        setDesignQueryParams(newParams);
+                        setSearchParams(buildDesignQueryParams(newParams));
+                      }
                     }}
                   />
                   Screen Print
@@ -102,13 +118,17 @@ export function DesignLibrary() {
                     id="embroidery"
                     checked={selectedDesignType === "Embroidery"}
                     onChange={(e) => {
-                      if (setDesignQueryParams)
-                        setDesignQueryParams({
+                      if (setDesignQueryParams && designQueryParams) {
+                        const designType: DesignType = e.target.checked
+                          ? "Embroidery"
+                          : "Screen Print";
+                        const newParams = {
                           ...designQueryParams,
-                          designType: e.target.checked
-                            ? "Embroidery"
-                            : "Screen Print",
-                        });
+                          designType,
+                        };
+                        setDesignQueryParams(newParams);
+                        setSearchParams(buildDesignQueryParams(newParams));
+                      }
                     }}
                   />
                   Embroidery
@@ -123,7 +143,8 @@ export function DesignLibrary() {
                       name={button}
                       id={`${buttonIdPrefix}${button}`}
                       checked={
-                        button === selectedCategory ||
+                        (button === "Featured" &&
+                          designQueryParams?.featuredOnly) ||
                         button === selectedSubcategory
                       }
                       onChange={(e) => clickQuickFilterButton(e, button)}

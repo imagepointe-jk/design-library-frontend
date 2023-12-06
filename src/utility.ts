@@ -15,7 +15,7 @@ export function makeStringTitleCase(str: string) {
 export function buildDesignQueryParams(params: DesignQueryParams) {
   const tagsParam = params.tags ? `tags=${params.tags.join(",")}` : undefined;
   const subcategoryParam = params.subcategory
-    ? `subcategory=${params.subcategory}`
+    ? `subcategories=${params.subcategory}` //this will be a comma separated list if we decide to allow multiple subcategories
     : undefined;
   const keywordsParam = params.keywords
     ? `keywords=${params.keywords.join(",")}`
@@ -27,6 +27,7 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
   const pageNumberParam = params.pageNumber
     ? `pageNumber=${params.pageNumber}`
     : undefined;
+  const featuredParam = params.featuredOnly ? "featured=true" : undefined;
 
   return [
     designTypeParam,
@@ -35,6 +36,7 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     pageNumberParam,
     tagsParam,
     keywordsParam,
+    featuredParam,
   ]
     .filter((item) => item !== undefined)
     .join("&");

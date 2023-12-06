@@ -5,6 +5,7 @@ describe("Correctly build query string from the React state", () => {
   it("should build the correct query string with only design type", () => {
     const testParams: DesignQueryParams = {
       designType: "Screen Print",
+      featuredOnly: false,
     };
 
     expect(buildDesignQueryParams(testParams)).toBe("designtype=screen print");
@@ -15,6 +16,7 @@ describe("Correctly build query string from the React state", () => {
       designType: "Embroidery",
       pageNumber: 4,
       keywords: ["dog", "cat", "alien"],
+      featuredOnly: false,
     };
 
     expect(buildDesignQueryParams(testParams)).toBe(
@@ -27,6 +29,7 @@ describe("Correctly build query string from the React state", () => {
       designType: "Screen Print",
       tags: ["abc", "def"],
       countPerPage: 13,
+      featuredOnly: false,
     };
 
     expect(buildDesignQueryParams(testParams)).toBe(
@@ -41,6 +44,7 @@ describe("Correctly build query string from the React state", () => {
       subcategory: "St. Patrick's Day",
       keywords: ["apple", "pear"],
       tags: ["hat", "ball", "shirt"],
+      featuredOnly: false,
     };
 
     expect(buildDesignQueryParams(testParams)).toBe(

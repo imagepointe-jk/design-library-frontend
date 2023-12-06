@@ -1,4 +1,5 @@
-import { deduplicateStrings } from "../utility";
+import { useSearchParams } from "react-router-dom";
+import { buildDesignQueryParams, deduplicateStrings } from "../utility";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
 import { Modal } from "./Modal";
@@ -13,6 +14,7 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
     useApp();
   const selectedCategory = designQueryParams?.category;
   const selectedSubcategory = designQueryParams?.subcategory;
+  const [_, setSearchParams] = useSearchParams();
 
   const parentCategories =
     subcategoriesData &&
@@ -53,13 +55,15 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
               type="checkbox"
               name="parent-category"
               id={`${buttonIdPrefix}Featured`}
-              onChange={(e) =>
-                setDesignQueryParams({
+              onChange={(e) => {
+                const newParams = {
                   ...designQueryParams,
                   category: e.target.checked ? "Featured" : undefined,
                   subcategory: undefined,
-                })
-              }
+                };
+                setDesignQueryParams(newParams);
+                setSearchParams(buildDesignQueryParams(newParams));
+              }}
               checked={selectedCategory === "Featured"}
             />
             <label htmlFor={`${buttonIdPrefix}Featured`}>Featured</label>

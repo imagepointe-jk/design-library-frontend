@@ -1,14 +1,14 @@
-import { DesignGrid } from "./DesignGrid";
-import { useParams, Link, useSearchParams } from "react-router-dom";
-import { DesignModal } from "./DesignModal";
-import { useState, useEffect } from "react";
-import { DesignType, TempDesignWithImages } from "../sharedTypes";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { getDesigns } from "../fetch";
-import styles from "./styles/DesignLibrary.module.css";
-import { FilterModal } from "./FilterModal";
-import { useApp } from "./AppProvider";
-import { buildDesignQueryParams } from "../utility";
+import { DesignType, TempDesignWithImages, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
+import { buildDesignQueryParams } from "../utility";
+import { useApp } from "./AppProvider";
+import { DesignGrid } from "./DesignGrid";
+import { DesignModal } from "./DesignModal";
+import { FilterModal } from "./FilterModal";
+import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibrary() {
   const { designNumber: designNumberStr } = useParams();
@@ -16,11 +16,9 @@ export function DesignLibrary() {
     undefined
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const { designQueryParams, setDesignQueryParams } = useApp();
-  const [_, setSearchParams] = useSearchParams();
+  const { designQueryParams, updateDesignQueryParams } = useApp();
 
   const designId = designNumberStr !== undefined ? +designNumberStr : 0;
-  const selectedCategory = designQueryParams?.category;
   const selectedSubcategory = designQueryParams?.subcategory;
   const selectedDesignType = designQueryParams?.designType;
 
@@ -28,45 +26,44 @@ export function DesignLibrary() {
     if (!designQueryParams) return;
 
     try {
-      console.log("getting results for", designQueryParams);
       const fetchedDesigns = await getDesigns(
         buildDesignQueryParams(designQueryParams)
       );
-      console.log("setting new results");
       setDesigns(fetchedDesigns);
     } catch (error) {
       console.error(error);
     }
   }
 
-  function changeQueryAndReload(newQuery: DesignQueryParams) {}
-
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,
     filterName: string
   ) {
-    if (!designQueryParams || !setDesignQueryParams) return;
+    if (!designQueryParams || !updateDesignQueryParams) return;
     const isChecked = e.target.checked;
+    const newParams = { ...designQueryParams };
 
     if (filterName === "Featured") {
-      const newParams = {
-        ...designQueryParams,
-        category: undefined,
-        subcategory: undefined,
-        featuredOnly: isChecked,
-      };
-      setDesignQueryParams(newParams);
-      setSearchParams(buildDesignQueryParams(newParams));
+      newParams.category = undefined;
+      newParams.subcategory = undefined;
+      newParams.featuredOnly = isChecked;
     } else {
-      const newParams = {
-        ...designQueryParams,
-        category: isChecked ? "Quick Search" : undefined,
-        subcategory: isChecked ? filterName : undefined,
-        featuredOnly: false,
-      };
-      setDesignQueryParams(newParams);
-      setSearchParams(buildDesignQueryParams(newParams));
+      newParams.category = isChecked ? "Quick Search" : undefined;
+      newParams.subcategory = isChecked ? filterName : undefined;
+      newParams.featuredOnly = false;
     }
+
+    updateDesignQueryParams(newParams);
+  }
+
+  function changeDesignType(newType: DesignType) {
+    if (!designQueryParams || !updateDesignQueryParams) return;
+
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      designType: newType,
+    };
+    updateDesignQueryParams(newParams);
   }
 
   useEffect(() => {
@@ -89,50 +86,18 @@ export function DesignLibrary() {
           <div className={styles["search-container"]}>
             <div className={styles["settings-container"]}>
               <div className={styles["settings-subcontainer"]}>
-                <label htmlFor="screen-print">
-                  <input
-                    type="radio"
-                    name="design-type"
-                    id="screen-print"
-                    checked={selectedDesignType === "Screen Print"}
-                    onChange={(e) => {
-                      if (setDesignQueryParams && designQueryParams) {
-                        const designType: DesignType = e.target.checked
-                          ? "Screen Print"
-                          : "Embroidery";
-                        const newParams = {
-                          ...designQueryParams,
-                          designType,
-                        };
-                        setDesignQueryParams(newParams);
-                        setSearchParams(buildDesignQueryParams(newParams));
-                      }
-                    }}
-                  />
-                  Screen Print
-                </label>
-                <label htmlFor="embroidery">
-                  <input
-                    type="radio"
-                    name="design-type"
-                    id="embroidery"
-                    checked={selectedDesignType === "Embroidery"}
-                    onChange={(e) => {
-                      if (setDesignQueryParams && designQueryParams) {
-                        const designType: DesignType = e.target.checked
-                          ? "Embroidery"
-                          : "Screen Print";
-                        const newParams = {
-                          ...designQueryParams,
-                          designType,
-                        };
-                        setDesignQueryParams(newParams);
-                        setSearchParams(buildDesignQueryParams(newParams));
-                      }
-                    }}
-                  />
-                  Embroidery
-                </label>
+                {designTypes.map((type) => (
+                  <label htmlFor={`${buttonIdPrefix}${type}`}>
+                    <input
+                      type="radio"
+                      name="design-type"
+                      id={`${buttonIdPrefix}${type}`}
+                      checked={selectedDesignType === type}
+                      onChange={(e) => changeDesignType(type)}
+                    />
+                    {type}
+                  </label>
+                ))}
               </div>
               <div className={styles["settings-subcontainer"]}>
                 {checkboxButtons.map((button) => (

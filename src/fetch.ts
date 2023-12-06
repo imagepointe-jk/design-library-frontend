@@ -15,6 +15,9 @@ const serverURL = () =>
 export async function getDesigns(queryParamsString: string) {
   const response = await fetch(`${serverURL()}/designs?${queryParamsString}`);
   const json = await response.json();
+  if (response.status === 404) {
+    return [];
+  }
   if (!response.ok) {
     console.error(
       `Error ${response.status} while retrieving designs. Message: ${json.message}`

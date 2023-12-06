@@ -17,6 +17,9 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
   const subcategoryParam = params.subcategory
     ? `subcategories=${params.subcategory}` //this will be a comma separated list if we decide to allow multiple subcategories
     : undefined;
+  const categoryParam = params.category
+    ? `category=${params.category}`
+    : undefined;
   const keywordsParam = params.keywords
     ? `keywords=${params.keywords.join(",")}`
     : undefined;
@@ -32,6 +35,7 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
   return [
     designTypeParam,
     subcategoryParam,
+    categoryParam,
     perPageParam,
     pageNumberParam,
     tagsParam,

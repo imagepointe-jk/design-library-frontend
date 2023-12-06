@@ -5,15 +5,16 @@ import {
   useEffect,
   useState,
 } from "react";
-import { DesignQueryParams, SubcategoryData } from "../types";
-import { getSubcategories as getSubcategoriesData } from "../fetch";
 import { useSearchParams } from "react-router-dom";
+import { getSubcategories as getSubcategoriesData } from "../fetch";
+import { DesignQueryParams, SubcategoryData } from "../types";
+import { buildDesignQueryParams } from "../utility";
 import { parseSearchParams } from "../validations";
 
 type AppContextType = {
   subcategoriesData: SubcategoryData[] | null;
   designQueryParams: DesignQueryParams;
-  setDesignQueryParams: (newParams: DesignQueryParams) => void;
+  updateDesignQueryParams: (newParams: DesignQueryParams) => void;
 };
 
 const AppContext = createContext(null as AppContextType | null);
@@ -23,12 +24,12 @@ export function useApp() {
   return {
     subcategoriesData: context?.subcategoriesData,
     designQueryParams: context?.designQueryParams,
-    setDesignQueryParams: context?.setDesignQueryParams,
+    updateDesignQueryParams: context?.updateDesignQueryParams,
   };
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialQueryParams = parseSearchParams(searchParams);
 
   const [subcategoriesData, setSubcategoriesData] = useState(
@@ -46,6 +47,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  function updateDesignQueryParams(newParams: DesignQueryParams) {
+    setDesignQueryParams(newParams);
+    setSearchParams(buildDesignQueryParams(newParams));
+  }
+
   useEffect(() => {
     fetchSubcategories();
   }, []);
@@ -55,7 +61,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       value={{
         subcategoriesData,
         designQueryParams,
-        setDesignQueryParams,
+        updateDesignQueryParams,
       }}
     >
       {children}

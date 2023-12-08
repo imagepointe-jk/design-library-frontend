@@ -10,6 +10,7 @@ import { DesignModal } from "./DesignModal";
 import { FilterModal } from "./FilterModal";
 import { SearchModal } from "./SearchModal";
 import styles from "./styles/DesignLibrary.module.css";
+import { LoadingIndicator } from "./LoadingIndicator";
 
 export function DesignLibrary() {
   const { designNumber: designNumberStr } = useParams();
@@ -34,6 +35,7 @@ export function DesignLibrary() {
       setIsFetchingResults(false);
       setDesigns(fetchedDesigns);
     } catch (error) {
+      setIsFetchingResults(false);
       console.error(error);
     }
   }
@@ -70,10 +72,13 @@ export function DesignLibrary() {
               setShowFilterModal={setShowFilterModal}
               setShowSearchModal={setShowSearchModal}
             />
+            {isFetchingResults && <LoadingIndicator />}
             {designs && designs.length === 0 && !isFetchingResults && (
               <h3>No results</h3>
             )}
-            {designs && !isFetchingResults && <DesignGrid designs={designs} />}
+            {designs && designs.length > 0 && !isFetchingResults && (
+              <DesignGrid designs={designs} />
+            )}
             {designId !== undefined && designId > 0 && (
               <DesignModal designId={designId} />
             )}

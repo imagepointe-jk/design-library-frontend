@@ -4,6 +4,7 @@ import styles from "./styles/DesignModal.module.css";
 import { useState, useEffect } from "react";
 import { TempDesignWithImages } from "../sharedTypes";
 import { getDesignById } from "../fetch";
+import { LoadingIndicator } from "./LoadingIndicator";
 
 type DesignModalProps = {
   designId: number;
@@ -35,6 +36,7 @@ export function DesignModal({ designId }: DesignModalProps) {
 
   return (
     <Modal clickAwayFunction={() => navigate(-1)}>
+      {!design && loading && <LoadingIndicator />}
       {!design && !loading && (
         <>
           <h2>Error</h2>

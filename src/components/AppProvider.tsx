@@ -14,7 +14,10 @@ import { parseSearchParams } from "../validations";
 type AppContextType = {
   subcategoriesData: SubcategoryData[] | null;
   designQueryParams: DesignQueryParams;
-  updateDesignQueryParams: (newParams: DesignQueryParams) => void;
+  updateDesignQueryParams: (
+    newParams: DesignQueryParams,
+    alsoChangeURL?: boolean
+  ) => void;
 };
 
 const AppContext = createContext(null as AppContextType | null);
@@ -47,9 +50,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function updateDesignQueryParams(newParams: DesignQueryParams) {
+  function updateDesignQueryParams(
+    newParams: DesignQueryParams,
+    alsoChangeURL: boolean = true
+  ) {
     setDesignQueryParams(newParams);
-    setSearchParams(buildDesignQueryParams(newParams));
+    if (alsoChangeURL) setSearchParams(buildDesignQueryParams(newParams));
   }
 
   useEffect(() => {

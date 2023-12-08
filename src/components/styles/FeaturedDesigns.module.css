@@ -15,10 +15,12 @@
   width: 10000px;
   white-space: nowrap;
   left: 0px;
+  display: flex;
 }
 
 .design-card {
   width: 200px;
+  display: block;
 }
 
 .left-button,

@@ -1,14 +1,40 @@
+import { useEffect, useState } from "react";
 import styles from "./styles/FeaturedDesigns.module.css";
+import { TempDesignWithImages } from "../sharedTypes";
+import { getDesigns } from "../fetch";
 
 export function FeaturedDesigns() {
-  const temp = Array.from({ length: 10 }, () => 0);
+  const [featuredDesigns, setFeaturedDesigns] = useState(
+    null as TempDesignWithImages[] | null
+  );
+
+  //? Should we be showing embroidery AND screen print featured designs,
+  //? or just one or the other?
+  async function getFeaturedDesigns() {
+    try {
+      const fetchedDesigns = await getDesigns("featured=true");
+      setFeaturedDesigns(fetchedDesigns);
+    } catch (error) {
+      console.error("Error while fetching featured designs", error);
+    }
+  }
+
+  useEffect(() => {
+    getFeaturedDesigns();
+  }, []);
+
   return (
     <div className={styles["main-container"]}>
       <div className={styles["design-row-container"]}>
         <div className={styles["design-row"]}>
-          {temp.map(() => (
-            <img className={styles["design-card"]} src="/vite.svg" alt="" />
-          ))}
+          {featuredDesigns &&
+            featuredDesigns.map((design) => (
+              <img
+                className={styles["design-card"]}
+                src={design.ImageURLs[0]}
+                alt=""
+              />
+            ))}
         </div>
       </div>
       <button className={styles["left-button"]}>{"<"}</button>

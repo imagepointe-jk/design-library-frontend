@@ -9,6 +9,7 @@ import { DesignGrid } from "./DesignGrid";
 import { DesignModal } from "./DesignModal";
 import { FilterModal } from "./FilterModal";
 import styles from "./styles/DesignLibrary.module.css";
+import { SearchModal } from "./SearchModal";
 
 export function DesignLibrary() {
   const { designNumber: designNumberStr } = useParams();
@@ -16,7 +17,9 @@ export function DesignLibrary() {
     undefined
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
   const { designQueryParams, updateDesignQueryParams } = useApp();
+  const [isFetchingResults, setIsFetchingResults] = useState(true);
 
   const designId = designNumberStr !== undefined ? +designNumberStr : 0;
   const selectedSubcategory = designQueryParams?.subcategory;
@@ -26,9 +29,11 @@ export function DesignLibrary() {
     if (!designQueryParams) return;
 
     try {
+      setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(
         buildDesignQueryParams(designQueryParams)
       );
+      setIsFetchingResults(false);
       setDesigns(fetchedDesigns);
     } catch (error) {
       console.error(error);
@@ -72,6 +77,10 @@ export function DesignLibrary() {
 
   const buttonIdPrefix = "library-page-filter-button-";
   const checkboxButtons = ["New Designs", "Best Sellers", "Featured"];
+  const keywordsAsString =
+    designQueryParams?.keywords !== undefined
+      ? designQueryParams.keywords.join(" ")
+      : undefined;
 
   return (
     <>
@@ -83,6 +92,14 @@ export function DesignLibrary() {
             deserunt, natus eos eligendi. Impedit veritatis placeat dignissimos
             perferendis possimus distinctio, eos eum!
           </p>
+          {keywordsAsString && (
+            <h2>
+              Searching for{" "}
+              <span className={styles["searching-for-keywords"]}>
+                "{keywordsAsString}"
+              </span>
+            </h2>
+          )}
           <div className={styles["search-container"]}>
             <div className={styles["settings-container"]}>
               <div className={styles["settings-subcontainer"]}>
@@ -128,13 +145,19 @@ export function DesignLibrary() {
                   <i className="fa-solid fa-sliders"></i>
                   Filters
                 </button>
-                <button className={styles["settings-button"]}>
+                <button
+                  className={styles["settings-button"]}
+                  onClick={() => setShowSearchModal(true)}
+                >
                   <i className="fa-solid fa-magnifying-glass"></i>
                   Search
                 </button>
               </div>
             </div>
-            {designs && <DesignGrid designs={designs} />}
+            {designs && designs.length === 0 && !isFetchingResults && (
+              <h3>No results</h3>
+            )}
+            {designs && !isFetchingResults && <DesignGrid designs={designs} />}
             {designId !== undefined && designId > 0 && (
               <DesignModal designId={designId} />
             )}
@@ -143,6 +166,9 @@ export function DesignLibrary() {
       </div>
       {showFilterModal && (
         <FilterModal clickAwayFunction={() => setShowFilterModal(false)} />
+      )}
+      {showSearchModal && (
+        <SearchModal clickAwayFunction={() => setShowSearchModal(false)} />
       )}
     </>
   );

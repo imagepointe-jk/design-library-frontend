@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { DesignType, designTypes } from "../sharedTypes";
-import { useApp } from "./AppProvider";
+import { DesignQueryParams } from "../types";
+import { buildDesignQueryParams } from "../utility";
 import { Modal } from "./Modal";
 import { SearchArea } from "./SearchArea";
 import styles from "./styles/SearchModal.module.css";
-import { DesignQueryParams } from "../types";
-import { buildDesignQueryParams } from "../utility";
 
 type SearchModalProps = {
   clickAwayFunction: () => void;
@@ -13,11 +12,9 @@ type SearchModalProps = {
 
 export function SearchModal({ clickAwayFunction }: SearchModalProps) {
   const navigate = useNavigate();
-  const { updateDesignQueryParams } = useApp();
 
   function submitSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!updateDesignQueryParams) return;
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -31,7 +28,7 @@ export function SearchModal({ clickAwayFunction }: SearchModalProps) {
     if ((designType as DesignType) === "Embroidery")
       newParams.designType = "Embroidery";
     const queryString = buildDesignQueryParams(newParams);
-    updateDesignQueryParams(newParams, false);
+
     navigate(`/designs/?${queryString}`);
     clickAwayFunction();
   }

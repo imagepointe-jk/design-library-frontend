@@ -26,7 +26,7 @@ function tryParseDesignType(str: string) {
 export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
   const designTypeFromParams = params.get("designtype");
   const categoryFromParams = params.get("category");
-  const subcategoryFromParams = params.get("subcategory");
+  const subcategoryFromParams = params.get("subcategories");
   const tagsFromParams = params.get("tags");
   const keywordsFromParams = params.get("keywords");
   const countPerPageFromParams = params.get("perPage");

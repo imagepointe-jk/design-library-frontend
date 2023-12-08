@@ -1,5 +1,7 @@
+import { useSearchParams } from "react-router-dom";
 import { DesignQueryParams } from "../types";
-import { deduplicateStrings } from "../utility";
+import { buildDesignQueryParams, deduplicateStrings } from "../utility";
+import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
 import { Modal } from "./Modal";
@@ -10,10 +12,11 @@ type FilterModalProps = {
 };
 
 export function FilterModal({ clickAwayFunction }: FilterModalProps) {
-  const { subcategoriesData, designQueryParams, updateDesignQueryParams } =
-    useApp();
-  const selectedCategory = designQueryParams?.category;
-  const selectedSubcategory = designQueryParams?.subcategory;
+  const { subcategoriesData } = useApp();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const designQueryParams = parseSearchParams(searchParams);
+  const selectedCategory = designQueryParams.category;
+  const selectedSubcategory = designQueryParams.subcategory;
 
   const parentCategories =
     subcategoriesData &&
@@ -34,7 +37,6 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
     buttonType: "Featured" | "Category" | "Subcategory",
     value: string | null
   ) {
-    if (!designQueryParams || !updateDesignQueryParams) return;
     const newParams: DesignQueryParams = { ...designQueryParams };
 
     if (buttonType === "Featured") {
@@ -50,15 +52,10 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
       newParams.featuredOnly = false;
     }
 
-    updateDesignQueryParams(newParams);
+    setSearchParams(buildDesignQueryParams(newParams));
   }
 
-  if (
-    !parentCategories ||
-    !subcategoriesToShow ||
-    !designQueryParams ||
-    !updateDesignQueryParams
-  )
+  if (!parentCategories || !subcategoriesToShow)
     return (
       <Modal clickAwayFunction={clickAwayFunction}>
         <ErrorPage />

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { getDesigns } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
 import { buildDesignQueryParams } from "../utility";
-import { useApp } from "./AppProvider";
+import { parseSearchParams } from "../validations";
 import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
 import { DesignModal } from "./DesignModal";
 import { FilterModal } from "./FilterModal";
+import { LoadingIndicator } from "./LoadingIndicator";
 import { SearchModal } from "./SearchModal";
 import styles from "./styles/DesignLibrary.module.css";
-import { LoadingIndicator } from "./LoadingIndicator";
 
 export function DesignLibrary() {
   const { designNumber: designNumberStr } = useParams();
@@ -19,14 +19,13 @@ export function DesignLibrary() {
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
-  const { designQueryParams } = useApp();
+  const [searchParams] = useSearchParams();
+  const designQueryParams = parseSearchParams(searchParams);
   const [isFetchingResults, setIsFetchingResults] = useState(true);
 
   const designId = designNumberStr !== undefined ? +designNumberStr : 0;
 
   async function getDesignsToDisplay() {
-    if (!designQueryParams) return;
-
     try {
       setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(
@@ -42,7 +41,7 @@ export function DesignLibrary() {
 
   useEffect(() => {
     getDesignsToDisplay();
-  }, [designQueryParams]);
+  }, [searchParams]);
 
   const keywordsAsString =
     designQueryParams?.keywords !== undefined

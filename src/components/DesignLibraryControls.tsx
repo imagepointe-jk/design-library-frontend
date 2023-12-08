@@ -1,7 +1,10 @@
+import { useSearchParams } from "react-router-dom";
 import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { useApp } from "./AppProvider";
 import styles from "./styles/DesignLibrary.module.css";
+import { parseSearchParams } from "../validations";
+import { buildDesignQueryParams } from "../utility";
 
 type DesignLibraryControlsProps = {
   setShowFilterModal: (b: boolean) => void;
@@ -12,27 +15,25 @@ export function DesignLibraryControls({
   setShowFilterModal,
   setShowSearchModal,
 }: DesignLibraryControlsProps) {
-  const { designQueryParams, updateDesignQueryParams } = useApp();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const designQueryParams = parseSearchParams(searchParams);
   const buttonIdPrefix = "library-page-filter-button-";
   const checkboxButtons = ["New Designs", "Best Sellers", "Featured"];
-  const selectedSubcategory = designQueryParams?.subcategory;
-  const selectedDesignType = designQueryParams?.designType;
+  const selectedSubcategory = designQueryParams.subcategory;
+  const selectedDesignType = designQueryParams.designType;
 
   function changeDesignType(newType: DesignType) {
-    if (!designQueryParams || !updateDesignQueryParams) return;
-
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       designType: newType,
     };
-    updateDesignQueryParams(newParams);
+    setSearchParams(buildDesignQueryParams(newParams));
   }
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,
     filterName: string
   ) {
-    if (!designQueryParams || !updateDesignQueryParams) return;
     const isChecked = e.target.checked;
     const newParams = { ...designQueryParams };
 
@@ -46,7 +47,7 @@ export function DesignLibraryControls({
       newParams.featuredOnly = false;
     }
 
-    updateDesignQueryParams(newParams);
+    setSearchParams(buildDesignQueryParams(newParams));
   }
 
   return (

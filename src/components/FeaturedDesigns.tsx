@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import styles from "./styles/FeaturedDesigns.module.css";
-import { TempDesignWithImages } from "../sharedTypes";
 import { getDesigns } from "../fetch";
+import { TempDesignResults } from "../sharedTypes";
 import { LoadingIndicator } from "./LoadingIndicator";
+import styles from "./styles/FeaturedDesigns.module.css";
 
 export function FeaturedDesigns() {
   const [featuredDesigns, setFeaturedDesigns] = useState(
-    null as TempDesignWithImages[] | null
+    null as TempDesignResults | null
   );
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,7 +33,7 @@ export function FeaturedDesigns() {
         {isLoading && <LoadingIndicator />}
         <div className={styles["design-row"]}>
           {featuredDesigns &&
-            featuredDesigns.map((design) => (
+            featuredDesigns.designs.map((design) => (
               <img
                 className={styles["design-card"]}
                 src={design.ImageURLs[0]}

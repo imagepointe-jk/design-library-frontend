@@ -14,7 +14,7 @@ export type DesignQueryParams = {
   tags?: string[];
   keywords?: string[];
   countPerPage?: number;
-  pageNumber?: number;
+  pageNumber: number;
   featuredOnly: boolean;
 };
 

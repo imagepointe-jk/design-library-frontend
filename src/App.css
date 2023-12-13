@@ -42,6 +42,14 @@ button {
   cursor: pointer;
 }
 
+.button-minor {
+  background-color: gray;
+}
+
+button:disabled {
+  background-color: lightgray;
+}
+
 input[type="text"],
 input[type="search"] {
   padding: 10px;

@@ -11,6 +11,7 @@ export function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const paramsForLibraryButton: DesignQueryParams = {
     designType: "Screen Print",
+    pageNumber: 1,
     featuredOnly: true,
   };
 

@@ -22,6 +22,7 @@ export function SearchModal({ clickAwayFunction }: SearchModalProps) {
     const designType = formData.get("design-type");
     const newParams: DesignQueryParams = {
       designType: "Screen Print",
+      pageNumber: 1,
       keywords: keywords?.toString().split(" "),
       featuredOnly: false,
     };

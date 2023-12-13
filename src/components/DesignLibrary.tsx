@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { getDesigns } from "../fetch";
-import { TempDesignWithImages } from "../sharedTypes";
+import { TempDesignResults, TempDesignWithImages } from "../sharedTypes";
 import { buildDesignQueryParams } from "../utility";
 import { parseSearchParams } from "../validations";
 import { DesignGrid } from "./DesignGrid";
@@ -11,11 +11,12 @@ import { FilterModal } from "./FilterModal";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { SearchModal } from "./SearchModal";
 import styles from "./styles/DesignLibrary.module.css";
+import { PageControls } from "./PageControls";
 
 export function DesignLibrary() {
   const { designNumber: designNumberStr } = useParams();
-  const [designs, setDesigns] = useState<TempDesignWithImages[] | undefined>(
-    undefined
+  const [designResults, setDesignResults] = useState<TempDesignResults | null>(
+    null
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
@@ -32,7 +33,7 @@ export function DesignLibrary() {
         buildDesignQueryParams(designQueryParams)
       );
       setIsFetchingResults(false);
-      setDesigns(fetchedDesigns);
+      setDesignResults(fetchedDesigns);
     } catch (error) {
       setIsFetchingResults(false);
       console.error(error);
@@ -47,6 +48,9 @@ export function DesignLibrary() {
     designQueryParams?.keywords !== undefined
       ? designQueryParams.keywords.join(" ")
       : undefined;
+  const pageCount = designResults
+    ? Math.ceil(designResults.total / designResults.perPage)
+    : 0;
 
   return (
     <>
@@ -72,16 +76,21 @@ export function DesignLibrary() {
               setShowSearchModal={setShowSearchModal}
             />
             {isFetchingResults && <LoadingIndicator />}
-            {designs && designs.length === 0 && !isFetchingResults && (
-              <h3>No results</h3>
-            )}
-            {designs && designs.length > 0 && !isFetchingResults && (
-              <DesignGrid designs={designs} />
-            )}
+            {designResults &&
+              designResults.designs.length === 0 &&
+              !isFetchingResults && <h3>No results</h3>}
+            {designResults &&
+              designResults.designs.length > 0 &&
+              !isFetchingResults && (
+                <DesignGrid designs={designResults.designs} />
+              )}
             {designId !== undefined && designId > 0 && (
               <DesignModal designId={designId} />
             )}
           </div>
+          {designResults && !isFetchingResults && (
+            <PageControls totalPages={pageCount} />
+          )}
         </div>
       </div>
       {showFilterModal && (

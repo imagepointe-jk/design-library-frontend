@@ -1,10 +1,14 @@
 import { z } from "zod";
-import { designTypeSchema, tempDesignWithImagesSchema } from "./sharedTypes";
+import {
+  designTypeSchema,
+  tempDesignResultsSchema,
+  tempDesignWithImagesSchema,
+} from "./sharedTypes";
 import { DesignQueryParams, subcategoryDataSchema } from "./types";
 import { makeStringTitleCase } from "./utility";
 
-export function validateDesignsJson(json: any) {
-  return z.array(tempDesignWithImagesSchema).parse(json);
+export function validateDesignResultsJson(json: any) {
+  return tempDesignResultsSchema.parse(json);
 }
 
 export function validateSingleDesignJson(json: any) {
@@ -53,7 +57,7 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
     pageNumber:
       pageNumberFromParams && !isNaN(+pageNumberFromParams)
         ? +pageNumberFromParams
-        : undefined,
+        : 1,
     tags: tagsFromParams ? tagsFromParams.split(",") : undefined,
     featuredOnly: featuredFromParams === "true",
   };

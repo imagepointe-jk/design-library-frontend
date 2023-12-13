@@ -1,6 +1,6 @@
 import { DesignQueryParams } from "./types";
 import {
-  validateDesignsJson,
+  validateDesignResultsJson,
   validateSingleDesignJson,
   validateSubcategories,
 } from "./validations";
@@ -16,7 +16,7 @@ export async function getDesigns(queryParamsString: string) {
   const response = await fetch(`${serverURL()}/designs?${queryParamsString}`);
   const json = await response.json();
   if (response.status === 404) {
-    return [];
+    return null;
   }
   if (!response.ok) {
     console.error(
@@ -24,7 +24,7 @@ export async function getDesigns(queryParamsString: string) {
     );
     throw new Error();
   }
-  return validateDesignsJson(json);
+  return validateDesignResultsJson(json);
 }
 
 export async function getDesignById(designId: number) {

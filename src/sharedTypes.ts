@@ -34,6 +34,14 @@ export const tempDesignWithImagesSchema = z.intersection(
   z.object({ ImageURLs: z.array(z.string()) })
 );
 
+export const tempDesignResultsSchema = z.object({
+  pageNumber: z.number(),
+  perPage: z.number(),
+  total: z.number(),
+  designs: z.array(tempDesignWithImagesSchema),
+});
+
 export type DesignType = z.infer<typeof designTypeSchema>;
 export type TempDesign = z.infer<typeof tempDesignSchema>;
 export type TempDesignWithImages = z.infer<typeof tempDesignWithImagesSchema>;
+export type TempDesignResults = z.infer<typeof tempDesignResultsSchema>;

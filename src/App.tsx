@@ -9,12 +9,17 @@ import { DesignModal } from "./components/DesignModal";
 function App() {
   const { parentWindowLocation } = useApp();
 
-  const urlSplit = parentWindowLocation?.url.split(
-    parentWindowLocation.pathname
-  );
-  const designNumberStr = urlSplit?.length ? urlSplit[1] : undefined;
+  const searchParams = new URLSearchParams(parentWindowLocation?.search);
+  const designNumberStr = searchParams.get("designId");
+  console.log("got designId from params", designNumberStr);
   const designNumber =
     designNumberStr && !isNaN(+designNumberStr) ? +designNumberStr : undefined;
+  // const urlSplit = parentWindowLocation?.url.split(
+  //   parentWindowLocation.pathname
+  // );
+  // const designNumberStr = urlSplit?.length ? urlSplit[1] : undefined;
+  // const designNumber =
+  //   designNumberStr && !isNaN(+designNumberStr) ? +designNumberStr : undefined;
 
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
   const showLibrary =

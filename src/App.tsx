@@ -10,8 +10,8 @@ function App() {
   console.log("pathname is " + parentWindowLocation?.pathname);
   return (
     <>
-      {parentWindowLocation?.pathname === "design-library-new" && <Home />}
-      {parentWindowLocation?.pathname === "design-library-new-designs" && (
+      {parentWindowLocation?.pathname === "/design-library-new/" && <Home />}
+      {parentWindowLocation?.pathname === "/design-library-new-designs/" && (
         <DesignLibrary />
       )}
     </>

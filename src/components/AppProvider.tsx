@@ -11,6 +11,7 @@ import { SubcategoryData } from "../types";
 type AppContextType = {
   subcategoriesData: SubcategoryData[] | null;
   parentWindowLocation: {
+    origin: string;
     url: string;
     pathname: string;
     search: string;
@@ -34,6 +35,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     null as SubcategoryData[] | null
   );
   const [parentWindowLocation, setParentWindowLocation] = useState({
+    origin: "",
     url: "",
     pathname: "",
     search: "",
@@ -60,7 +62,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     if (e.data.type === "design-library-url-retrieve-response") {
       console.log("Provider received response", e.data.url);
+      console.log(e.data.pathname);
       setParentWindowLocation({
+        origin: e.origin,
         pathname: e.data.pathname,
         search: e.data.search,
         url: e.data.url,

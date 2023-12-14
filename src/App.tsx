@@ -12,15 +12,8 @@ function App() {
 
   const searchParams = new URLSearchParams(parentWindowLocation?.search);
   const designNumberStr = searchParams.get("designId");
-  console.log("got designId from params", designNumberStr);
   const designNumber =
     designNumberStr && !isNaN(+designNumberStr) ? +designNumberStr : undefined;
-  // const urlSplit = parentWindowLocation?.url.split(
-  //   parentWindowLocation.pathname
-  // );
-  // const designNumberStr = urlSplit?.length ? urlSplit[1] : undefined;
-  // const designNumber =
-  //   designNumberStr && !isNaN(+designNumberStr) ? +designNumberStr : undefined;
 
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
   const showLibrary =
@@ -29,7 +22,7 @@ function App() {
   return (
     <>
       {showHome && <Home />}
-      {showLibrary && <DesignLibrary />}
+      {!designNumber && showLibrary && <DesignLibrary />}
       {designNumber && <DesignPage designId={designNumber} />}
     </>
   );

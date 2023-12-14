@@ -1,5 +1,6 @@
 // import { Link } from "react-router-dom";
 import { handleAnchorClick } from "../utility";
+import { useApp } from "./AppProvider";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignCardProps = {
@@ -8,10 +9,13 @@ type DesignCardProps = {
 };
 
 export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
+  const { parentWindowLocation } = useApp();
+  const domain = parentWindowLocation?.origin;
+
   return (
     <a
       className={styles["design-card"]}
-      href={`https://www.imagepointe.com/design-library-new-designs/?designId=${designNumber}`}
+      href={`${domain}/design-library-new-designs/?designId=${designNumber}`}
       onClick={handleAnchorClick}
     >
       <img

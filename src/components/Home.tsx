@@ -10,6 +10,8 @@ import { useApp } from "./AppProvider";
 
 export function Home() {
   const [modalOpen, setModalOpen] = useState(false);
+  const { parentWindowLocation } = useApp();
+  const domain = parentWindowLocation?.origin;
   const paramsForLibraryButton: DesignQueryParams = {
     designType: "Screen Print",
     pageNumber: 1,
@@ -38,7 +40,7 @@ export function Home() {
           <Link to="/">Art Services</Link> */}
           <a
             className="link-black"
-            href={`https://www.imagepointe.com/design-library-new-designs/?${buildDesignQueryParams(
+            href={`${domain}/design-library-new-designs/?${buildDesignQueryParams(
               paramsForLibraryButton
             )}`}
             onClick={handleAnchorClick}

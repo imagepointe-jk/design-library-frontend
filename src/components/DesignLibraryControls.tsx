@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { useApp } from "./AppProvider";
@@ -15,8 +15,12 @@ export function DesignLibraryControls({
   setShowFilterModal,
   setShowSearchModal,
 }: DesignLibraryControlsProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const designQueryParams = parseSearchParams(searchParams);
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const designQueryParams = parseSearchParams(searchParams);
+  const { parentWindowLocation } = useApp();
+  const designQueryParams = parseSearchParams(
+    new URLSearchParams(parentWindowLocation?.search)
+  );
   const buttonIdPrefix = "library-page-filter-button-";
   const checkboxButtons = ["New Designs", "Best Sellers", "Featured"];
   const selectedSubcategory = designQueryParams.subcategory;
@@ -27,7 +31,7 @@ export function DesignLibraryControls({
       ...designQueryParams,
       designType: newType,
     };
-    setSearchParams(buildDesignQueryParams(newParams));
+    // setSearchParams(buildDesignQueryParams(newParams));
   }
 
   function clickQuickFilterButton(
@@ -47,7 +51,7 @@ export function DesignLibraryControls({
       newParams.featuredOnly = false;
     }
 
-    setSearchParams(buildDesignQueryParams(newParams));
+    // setSearchParams(buildDesignQueryParams(newParams));
   }
 
   return (

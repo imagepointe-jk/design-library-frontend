@@ -23,9 +23,11 @@ export function DesignLibrary() {
   const [showSearchModal, setShowSearchModal] = useState(false);
   // const [searchParams] = useSearchParams();
   const { parentWindowLocation } = useApp();
+  console.log("Reached 1");
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
   );
+  console.log("Reached 2");
   // const designQueryParams = parseSearchParams(searchParams);
   const [isFetchingResults, setIsFetchingResults] = useState(true);
 
@@ -33,10 +35,12 @@ export function DesignLibrary() {
 
   async function getDesignsToDisplay() {
     try {
+      console.log("Reached 3");
       setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(
         buildDesignQueryParams(designQueryParams)
       );
+      console.log("Reached 4");
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
     } catch (error) {
@@ -50,6 +54,7 @@ export function DesignLibrary() {
   // }, [searchParams]);
 
   useEffect(() => {
+    console.log("entered useEffect");
     getDesignsToDisplay();
   }, []);
 

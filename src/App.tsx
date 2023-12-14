@@ -5,6 +5,7 @@ import { Home } from "./components/Home";
 import { AppProvider, useApp } from "./components/AppProvider";
 import { useEffect } from "react";
 import { DesignModal } from "./components/DesignModal";
+import { DesignPage } from "./components/DesignPage";
 
 function App() {
   const { parentWindowLocation } = useApp();
@@ -29,7 +30,7 @@ function App() {
     <>
       {showHome && <Home />}
       {showLibrary && <DesignLibrary />}
-      {designNumber && <DesignModal designId={designNumber} />}
+      {designNumber && <DesignPage designId={designNumber} />}
     </>
   );
   // return (

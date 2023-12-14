@@ -6,9 +6,11 @@ import { useState } from "react";
 import { SearchModal } from "./SearchModal";
 import { DesignQueryParams } from "../types";
 import { buildDesignQueryParams, handleAnchorClick } from "../utility";
+import { useApp } from "./AppProvider";
 
 export function Home() {
   const [modalOpen, setModalOpen] = useState(false);
+  const { parentWindowLocation } = useApp();
   const paramsForLibraryButton: DesignQueryParams = {
     designType: "Screen Print",
     pageNumber: 1,
@@ -37,7 +39,11 @@ export function Home() {
           <Link to="/">Art Services</Link> */}
           <a
             className="link-black"
-            href={`/designs/?${buildDesignQueryParams(paramsForLibraryButton)}`}
+            href={`${
+              parentWindowLocation?.url
+            }design-library-new-designs/?${buildDesignQueryParams(
+              paramsForLibraryButton
+            )}`}
             onClick={handleAnchorClick}
           >
             View Design Library

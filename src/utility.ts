@@ -51,8 +51,11 @@ export function handleAnchorClick(
 ) {
   e.preventDefault();
 
-  window.parent.postMessage({
-    type: "design-library-url-change-request",
-    url: e.currentTarget.href,
-  });
+  window.parent.postMessage(
+    {
+      type: "design-library-url-change-request",
+      url: e.currentTarget.href,
+    },
+    "*"
+  );
 }

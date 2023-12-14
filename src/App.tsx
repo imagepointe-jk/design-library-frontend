@@ -6,9 +6,6 @@ import { AppProvider, useApp } from "./components/AppProvider";
 import { useEffect } from "react";
 
 function App() {
-  const { parentWindowUrl } = useApp();
-  console.log("App received " + parentWindowUrl);
-
   return <Home />;
   // return (
   //   <AppProvider>

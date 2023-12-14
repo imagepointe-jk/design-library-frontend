@@ -10,9 +10,11 @@ import { SubcategoryData } from "../types";
 
 type AppContextType = {
   subcategoriesData: SubcategoryData[] | null;
-  parentWindowUrl: string;
-  parentWindowPathname: string;
-  parentWindowSearch: string;
+  parentWindowLocation: {
+    url: string;
+    pathname: string;
+    search: string;
+  };
 };
 
 const AppContext = createContext(null as AppContextType | null);
@@ -21,9 +23,9 @@ export function useApp() {
   const context = useContext(AppContext);
   return {
     subcategoriesData: context?.subcategoriesData,
-    parentWindowUrl: context?.parentWindowUrl,
-    parentWindowPathname: context?.parentWindowPathname,
-    parentWindowSearch: context?.parentWindowSearch,
+    parentWindowLocation: context?.parentWindowLocation,
+    // parentWindowPathname: context?.parentWindowPathname,
+    // parentWindowSearch: context?.parentWindowSearch,
   };
 }
 
@@ -31,9 +33,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [subcategoriesData, setSubcategoriesData] = useState(
     null as SubcategoryData[] | null
   );
-  const [parentWindowUrl, setParentWindowUrl] = useState("");
-  const [parentWindowPathname, setParentWindowPathname] = useState("");
-  const [parentWindowSearch, setParentWindowSearch] = useState("");
+  const [parentWindowLocation, setParentWindowLocation] = useState({
+    url: "",
+    pathname: "",
+    search: "",
+  });
+  // const [parentWindowUrl, setParentWindowUrl] = useState("");
+  // const [parentWindowPathname, setParentWindowPathname] = useState("");
+  // const [parentWindowSearch, setParentWindowSearch] = useState("");
 
   async function fetchSubcategories() {
     try {
@@ -53,7 +60,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     if (e.data.type === "design-library-url-retrieve-response") {
       console.log("Provider received response", e.data.url);
-      setParentWindowUrl(e.data.url);
+      setParentWindowLocation({
+        pathname: e.data.pathname,
+        search: e.data.search,
+        url: e.data.url,
+      });
+      // setParentWindowUrl(e.data.url);
+      // setParentWindowPathname(e.data.pathname);
+      // setParentWindowSearch(e.data.search);
     }
   }
 
@@ -75,9 +89,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     <AppContext.Provider
       value={{
         subcategoriesData,
-        parentWindowPathname,
-        parentWindowSearch,
-        parentWindowUrl,
+        parentWindowLocation,
+        // parentWindowPathname,
+        // parentWindowSearch,
+        // parentWindowUrl,
       }}
     >
       {children}

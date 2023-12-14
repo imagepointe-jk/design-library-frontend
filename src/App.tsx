@@ -1,19 +1,25 @@
 import "./App.css";
-import { Routes, Route } from "react-router";
+// import { Routes, Route } from "react-router";
 import { DesignLibrary } from "./components/DesignLibrary";
 import { Home } from "./components/Home";
-import { AppProvider } from "./components/AppProvider";
+import { AppProvider, useApp } from "./components/AppProvider";
+import { useEffect } from "react";
 
 function App() {
-  return (
-    <AppProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/designs/:designNumber?" element={<DesignLibrary />} />
-        <Route path="/designs" element={<DesignLibrary />} />
-      </Routes>
-    </AppProvider>
-  );
+  const { parentWindowUrl } = useApp();
+  console.log("App received " + parentWindowUrl);
+
+  return <Home />;
+  // return (
+  //   <AppProvider>
+  //     <Home />
+  //     <Routes>
+  //       <Route path="/" element={<Home />} />
+  //       <Route path="/designs/:designNumber?" element={<DesignLibrary />} />
+  //       <Route path="/designs" element={<DesignLibrary />} />
+  //     </Routes>
+  //   </AppProvider>
+  // );
 }
 
 export default App;

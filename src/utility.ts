@@ -45,3 +45,14 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     .filter((item) => item !== undefined)
     .join("&");
 }
+
+export function handleAnchorClick(
+  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+) {
+  e.preventDefault();
+
+  window.parent.postMessage({
+    type: "design-library-url-change-request",
+    url: e.currentTarget.href,
+  });
+}

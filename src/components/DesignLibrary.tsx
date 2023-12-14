@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+// import { useParams, useSearchParams } from "react-router-dom";
 import { getDesigns } from "../fetch";
 import { TempDesignResults, TempDesignWithImages } from "../sharedTypes";
 import { buildDesignQueryParams } from "../utility";
@@ -12,19 +12,24 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { SearchModal } from "./SearchModal";
 import styles from "./styles/DesignLibrary.module.css";
 import { PageControls } from "./PageControls";
+import { useApp } from "./AppProvider";
 
 export function DesignLibrary() {
-  const { designNumber: designNumberStr } = useParams();
+  // const { designNumber: designNumberStr } = useParams();
   const [designResults, setDesignResults] = useState<TempDesignResults | null>(
     null
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
-  const [searchParams] = useSearchParams();
-  const designQueryParams = parseSearchParams(searchParams);
+  // const [searchParams] = useSearchParams();
+  const { parentWindowLocation } = useApp();
+  const designQueryParams = parseSearchParams(
+    new URLSearchParams(parentWindowLocation?.search)
+  );
+  // const designQueryParams = parseSearchParams(searchParams);
   const [isFetchingResults, setIsFetchingResults] = useState(true);
 
-  const designId = designNumberStr !== undefined ? +designNumberStr : 0;
+  // const designId = designNumberStr !== undefined ? +designNumberStr : 0;
 
   async function getDesignsToDisplay() {
     try {
@@ -40,9 +45,13 @@ export function DesignLibrary() {
     }
   }
 
+  // useEffect(() => {
+  //   getDesignsToDisplay();
+  // }, [searchParams]);
+
   useEffect(() => {
     getDesignsToDisplay();
-  }, [searchParams]);
+  }, []);
 
   const keywordsAsString =
     designQueryParams?.keywords !== undefined
@@ -84,9 +93,9 @@ export function DesignLibrary() {
               !isFetchingResults && (
                 <DesignGrid designs={designResults.designs} />
               )}
-            {designId !== undefined && designId > 0 && (
+            {/* {designId !== undefined && designId > 0 && (
               <DesignModal designId={designId} />
-            )}
+            )} */}
           </div>
           {designResults && !isFetchingResults && (
             <PageControls totalPages={pageCount} />

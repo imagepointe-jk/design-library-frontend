@@ -10,7 +10,6 @@ import { useApp } from "./AppProvider";
 
 export function Home() {
   const [modalOpen, setModalOpen] = useState(false);
-  const { parentWindowLocation } = useApp();
   const paramsForLibraryButton: DesignQueryParams = {
     designType: "Screen Print",
     pageNumber: 1,

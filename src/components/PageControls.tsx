@@ -1,16 +1,21 @@
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import styles from "./styles/PageControls.module.css";
 import { parseSearchParams } from "../validations";
 import { DesignQueryParams } from "../types";
 import { buildDesignQueryParams } from "../utility";
+import { useApp } from "./AppProvider";
 
 type PageControlsProps = {
   totalPages: number;
 };
 
 export function PageControls({ totalPages }: PageControlsProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const designQueryParams = parseSearchParams(searchParams);
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const designQueryParams = parseSearchParams(searchParams);
+  const { parentWindowLocation } = useApp();
+  const designQueryParams = parseSearchParams(
+    new URLSearchParams(parentWindowLocation?.search)
+  );
 
   const useSplitView = totalPages > 5; //whether we should show page buttons as: 1, 2, 3, ... 23 (for example)
   const consecutiveButtons = useSplitView ? 3 : totalPages;
@@ -24,7 +29,7 @@ export function PageControls({ totalPages }: PageControlsProps) {
       ...designQueryParams,
       pageNumber: pageNumber,
     };
-    setSearchParams(buildDesignQueryParams(newParams));
+    // setSearchParams(buildDesignQueryParams(newParams));
   }
 
   function submitJumpToPage(e: React.FormEvent<HTMLFormElement>) {
@@ -45,7 +50,7 @@ export function PageControls({ totalPages }: PageControlsProps) {
       ...designQueryParams,
       pageNumber: +jumpToPage,
     };
-    setSearchParams(buildDesignQueryParams(newParams));
+    // setSearchParams(buildDesignQueryParams(newParams));
   }
 
   function changeResultsPerPage(count: number) {
@@ -54,7 +59,7 @@ export function PageControls({ totalPages }: PageControlsProps) {
       pageNumber: 1,
       countPerPage: count,
     };
-    setSearchParams(buildDesignQueryParams(newParams));
+    // setSearchParams(buildDesignQueryParams(newParams));
   }
 
   return (

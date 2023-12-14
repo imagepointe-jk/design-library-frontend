@@ -6,7 +6,16 @@ import { AppProvider, useApp } from "./components/AppProvider";
 import { useEffect } from "react";
 
 function App() {
-  return <Home />;
+  const { parentWindowLocation } = useApp();
+  console.log("pathname is " + parentWindowLocation?.pathname);
+  return (
+    <>
+      {parentWindowLocation?.pathname === "design-library-new" && <Home />}
+      {parentWindowLocation?.pathname === "design-library-new-designs" && (
+        <DesignLibrary />
+      )}
+    </>
+  );
   // return (
   //   <AppProvider>
   //     <Home />

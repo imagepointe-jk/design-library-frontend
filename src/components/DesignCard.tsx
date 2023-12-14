@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { handleAnchorClick } from "../utility";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignCardProps = {
@@ -8,7 +9,11 @@ type DesignCardProps = {
 
 export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
   return (
-    <Link className={styles["design-card"]} to={`/designs/${designNumber}`}>
+    <a
+      className={styles["design-card"]}
+      href={`/designs/${designNumber}`}
+      onClick={handleAnchorClick}
+    >
       <img
         className={"design-img"}
         src={imgUrl}
@@ -18,6 +23,6 @@ export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
         }}
       />
       <div className={styles["design-card-id"]}>{designNumber}</div>
-    </Link>
+    </a>
   );
 }

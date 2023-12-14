@@ -70,12 +70,6 @@ export function DesignLibrary() {
     <>
       <div className={styles["bg"]}>
         <div className="inner-body">
-          <p className={styles["library-text"]}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi
-            unde, provident omnis libero corporis minus, voluptas perspiciatis
-            deserunt, natus eos eligendi. Impedit veritatis placeat dignissimos
-            perferendis possimus distinctio, eos eum!
-          </p>
           {keywordsAsString && (
             <h2>
               Searching for{" "}

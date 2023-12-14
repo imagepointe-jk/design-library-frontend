@@ -4,16 +4,27 @@ import { DesignLibrary } from "./components/DesignLibrary";
 import { Home } from "./components/Home";
 import { AppProvider, useApp } from "./components/AppProvider";
 import { useEffect } from "react";
+import { DesignModal } from "./components/DesignModal";
 
 function App() {
   const { parentWindowLocation } = useApp();
-  console.log("pathname is " + parentWindowLocation?.pathname);
+
+  const urlSplit = parentWindowLocation?.url.split(
+    parentWindowLocation.pathname
+  );
+  const designNumberStr = urlSplit?.length ? urlSplit[1] : undefined;
+  const designNumber =
+    designNumberStr && !isNaN(+designNumberStr) ? +designNumberStr : undefined;
+
+  const showHome = parentWindowLocation?.pathname === "/design-library-new/";
+  const showLibrary =
+    parentWindowLocation?.pathname === "/design-library-new-designs/";
+
   return (
     <>
-      {parentWindowLocation?.pathname === "/design-library-new/" && <Home />}
-      {parentWindowLocation?.pathname === "/design-library-new-designs/" && (
-        <DesignLibrary />
-      )}
+      {showHome && <Home />}
+      {showLibrary && <DesignLibrary />}
+      {designNumber && <DesignModal designId={designNumber} />}
     </>
   );
   // return (

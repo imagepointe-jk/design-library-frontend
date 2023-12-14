@@ -11,7 +11,7 @@ export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
   return (
     <a
       className={styles["design-card"]}
-      href={`/designs/${designNumber}`}
+      href={`https://www.imagepointe.com/design-library-new-designs/${designNumber}`}
       onClick={handleAnchorClick}
     >
       <img

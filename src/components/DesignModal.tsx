@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Modal } from "./Modal";
 import styles from "./styles/DesignModal.module.css";
 import { useState, useEffect } from "react";
@@ -11,7 +11,7 @@ type DesignModalProps = {
 };
 
 export function DesignModal({ designId }: DesignModalProps) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [design, setDesign] = useState<TempDesignWithImages | undefined>(
     undefined
@@ -35,7 +35,8 @@ export function DesignModal({ designId }: DesignModalProps) {
   const bgColorToUse = bgColor ? bgColor : design?.DefaultBackgroundColor;
 
   return (
-    <Modal clickAwayFunction={() => navigate(-1)}>
+    // <Modal clickAwayFunction={() => navigate(-1)}>
+    <Modal clickAwayFunction={() => {}}>
       {!design && loading && <LoadingIndicator />}
       {!design && !loading && (
         <>

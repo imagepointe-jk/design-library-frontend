@@ -39,9 +39,7 @@ export function Home() {
           <Link to="/">Art Services</Link> */}
           <a
             className="link-black"
-            href={`${
-              parentWindowLocation?.url
-            }design-library-new-designs/?${buildDesignQueryParams(
+            href={`https://www.imagepointe.com/design-library-new-designs/?${buildDesignQueryParams(
               paramsForLibraryButton
             )}`}
             onClick={handleAnchorClick}

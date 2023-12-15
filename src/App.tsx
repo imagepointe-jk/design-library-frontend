@@ -30,8 +30,8 @@ function App() {
   if (showHome) return <Home />;
   if (showSearch) return <SearchArea />;
   if (showFilters) return <FilterModal />;
-  if (showLibrary) return <DesignLibrary />;
   if (designNumberToUse) return <DesignPage designId={designNumberToUse} />;
+  if (showLibrary) return <DesignLibrary />;
 }
 
 export default App;

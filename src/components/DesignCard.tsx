@@ -16,7 +16,16 @@ export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
     <a
       className={styles["design-card"]}
       href={`${domain}/design-library-new-designs/?designId=${designNumber}`}
-      onClick={handleAnchorClick}
+      onClick={(e) => {
+        e.preventDefault();
+        window.parent.postMessage(
+          {
+            type: "design-library-open-modal",
+            designNumber: designNumber,
+          },
+          "*"
+        );
+      }}
     >
       <img
         className={"design-img"}

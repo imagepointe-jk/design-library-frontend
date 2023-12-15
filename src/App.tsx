@@ -10,20 +10,27 @@ import { DesignPage } from "./components/DesignPage";
 function App() {
   const { parentWindowLocation } = useApp();
 
+  const ownPathname = window.location.pathname.replace("/", "");
+  const ownDesignNumber = !isNaN(+ownPathname) ? +ownPathname : undefined;
   const searchParams = new URLSearchParams(parentWindowLocation?.search);
-  const designNumberStr = searchParams.get("designId");
-  const designNumber =
-    designNumberStr && !isNaN(+designNumberStr) ? +designNumberStr : undefined;
+  const parentDesignNumberStr = searchParams.get("designId");
+  const parentDesignNumber =
+    parentDesignNumberStr && !isNaN(+parentDesignNumberStr)
+      ? +parentDesignNumberStr
+      : undefined;
 
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
   const showLibrary =
     parentWindowLocation?.pathname === "/design-library-new-designs/";
+  const designNumberToUse = ownDesignNumber
+    ? ownDesignNumber
+    : parentDesignNumber;
 
   return (
     <>
       {showHome && <Home />}
-      {!designNumber && showLibrary && <DesignLibrary />}
-      {designNumber && <DesignPage designId={designNumber} />}
+      {!designNumberToUse && showLibrary && <DesignLibrary />}
+      {designNumberToUse && <DesignPage designId={designNumberToUse} />}
     </>
   );
   // return (

@@ -6,6 +6,8 @@ import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
 import styles from "./styles/FilterModal.module.css";
 
+const maxSubcategoriesBeforeScrollable = 31;
+
 export function FilterModal() {
   const { subcategoriesData, parentWindowLocation } = useApp();
   const designQueryParams = parseSearchParams(
@@ -72,7 +74,9 @@ export function FilterModal() {
   return (
     <>
       <h2>Screen Print Design Library Filters</h2>
-      <p>Select a main category on the left and a subcategory below</p>
+      <p className={styles["instructions"]}>
+        Select a main category on the left and a subcategory below
+      </p>
       <div className={styles["main-flex"]}>
         <div className={styles["parent-category-column"]}>
           {["Featured", ...parentCategories].map((buttonName) => (
@@ -99,17 +103,16 @@ export function FilterModal() {
               </label>
             </>
           ))}
-          <button disabled={pendingQueryParams === null} onClick={applyFilters}>
-            Apply Filters
-          </button>
-          <button
-            disabled={pendingQueryParams === null}
-            onClick={() => setPendingQueryParams(null)}
-          >
-            Clear Selection
-          </button>
         </div>
-        <div>
+        <div
+          className={styles["subcategories-container"]}
+          style={{
+            overflowY:
+              subcategoriesToShow.length > maxSubcategoriesBeforeScrollable
+                ? "scroll"
+                : undefined,
+          }}
+        >
           {subcategoriesToShow.map((subcategory) => (
             <>
               <input
@@ -131,6 +134,22 @@ export function FilterModal() {
             </>
           ))}
         </div>
+      </div>
+      <div className={styles["filter-action-button-row"]}>
+        <button
+          className={styles["filter-action-button"]}
+          disabled={pendingQueryParams === null}
+          onClick={applyFilters}
+        >
+          Apply Filters
+        </button>
+        <button
+          className={`${styles["filter-action-button"]} ${styles["clear-selection-button"]}`}
+          disabled={pendingQueryParams === null}
+          onClick={() => setPendingQueryParams(null)}
+        >
+          Clear Selection
+        </button>
       </div>
     </>
   );

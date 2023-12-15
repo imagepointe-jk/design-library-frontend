@@ -1,3 +1,7 @@
+.instructions {
+  text-align: center;
+}
+
 .main-flex {
   display: flex;
   justify-content: space-between;
@@ -11,4 +15,24 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.filter-action-button-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.filter-action-button {
+  padding: 10px;
+}
+
+.clear-selection-button {
+  background-color: gray;
+}
+
+.subcategories-container {
+  height: 300px;
+  width: 300px;
 }

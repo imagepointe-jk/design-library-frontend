@@ -42,6 +42,10 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: initial;
+}
+
 .button-minor {
   background-color: gray;
 }

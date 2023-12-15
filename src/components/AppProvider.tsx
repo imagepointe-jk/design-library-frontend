@@ -78,9 +78,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     fetchSubcategories();
     window.addEventListener("message", handleMessage);
-    console.log("Requesting url");
     window.parent.postMessage(
-      { type: "design-library-url-retrieve-request" },
+      {
+        type: "design-library-url-retrieve-request",
+        originPathname: window.location.pathname,
+      },
       "*"
     );
 

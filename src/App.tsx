@@ -30,15 +30,21 @@ function App() {
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
-  return (
-    <>
-      {showHome && <Home />}
-      {!designNumberToUse && showLibrary && <DesignLibrary />}
-      {designNumberToUse && <DesignPage designId={designNumberToUse} />}
-      {showSearch && <SearchArea />}
-      {showFilters && <FilterModal />}
-    </>
-  );
+  if (showHome) return <Home />;
+  if (showSearch) return <SearchArea />;
+  if (showFilters) return <FilterModal />;
+  if (showLibrary) return <DesignLibrary />;
+  if (designNumberToUse) return <DesignPage designId={designNumberToUse} />;
+
+  // return (
+  //   <>
+  //     {showHome && <Home />}
+  //     {!designNumberToUse && showLibrary && <DesignLibrary />}
+  //     {designNumberToUse && <DesignPage designId={designNumberToUse} />}
+  //     {showSearch && <SearchArea />}
+  //     {showFilters && <FilterModal />}
+  //   </>
+  // );
   // return (
   //   <AppProvider>
   //     <Home />

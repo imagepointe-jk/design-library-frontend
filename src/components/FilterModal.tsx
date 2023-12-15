@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { DesignQueryParams } from "../types";
-import { deduplicateStrings } from "../utility";
+import { deduplicateStrings, requestParentWindowQueryChange } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
@@ -10,8 +11,17 @@ export function FilterModal() {
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
   );
-  const selectedCategory = designQueryParams.category;
-  const selectedSubcategory = designQueryParams.subcategory;
+  //the pending query params are the query the user has started building
+  //after they started clicking filter buttons.
+  //won't be submitted until apply filters is clicked.
+  const [pendingQueryParams, setPendingQueryParams] = useState(
+    null as DesignQueryParams | null
+  );
+  const queryParamsToUse = pendingQueryParams
+    ? pendingQueryParams
+    : designQueryParams;
+  const selectedCategory = queryParamsToUse.category;
+  const selectedSubcategory = queryParamsToUse.subcategory;
 
   const parentCategories =
     subcategoriesData &&
@@ -22,8 +32,7 @@ export function FilterModal() {
   const subcategoriesToShow =
     subcategoriesData &&
     subcategoriesData.filter(
-      (subcategory) =>
-        subcategory.ParentCategory === designQueryParams?.category
+      (subcategory) => subcategory.ParentCategory === queryParamsToUse?.category
     );
 
   const buttonIdPrefix = "filter-modal-filter-button-";
@@ -32,7 +41,7 @@ export function FilterModal() {
     buttonType: "Featured" | "Category" | "Subcategory",
     value: string | null
   ) {
-    const newParams: DesignQueryParams = { ...designQueryParams };
+    const newParams: DesignQueryParams = { ...queryParamsToUse };
 
     if (buttonType === "Featured") {
       newParams.category = undefined;
@@ -47,7 +56,15 @@ export function FilterModal() {
       newParams.featuredOnly = false;
     }
 
-    // setSearchParams(buildDesignQueryParams(newParams));
+    setPendingQueryParams(newParams);
+  }
+
+  function applyFilters() {
+    if (!parentWindowLocation || !pendingQueryParams) return;
+    requestParentWindowQueryChange(
+      parentWindowLocation.url,
+      pendingQueryParams
+    );
   }
 
   if (!parentCategories || !subcategoriesToShow) return <ErrorPage />;
@@ -73,7 +90,7 @@ export function FilterModal() {
                 }
                 checked={
                   (buttonName === "Featured" &&
-                    designQueryParams.featuredOnly) ||
+                    queryParamsToUse.featuredOnly) ||
                   buttonName === selectedCategory
                 }
               />
@@ -82,8 +99,15 @@ export function FilterModal() {
               </label>
             </>
           ))}
-          <button>Apply Filters</button>
-          <button>Clear Selection</button>
+          <button disabled={pendingQueryParams === null} onClick={applyFilters}>
+            Apply Filters
+          </button>
+          <button
+            disabled={pendingQueryParams === null}
+            onClick={() => setPendingQueryParams(null)}
+          >
+            Clear Selection
+          </button>
         </div>
         <div>
           {subcategoriesToShow.map((subcategory) => (

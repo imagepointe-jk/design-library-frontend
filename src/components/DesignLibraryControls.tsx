@@ -1,4 +1,3 @@
-// import { useSearchParams } from "react-router-dom";
 import { defaultModalHeight } from "../constants";
 import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";

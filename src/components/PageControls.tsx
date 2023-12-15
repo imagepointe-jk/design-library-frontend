@@ -1,4 +1,3 @@
-// import { useSearchParams } from "react-router-dom";
 import { DesignQueryParams } from "../types";
 import { requestParentWindowQueryChange } from "../utility";
 import { parseSearchParams } from "../validations";

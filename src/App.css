@@ -34,7 +34,7 @@ button {
   background-color: var(--color-alpha);
   font-size: var(--size-20);
   color: white;
-  padding: 20px;
+  padding: 12px 15px;
   border: none;
   text-decoration: none;
   display: block;

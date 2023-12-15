@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { getDesigns } from "../fetch";
 import { TempDesignResults } from "../sharedTypes";
-import { buildDesignQueryParams } from "../utility";
+import { DesignQueryParams } from "../types";
+import {
+  buildDesignQueryParams,
+  requestParentWindowQueryChange,
+} from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { DesignGrid } from "./DesignGrid";
@@ -34,6 +38,16 @@ export function DesignLibrary() {
     }
   }
 
+  function clearSearch() {
+    if (!parentWindowLocation) return;
+
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      keywords: undefined,
+    };
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+  }
+
   useEffect(() => {
     getDesignsToDisplay();
   }, []);
@@ -51,12 +65,17 @@ export function DesignLibrary() {
       <div className={styles["bg"]}>
         <div className="inner-body">
           {keywordsAsString && (
-            <h2>
-              Searching for{" "}
-              <span className={styles["searching-for-keywords"]}>
-                "{keywordsAsString}"
-              </span>
-            </h2>
+            <div className={styles["searching-for-area"]}>
+              <h2>
+                Searching for{" "}
+                <span className={styles["searching-for-keywords"]}>
+                  "{keywordsAsString}"
+                </span>
+              </h2>
+              <button onClick={clearSearch}>
+                <i className="fa-solid fa-xmark"></i>Clear Search
+              </button>
+            </div>
           )}
           <div className={styles["search-container"]}>
             <DesignLibraryControls />

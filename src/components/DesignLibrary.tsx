@@ -22,12 +22,10 @@ export function DesignLibrary() {
 
   async function getDesignsToDisplay() {
     try {
-      console.log("Reached 3");
       setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(
         buildDesignQueryParams(designQueryParams)
       );
-      console.log("Reached 4");
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
     } catch (error) {

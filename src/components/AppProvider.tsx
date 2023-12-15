@@ -56,8 +56,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
 
     if (e.data.type === "design-library-url-retrieve-response") {
-      console.log("Provider received response", e.data.url);
-      console.log(e.data.pathname);
       setParentWindowLocation({
         origin: e.origin,
         pathname: e.data.pathname,

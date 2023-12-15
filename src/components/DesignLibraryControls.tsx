@@ -1,14 +1,14 @@
 // import { useSearchParams } from "react-router-dom";
+import { defaultModalHeight } from "../constants";
 import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
-import { useApp } from "./AppProvider";
-import styles from "./styles/DesignLibrary.module.css";
-import { parseSearchParams } from "../validations";
 import {
   requestParentWindowModalOpen,
   requestParentWindowQueryChange,
 } from "../utility";
-import { defaultModalHeight } from "../constants";
+import { parseSearchParams } from "../validations";
+import { useApp } from "./AppProvider";
+import styles from "./styles/DesignLibrary.module.css";
 
 const searchModalHeight = 300;
 
@@ -37,7 +37,10 @@ export function DesignLibraryControls() {
   ) {
     if (!parentWindowLocation) return;
     const isChecked = e.target.checked;
-    const newParams = { ...designQueryParams };
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      pageNumber: 1,
+    };
 
     if (filterName === "Featured") {
       newParams.category = undefined;

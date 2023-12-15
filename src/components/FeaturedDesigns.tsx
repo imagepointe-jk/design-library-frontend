@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { getDesigns } from "../fetch";
 import { TempDesignResults } from "../sharedTypes";
+import { clamp } from "../utility";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/FeaturedDesigns.module.css";
-import { clamp } from "../utility";
 
 const imageSizePx = 200;
 

@@ -1,9 +1,9 @@
 // import { useSearchParams } from "react-router-dom";
-import styles from "./styles/PageControls.module.css";
-import { parseSearchParams } from "../validations";
 import { DesignQueryParams } from "../types";
 import { requestParentWindowQueryChange } from "../utility";
+import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
+import styles from "./styles/PageControls.module.css";
 
 type PageControlsProps = {
   totalPages: number;

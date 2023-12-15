@@ -25,8 +25,6 @@ export function useApp() {
   return {
     subcategoriesData: context?.subcategoriesData,
     parentWindowLocation: context?.parentWindowLocation,
-    // parentWindowPathname: context?.parentWindowPathname,
-    // parentWindowSearch: context?.parentWindowSearch,
   };
 }
 
@@ -40,9 +38,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     pathname: "",
     search: "",
   });
-  // const [parentWindowUrl, setParentWindowUrl] = useState("");
-  // const [parentWindowPathname, setParentWindowPathname] = useState("");
-  // const [parentWindowSearch, setParentWindowSearch] = useState("");
 
   async function fetchSubcategories() {
     try {
@@ -69,9 +64,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         search: e.data.search,
         url: e.data.url,
       });
-      // setParentWindowUrl(e.data.url);
-      // setParentWindowPathname(e.data.pathname);
-      // setParentWindowSearch(e.data.search);
     }
   }
 
@@ -96,9 +88,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       value={{
         subcategoriesData,
         parentWindowLocation,
-        // parentWindowPathname,
-        // parentWindowSearch,
-        // parentWindowUrl,
       }}
     >
       {children}

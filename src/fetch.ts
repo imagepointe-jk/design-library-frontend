@@ -1,4 +1,3 @@
-import { DesignQueryParams } from "./types";
 import {
   validateDesignResultsJson,
   validateSingleDesignJson,

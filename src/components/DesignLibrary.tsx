@@ -1,37 +1,24 @@
 import { useEffect, useState } from "react";
-// import { useParams, useSearchParams } from "react-router-dom";
 import { getDesigns } from "../fetch";
-import { TempDesignResults, TempDesignWithImages } from "../sharedTypes";
+import { TempDesignResults } from "../sharedTypes";
 import { buildDesignQueryParams } from "../utility";
 import { parseSearchParams } from "../validations";
+import { useApp } from "./AppProvider";
 import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
-// import { DesignModal } from "./DesignModal";
-import { FilterModal } from "./FilterModal";
 import { LoadingIndicator } from "./LoadingIndicator";
-import { SearchModal } from "./SearchModal";
-import styles from "./styles/DesignLibrary.module.css";
 import { PageControls } from "./PageControls";
-import { useApp } from "./AppProvider";
+import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibrary() {
-  // const { designNumber: designNumberStr } = useParams();
   const [designResults, setDesignResults] = useState<TempDesignResults | null>(
     null
   );
-  const [showFilterModal, setShowFilterModal] = useState(false);
-  const [showSearchModal, setShowSearchModal] = useState(false);
-  // const [searchParams] = useSearchParams();
   const { parentWindowLocation } = useApp();
-  console.log("Reached 1");
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
   );
-  console.log("Reached 2");
-  // const designQueryParams = parseSearchParams(searchParams);
   const [isFetchingResults, setIsFetchingResults] = useState(true);
-
-  // const designId = designNumberStr !== undefined ? +designNumberStr : 0;
 
   async function getDesignsToDisplay() {
     try {
@@ -49,12 +36,7 @@ export function DesignLibrary() {
     }
   }
 
-  // useEffect(() => {
-  //   getDesignsToDisplay();
-  // }, [searchParams]);
-
   useEffect(() => {
-    console.log("entered useEffect");
     getDesignsToDisplay();
   }, []);
 
@@ -89,9 +71,6 @@ export function DesignLibrary() {
               !isFetchingResults && (
                 <DesignGrid designs={designResults.designs} />
               )}
-            {/* {designId !== undefined && designId > 0 && (
-              <DesignModal designId={designId} />
-            )} */}
           </div>
           {designResults && !isFetchingResults && (
             <PageControls totalPages={pageCount} />

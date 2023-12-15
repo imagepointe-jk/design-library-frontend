@@ -1,13 +1,10 @@
 import "./App.css";
-// import { Routes, Route } from "react-router";
+import { useApp } from "./components/AppProvider";
 import { DesignLibrary } from "./components/DesignLibrary";
-import { Home } from "./components/Home";
-import { AppProvider, useApp } from "./components/AppProvider";
-import { useEffect } from "react";
-// import { DesignModal } from "./components/DesignModal";
 import { DesignPage } from "./components/DesignPage";
-import { SearchArea } from "./components/SearchArea";
 import { FilterModal } from "./components/FilterModal";
+import { Home } from "./components/Home";
+import { SearchArea } from "./components/SearchArea";
 
 function App() {
   const { parentWindowLocation } = useApp();
@@ -35,26 +32,6 @@ function App() {
   if (showFilters) return <FilterModal />;
   if (showLibrary) return <DesignLibrary />;
   if (designNumberToUse) return <DesignPage designId={designNumberToUse} />;
-
-  // return (
-  //   <>
-  //     {showHome && <Home />}
-  //     {!designNumberToUse && showLibrary && <DesignLibrary />}
-  //     {designNumberToUse && <DesignPage designId={designNumberToUse} />}
-  //     {showSearch && <SearchArea />}
-  //     {showFilters && <FilterModal />}
-  //   </>
-  // );
-  // return (
-  //   <AppProvider>
-  //     <Home />
-  //     <Routes>
-  //       <Route path="/" element={<Home />} />
-  //       <Route path="/designs/:designNumber?" element={<DesignLibrary />} />
-  //       <Route path="/designs" element={<DesignLibrary />} />
-  //     </Routes>
-  //   </AppProvider>
-  // );
 }
 
 export default App;

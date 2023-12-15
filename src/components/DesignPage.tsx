@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { TempDesignWithImages } from "../sharedTypes";
 import { getDesignById } from "../fetch";
+import { TempDesignWithImages } from "../sharedTypes";
 import styles from "./styles/DesignPage.module.css";
 
 type DesignPageProps = {

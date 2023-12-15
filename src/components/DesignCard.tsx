@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { defaultModalHeight } from "../constants";
+import { requestParentWindowModalOpen } from "../utility";
+import { useApp } from "./AppProvider";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignCardProps = {
@@ -7,8 +9,20 @@ type DesignCardProps = {
 };
 
 export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
+  const { parentWindowLocation } = useApp();
+  const domain = parentWindowLocation?.origin;
+
   return (
-    <Link className={styles["design-card"]} to={`/designs/${designNumber}`}>
+    <a
+      className={styles["design-card"]}
+      href={`${domain}/design-library-new-designs/?designId=${designNumber}`}
+      onClick={(e) => {
+        e.preventDefault();
+        requestParentWindowModalOpen(`${designNumber}`, {
+          height: defaultModalHeight,
+        });
+      }}
+    >
       <img
         className={"design-img"}
         src={imgUrl}
@@ -18,6 +32,6 @@ export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
         }}
       />
       <div className={styles["design-card-id"]}>{designNumber}</div>
-    </Link>
+    </a>
   );
 }

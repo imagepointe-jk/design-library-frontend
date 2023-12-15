@@ -1,4 +1,3 @@
-import { DesignQueryParams } from "./types";
 import {
   validateDesignResultsJson,
   validateSingleDesignJson,
@@ -13,7 +12,6 @@ const serverURL = () =>
       import.meta.env.VITE_SERVER_URL;
 
 export async function getDesigns(queryParamsString: string) {
-  console.log(`making request to ${serverURL()}/designs?${queryParamsString}`);
   const response = await fetch(`${serverURL()}/designs?${queryParamsString}`);
   const json = await response.json();
   if (response.status === 404) {

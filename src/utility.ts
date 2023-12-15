@@ -45,3 +45,55 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     .filter((item) => item !== undefined)
     .join("&");
 }
+
+export function requestParentWindowUrlChange(url: string) {
+  window.parent.postMessage(
+    {
+      type: "design-library-url-change-request",
+      url,
+    },
+    "*"
+  );
+}
+
+export function requestParentWindowModalOpen(
+  iframePathname: string,
+  iframeSize: {
+    width?: number;
+    height?: number;
+  }
+) {
+  window.parent.postMessage(
+    {
+      type: "design-library-open-modal",
+      iframePathname,
+      width: iframeSize.width,
+      height: iframeSize.height,
+    },
+    "*"
+  );
+}
+
+export function requestParentWindowQueryChange(
+  currentUrl: string,
+  newParams: DesignQueryParams
+) {
+  const currentUrlWithoutQuery = currentUrl?.split("?")[0];
+  const newUrl = `${currentUrlWithoutQuery}?${buildDesignQueryParams(
+    newParams
+  )}`;
+  requestParentWindowUrlChange(newUrl);
+}
+
+export function handleAnchorClick(
+  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+) {
+  e.preventDefault();
+  requestParentWindowUrlChange(e.currentTarget.href);
+}
+
+export function clamp(value: number, min: number, max: number) {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+}

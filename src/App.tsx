@@ -1,19 +1,37 @@
 import "./App.css";
-import { Routes, Route } from "react-router";
+import { useApp } from "./components/AppProvider";
 import { DesignLibrary } from "./components/DesignLibrary";
+import { DesignPage } from "./components/DesignPage";
+import { FilterModal } from "./components/FilterModal";
 import { Home } from "./components/Home";
-import { AppProvider } from "./components/AppProvider";
+import { SearchArea } from "./components/SearchArea";
 
 function App() {
-  return (
-    <AppProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/designs/:designNumber?" element={<DesignLibrary />} />
-        <Route path="/designs" element={<DesignLibrary />} />
-      </Routes>
-    </AppProvider>
-  );
+  const { parentWindowLocation } = useApp();
+
+  const ownPathname = window.location.pathname.replace("/", "");
+  const ownDesignNumber = !isNaN(+ownPathname) ? +ownPathname : undefined;
+  const searchParams = new URLSearchParams(parentWindowLocation?.search);
+  const parentDesignNumberStr = searchParams.get("designId");
+  const parentDesignNumber =
+    parentDesignNumberStr && !isNaN(+parentDesignNumberStr)
+      ? +parentDesignNumberStr
+      : undefined;
+
+  const showHome = parentWindowLocation?.pathname === "/design-library-new/";
+  const showLibrary =
+    parentWindowLocation?.pathname === "/design-library-new-designs/";
+  const designNumberToUse = ownDesignNumber
+    ? ownDesignNumber
+    : parentDesignNumber;
+  const showSearch = ownPathname === "search";
+  const showFilters = ownPathname === "filters";
+
+  if (showHome) return <Home />;
+  if (showSearch) return <SearchArea />;
+  if (showFilters) return <FilterModal />;
+  if (designNumberToUse) return <DesignPage designId={designNumberToUse} />;
+  if (showLibrary) return <DesignLibrary />;
 }
 
 export default App;

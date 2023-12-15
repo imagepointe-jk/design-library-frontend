@@ -1,18 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { Modal } from "./Modal";
-import styles from "./styles/DesignModal.module.css";
-import { useState, useEffect } from "react";
-import { TempDesignWithImages } from "../sharedTypes";
+import { useEffect, useState } from "react";
 import { getDesignById } from "../fetch";
-import { LoadingIndicator } from "./LoadingIndicator";
+import { TempDesignWithImages } from "../sharedTypes";
+import styles from "./styles/DesignPage.module.css";
 
-type DesignModalProps = {
+type DesignPageProps = {
   designId: number;
 };
 
-export function DesignModal({ designId }: DesignModalProps) {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+export function DesignPage({ designId }: DesignPageProps) {
   const [design, setDesign] = useState<TempDesignWithImages | undefined>(
     undefined
   );
@@ -31,21 +26,11 @@ export function DesignModal({ designId }: DesignModalProps) {
     getDesignToDisplay();
   }, []);
 
-  const temp = Array.from({ length: 7 }, () => 0);
   const bgColorToUse = bgColor ? bgColor : design?.DefaultBackgroundColor;
+  const temp = Array.from({ length: 7 }, () => 0);
 
   return (
-    <Modal clickAwayFunction={() => navigate(-1)}>
-      {!design && loading && <LoadingIndicator />}
-      {!design && !loading && (
-        <>
-          <h2>Error</h2>
-          <div>
-            There was an error displaying design {designId}. Please try again
-            later.
-          </div>
-        </>
-      )}
+    <>
       {design && (
         <div className={styles["main-flex"]}>
           <div>
@@ -147,6 +132,6 @@ export function DesignModal({ designId }: DesignModalProps) {
           </div>
         </div>
       )}
-    </Modal>
+    </>
   );
 }

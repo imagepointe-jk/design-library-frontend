@@ -1,5 +1,6 @@
 // import { Link } from "react-router-dom";
-import { handleAnchorClick } from "../utility";
+import { defaultModalHeight } from "../constants";
+import { requestParentWindowModalOpen } from "../utility";
 import { useApp } from "./AppProvider";
 import styles from "./styles/DesignGrid.module.css";
 
@@ -18,13 +19,9 @@ export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
       href={`${domain}/design-library-new-designs/?designId=${designNumber}`}
       onClick={(e) => {
         e.preventDefault();
-        window.parent.postMessage(
-          {
-            type: "design-library-open-modal",
-            designNumber: designNumber,
-          },
-          "*"
-        );
+        requestParentWindowModalOpen(`${designNumber}`, {
+          height: defaultModalHeight,
+        });
       }}
     >
       <img

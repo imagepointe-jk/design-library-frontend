@@ -6,6 +6,8 @@ import { AppProvider, useApp } from "./components/AppProvider";
 import { useEffect } from "react";
 // import { DesignModal } from "./components/DesignModal";
 import { DesignPage } from "./components/DesignPage";
+import { SearchArea } from "./components/SearchArea";
+import { FilterModal } from "./components/FilterModal";
 
 function App() {
   const { parentWindowLocation } = useApp();
@@ -20,21 +22,21 @@ function App() {
       : undefined;
 
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
-  console.log(
-    `parent path name ${parentWindowLocation?.pathname} === /design-library-new/ ?`,
-    parentWindowLocation?.pathname === "/design-library-new/"
-  );
   const showLibrary =
     parentWindowLocation?.pathname === "/design-library-new-designs/";
   const designNumberToUse = ownDesignNumber
     ? ownDesignNumber
     : parentDesignNumber;
+  const showSearch = ownPathname === "search";
+  const showFilters = ownPathname === "filters";
 
   return (
     <>
       {showHome && <Home />}
       {!designNumberToUse && showLibrary && <DesignLibrary />}
       {designNumberToUse && <DesignPage designId={designNumberToUse} />}
+      {showSearch && <SearchArea />}
+      {showFilters && <FilterModal />}
     </>
   );
   // return (

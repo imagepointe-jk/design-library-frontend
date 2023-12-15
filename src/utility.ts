@@ -56,6 +56,24 @@ export function requestParentWindowUrlChange(url: string) {
   );
 }
 
+export function requestParentWindowModalOpen(
+  iframePathname: string,
+  iframeSize: {
+    width?: number;
+    height?: number;
+  }
+) {
+  window.parent.postMessage(
+    {
+      type: "design-library-open-modal",
+      iframePathname,
+      width: iframeSize.width,
+      height: iframeSize.height,
+    },
+    "*"
+  );
+}
+
 export function requestParentWindowQueryChange(
   currentUrl: string,
   newParams: DesignQueryParams

@@ -4,17 +4,15 @@ import { DesignQueryParams } from "../types";
 import { useApp } from "./AppProvider";
 import styles from "./styles/DesignLibrary.module.css";
 import { parseSearchParams } from "../validations";
-import { requestParentWindowQueryChange } from "../utility";
+import {
+  requestParentWindowModalOpen,
+  requestParentWindowQueryChange,
+} from "../utility";
+import { defaultModalHeight } from "../constants";
 
-type DesignLibraryControlsProps = {
-  setShowFilterModal: (b: boolean) => void;
-  setShowSearchModal: (b: boolean) => void;
-};
+const searchModalHeight = 300;
 
-export function DesignLibraryControls({
-  setShowFilterModal,
-  setShowSearchModal,
-}: DesignLibraryControlsProps) {
+export function DesignLibraryControls() {
   const { parentWindowLocation } = useApp();
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
@@ -89,7 +87,9 @@ export function DesignLibraryControls({
         <button
           className={styles["settings-button"]}
           onClick={() => {
-            setShowFilterModal(true);
+            requestParentWindowModalOpen("filters", {
+              height: defaultModalHeight,
+            });
           }}
         >
           <i className="fa-solid fa-sliders"></i>
@@ -97,7 +97,11 @@ export function DesignLibraryControls({
         </button>
         <button
           className={styles["settings-button"]}
-          onClick={() => setShowSearchModal(true)}
+          onClick={() =>
+            requestParentWindowModalOpen("search", {
+              height: searchModalHeight,
+            })
+          }
         >
           <i className="fa-solid fa-magnifying-glass"></i>
           Search

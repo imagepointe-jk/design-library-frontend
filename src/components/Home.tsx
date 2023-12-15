@@ -3,7 +3,7 @@ import { SearchArea } from "./SearchArea";
 // import { Link } from "react-router-dom";
 import styles from "./styles/Home.module.css";
 import { useState } from "react";
-import { SearchModal } from "./SearchModal";
+// import { SearchModal } from "./SearchModal";
 import { DesignQueryParams } from "../types";
 import { buildDesignQueryParams, handleAnchorClick } from "../utility";
 import { useApp } from "./AppProvider";
@@ -28,7 +28,7 @@ export function Home() {
           ipsum vero necessitatibus voluptatum doloremque quae reiciendis, quo
           architecto quaerat autem a!
         </p> */}
-        <SearchArea setModalOpen={setModalOpen} />
+        <SearchArea />
         <FeaturedDesigns />
         <div className={styles["buttons-flex"]}>
           {/* <Link
@@ -48,9 +48,6 @@ export function Home() {
             View Design Library
           </a> */}
         </div>
-        {modalOpen && (
-          <SearchModal clickAwayFunction={() => setModalOpen(false)} />
-        )}
       </div>
     </div>
   );

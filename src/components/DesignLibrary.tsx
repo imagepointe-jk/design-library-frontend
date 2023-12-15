@@ -79,10 +79,7 @@ export function DesignLibrary() {
             </h2>
           )}
           <div className={styles["search-container"]}>
-            <DesignLibraryControls
-              setShowFilterModal={setShowFilterModal}
-              setShowSearchModal={setShowSearchModal}
-            />
+            <DesignLibraryControls />
             {isFetchingResults && <LoadingIndicator />}
             {designResults &&
               designResults.designs.length === 0 &&
@@ -101,12 +98,6 @@ export function DesignLibrary() {
           )}
         </div>
       </div>
-      {showFilterModal && (
-        <FilterModal clickAwayFunction={() => setShowFilterModal(false)} />
-      )}
-      {showSearchModal && (
-        <SearchModal clickAwayFunction={() => setShowSearchModal(false)} />
-      )}
     </>
   );
 }

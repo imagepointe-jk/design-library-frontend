@@ -1,20 +1,15 @@
-import { useSearchParams } from "react-router-dom";
 import { DesignQueryParams } from "../types";
-import { buildDesignQueryParams, deduplicateStrings } from "../utility";
+import { deduplicateStrings } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
-import { Modal } from "./Modal";
 import styles from "./styles/FilterModal.module.css";
 
-type FilterModalProps = {
-  clickAwayFunction: () => void;
-};
-
-export function FilterModal({ clickAwayFunction }: FilterModalProps) {
-  const { subcategoriesData } = useApp();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const designQueryParams = parseSearchParams(searchParams);
+export function FilterModal() {
+  const { subcategoriesData, parentWindowLocation } = useApp();
+  const designQueryParams = parseSearchParams(
+    new URLSearchParams(parentWindowLocation?.search)
+  );
   const selectedCategory = designQueryParams.category;
   const selectedSubcategory = designQueryParams.subcategory;
 
@@ -52,74 +47,67 @@ export function FilterModal({ clickAwayFunction }: FilterModalProps) {
       newParams.featuredOnly = false;
     }
 
-    setSearchParams(buildDesignQueryParams(newParams));
+    // setSearchParams(buildDesignQueryParams(newParams));
   }
 
-  if (!parentCategories || !subcategoriesToShow)
-    return (
-      <Modal clickAwayFunction={clickAwayFunction}>
-        <ErrorPage />
-      </Modal>
-    );
+  if (!parentCategories || !subcategoriesToShow) return <ErrorPage />;
 
   return (
-    <Modal clickAwayFunction={clickAwayFunction}>
-      <>
-        <h2>Screen Print Design Library Filters</h2>
-        <p>Select a main category on the left and a subcategory below</p>
-        <div className={styles["main-flex"]}>
-          <div className={styles["parent-category-column"]}>
-            {["Featured", ...parentCategories].map((buttonName) => (
-              <>
-                <input
-                  className="button-styled-checkbox"
-                  type="checkbox"
-                  name="parent-category"
-                  id={`${buttonIdPrefix}${buttonName}`}
-                  onChange={(e) =>
-                    clickFilterButton(
-                      buttonName === "Featured" ? "Featured" : "Category",
-                      e.target.checked ? buttonName : null
-                    )
-                  }
-                  checked={
-                    (buttonName === "Featured" &&
-                      designQueryParams.featuredOnly) ||
-                    buttonName === selectedCategory
-                  }
-                />
-                <label htmlFor={`${buttonIdPrefix}${buttonName}`}>
-                  {buttonName}
-                </label>
-              </>
-            ))}
-            <button>Apply Filters</button>
-            <button>Clear Selection</button>
-          </div>
-          <div>
-            {subcategoriesToShow.map((subcategory) => (
-              <>
-                <input
-                  className="text-styled-checkbox"
-                  type="checkbox"
-                  name="subcategory"
-                  id={`${buttonIdPrefix}${subcategory.Name}`}
-                  onChange={(e) =>
-                    clickFilterButton(
-                      "Subcategory",
-                      e.target.checked ? subcategory.Name : null
-                    )
-                  }
-                  checked={subcategory.Name === selectedSubcategory}
-                />
-                <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>
-                  {subcategory.Name}
-                </label>
-              </>
-            ))}
-          </div>
+    <>
+      <h2>Screen Print Design Library Filters</h2>
+      <p>Select a main category on the left and a subcategory below</p>
+      <div className={styles["main-flex"]}>
+        <div className={styles["parent-category-column"]}>
+          {["Featured", ...parentCategories].map((buttonName) => (
+            <>
+              <input
+                className="button-styled-checkbox"
+                type="checkbox"
+                name="parent-category"
+                id={`${buttonIdPrefix}${buttonName}`}
+                onChange={(e) =>
+                  clickFilterButton(
+                    buttonName === "Featured" ? "Featured" : "Category",
+                    e.target.checked ? buttonName : null
+                  )
+                }
+                checked={
+                  (buttonName === "Featured" &&
+                    designQueryParams.featuredOnly) ||
+                  buttonName === selectedCategory
+                }
+              />
+              <label htmlFor={`${buttonIdPrefix}${buttonName}`}>
+                {buttonName}
+              </label>
+            </>
+          ))}
+          <button>Apply Filters</button>
+          <button>Clear Selection</button>
         </div>
-      </>
-    </Modal>
+        <div>
+          {subcategoriesToShow.map((subcategory) => (
+            <>
+              <input
+                className="text-styled-checkbox"
+                type="checkbox"
+                name="subcategory"
+                id={`${buttonIdPrefix}${subcategory.Name}`}
+                onChange={(e) =>
+                  clickFilterButton(
+                    "Subcategory",
+                    e.target.checked ? subcategory.Name : null
+                  )
+                }
+                checked={subcategory.Name === selectedSubcategory}
+              />
+              <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>
+                {subcategory.Name}
+              </label>
+            </>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

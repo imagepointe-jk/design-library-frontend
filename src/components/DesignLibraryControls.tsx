@@ -4,7 +4,7 @@ import { DesignQueryParams } from "../types";
 import { useApp } from "./AppProvider";
 import styles from "./styles/DesignLibrary.module.css";
 import { parseSearchParams } from "../validations";
-import { buildDesignQueryParams } from "../utility";
+import { requestParentWindowQueryChange } from "../utility";
 
 type DesignLibraryControlsProps = {
   setShowFilterModal: (b: boolean) => void;
@@ -15,8 +15,6 @@ export function DesignLibraryControls({
   setShowFilterModal,
   setShowSearchModal,
 }: DesignLibraryControlsProps) {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const designQueryParams = parseSearchParams(searchParams);
   const { parentWindowLocation } = useApp();
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
@@ -27,17 +25,19 @@ export function DesignLibraryControls({
   const selectedDesignType = designQueryParams.designType;
 
   function changeDesignType(newType: DesignType) {
+    if (!parentWindowLocation) return;
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       designType: newType,
     };
-    // setSearchParams(buildDesignQueryParams(newParams));
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,
     filterName: string
   ) {
+    if (!parentWindowLocation) return;
     const isChecked = e.target.checked;
     const newParams = { ...designQueryParams };
 
@@ -50,8 +50,7 @@ export function DesignLibraryControls({
       newParams.subcategory = isChecked ? filterName : undefined;
       newParams.featuredOnly = false;
     }
-
-    // setSearchParams(buildDesignQueryParams(newParams));
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }
 
   return (

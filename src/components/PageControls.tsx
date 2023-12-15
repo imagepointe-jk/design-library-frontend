@@ -2,7 +2,7 @@
 import styles from "./styles/PageControls.module.css";
 import { parseSearchParams } from "../validations";
 import { DesignQueryParams } from "../types";
-import { buildDesignQueryParams } from "../utility";
+import { requestParentWindowQueryChange } from "../utility";
 import { useApp } from "./AppProvider";
 
 type PageControlsProps = {
@@ -10,8 +10,6 @@ type PageControlsProps = {
 };
 
 export function PageControls({ totalPages }: PageControlsProps) {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const designQueryParams = parseSearchParams(searchParams);
   const { parentWindowLocation } = useApp();
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
@@ -25,14 +23,16 @@ export function PageControls({ totalPages }: PageControlsProps) {
   const perPageChoices = [3, 5, 7];
 
   function clickPageButton(pageNumber: number) {
+    if (!parentWindowLocation) return;
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       pageNumber: pageNumber,
     };
-    // setSearchParams(buildDesignQueryParams(newParams));
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }
 
   function submitJumpToPage(e: React.FormEvent<HTMLFormElement>) {
+    if (!parentWindowLocation) return;
     e.preventDefault();
 
     const form = e.target as HTMLFormElement;
@@ -50,16 +50,17 @@ export function PageControls({ totalPages }: PageControlsProps) {
       ...designQueryParams,
       pageNumber: +jumpToPage,
     };
-    // setSearchParams(buildDesignQueryParams(newParams));
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }
 
   function changeResultsPerPage(count: number) {
+    if (!parentWindowLocation) return;
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       pageNumber: 1,
       countPerPage: count,
     };
-    // setSearchParams(buildDesignQueryParams(newParams));
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }
 
   return (

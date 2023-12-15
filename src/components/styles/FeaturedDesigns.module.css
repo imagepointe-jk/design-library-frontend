@@ -19,6 +19,7 @@
   white-space: nowrap;
   left: 0px;
   display: flex;
+  transition: 0.2s;
 }
 
 .design-card {
@@ -41,12 +42,12 @@
 
 .left-button {
   left: 0;
-  translate: -100% -50%;
+  translate: -110% -50%;
 }
 
 .right-button {
   right: 0;
-  translate: 100% -50%;
+  translate: 110% -50%;
 }
 
 @media screen and (max-width: 1024px) {

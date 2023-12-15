@@ -6,7 +6,7 @@ import { buildDesignQueryParams } from "../utility";
 import { parseSearchParams } from "../validations";
 import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
-import { DesignModal } from "./DesignModal";
+// import { DesignModal } from "./DesignModal";
 import { FilterModal } from "./FilterModal";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { SearchModal } from "./SearchModal";

@@ -1,16 +1,12 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: 80vh;
+  gap: 10px;
 }
 
 .buttons-flex {
   display: flex;
   justify-content: center;
-  margin: auto;
-  gap: 30px;
-  flex-wrap: wrap;
 }
 
 .buttons-flex > a {

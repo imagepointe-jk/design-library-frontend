@@ -19,8 +19,8 @@ export function Home() {
   };
 
   return (
-    <div className={`inner-body ${styles["main"]}`}>
-      <div>
+    <div className={`inner-body`}>
+      <div className={styles["main"]}>
         {/* <h1>Union Designs For Every Occasion</h1>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci, qui
@@ -38,7 +38,7 @@ export function Home() {
             View Design Library
           </Link>
           <Link to="/">Art Services</Link> */}
-          <a
+          {/* <a
             className="link-black"
             href={`${domain}/design-library-new-designs/?${buildDesignQueryParams(
               paramsForLibraryButton
@@ -46,7 +46,7 @@ export function Home() {
             onClick={handleAnchorClick}
           >
             View Design Library
-          </a>
+          </a> */}
         </div>
         {modalOpen && (
           <SearchModal clickAwayFunction={() => setModalOpen(false)} />

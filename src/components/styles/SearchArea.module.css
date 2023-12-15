@@ -4,6 +4,7 @@
   position: relative;
   max-width: 600px;
   margin: auto;
+  gap: 5px;
 }
 
 .search-row input {

@@ -4,7 +4,7 @@ import { DesignLibrary } from "./components/DesignLibrary";
 import { Home } from "./components/Home";
 import { AppProvider, useApp } from "./components/AppProvider";
 import { useEffect } from "react";
-import { DesignModal } from "./components/DesignModal";
+// import { DesignModal } from "./components/DesignModal";
 import { DesignPage } from "./components/DesignPage";
 
 function App() {
@@ -20,6 +20,10 @@ function App() {
       : undefined;
 
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
+  console.log(
+    `parent path name ${parentWindowLocation?.pathname} === /design-library-new/ ?`,
+    parentWindowLocation?.pathname === "/design-library-new/"
+  );
   const showLibrary =
     parentWindowLocation?.pathname === "/design-library-new-designs/";
   const designNumberToUse = ownDesignNumber

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getDesignById } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
 import styles from "./styles/DesignPage.module.css";
+import { DesignScrollView } from "./DesignScrollView";
 
 type DesignPageProps = {
   designId: number;
@@ -27,43 +28,17 @@ export function DesignPage({ designId }: DesignPageProps) {
   }, []);
 
   const bgColorToUse = bgColor ? bgColor : design?.DefaultBackgroundColor;
-  const temp = Array.from({ length: 7 }, () => 0);
 
   return (
     <>
       {design && (
         <div className={styles["main-flex"]}>
-          <div>
-            <div
-              className={styles["main-img-container"]}
-              style={{ backgroundColor: bgColorToUse }}
-            >
-              <img
-                className={styles["main-img"]}
-                src={design.ImageURLs[0]}
-                alt={`design ${design.DesignNumber}`}
-                onError={(e) => {
-                  (e.target as any).src =
-                    "https://placehold.co/300x300?text=Not+Found";
-                }}
-              />
-              <button className={styles["left-button"]}>
-                <i className="fa-solid fa-chevron-left"></i>
-              </button>
-              <button className={styles["right-button"]}>
-                <i className="fa-solid fa-chevron-right"></i>
-              </button>
-            </div>
-            <div className={styles["gallery-slider-container"]}>
-              <div className={styles["gallery-slider"]}>
-                {temp.map(() => (
-                  <img src={design.ImageURLs[0]} /> //TODO: Make this an actual gallery of images associated with this design
-                ))}
-              </div>
-              <button className={styles["gallery-slider-button"]}>
-                <i className="fa-solid fa-chevron-right"></i>
-              </button>
-            </div>
+          <div className={styles["gallery-container"]}>
+            <DesignScrollView
+              overrideImages={design.ImageURLs}
+              imageClassname={styles["design-image"]}
+              scrollDistance={450}
+            />
           </div>
           <div className={styles["details-area"]}>
             <div>

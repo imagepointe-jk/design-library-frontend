@@ -5,6 +5,8 @@
 .main-flex {
   display: flex;
   justify-content: space-between;
+  justify-content: center;
+  gap: 60px;
 }
 
 .main-category-container {
@@ -34,5 +36,37 @@
 
 .subcategories-container {
   height: 300px;
-  width: 300px;
+  width: 250px;
+}
+
+.preview-designs-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 250px;
+}
+
+.preview-designs-container {
+  height: 250px;
+  width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.no-results {
+  font-weight: 700;
+  color: lightgray;
+  font-size: var(--size-20);
+}
+
+.preview-designs-row {
+  position: absolute;
+  left: 0;
+  display: flex;
+}
+
+.preview-design-image {
+  width: 230px;
 }

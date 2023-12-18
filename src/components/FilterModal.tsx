@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DesignQueryParams } from "../types";
-import { deduplicateStrings, requestParentWindowQueryChange } from "../utility";
+import {
+  buildDesignQueryParams,
+  deduplicateStrings,
+  requestParentWindowQueryChange,
+} from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
 import styles from "./styles/FilterModal.module.css";
+import { DesignScrollView } from "./DesignScrollView";
 
 const maxSubcategoriesBeforeScrollable = 31;
 
@@ -68,6 +73,14 @@ export function FilterModal() {
       pendingQueryParams
     );
   }
+
+  const previewDesignsQueryParams: DesignQueryParams = {
+    ...queryParamsToUse,
+    countPerPage: 5,
+  };
+  const previewDesignsQueryString = buildDesignQueryParams(
+    previewDesignsQueryParams
+  );
 
   if (!parentCategories || !subcategoriesToShow) return <ErrorPage />;
 
@@ -133,6 +146,10 @@ export function FilterModal() {
               </label>
             </>
           ))}
+        </div>
+        <div className={styles["preview-designs-area"]}>
+          <h4>Preview</h4>
+          <DesignScrollView queryString={previewDesignsQueryString} />
         </div>
       </div>
       <div className={styles["filter-action-button-row"]}>

@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  align-items: center;
+  height: 325px;
 }
 
 .buttons-flex {
@@ -10,5 +12,9 @@
 }
 
 .buttons-flex > a {
+  width: 200px;
+}
+
+.featured-image {
   width: 200px;
 }

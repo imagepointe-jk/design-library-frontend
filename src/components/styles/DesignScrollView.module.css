@@ -1,0 +1,47 @@
+.main {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.no-results {
+  font-weight: 700;
+  color: lightgray;
+  font-size: var(--size-20);
+}
+
+.designs-overflow-container {
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.designs-row {
+  display: flex;
+  position: absolute;
+  transition: 0.2s;
+}
+
+.design-image {
+  width: 250px;
+}
+
+.left-button,
+.right-button {
+  position: absolute;
+  top: 50%;
+}
+
+.left-button {
+  left: 0;
+  translate: -70% -50%;
+}
+
+.right-button {
+  right: 0;
+  translate: 70% -50%;
+}

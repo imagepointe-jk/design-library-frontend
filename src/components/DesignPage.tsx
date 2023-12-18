@@ -37,7 +37,7 @@ export function DesignPage({ designId }: DesignPageProps) {
             <DesignScrollView
               overrideImages={design.ImageURLs}
               imageClassname={styles["design-image"]}
-              scrollDistance={450}
+              scrollDistance={520}
             />
           </div>
           <div className={styles["details-area"]}>

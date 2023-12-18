@@ -49,7 +49,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   function handleMessage(e: MessageEvent) {
-    const allowed = true;
+    const allowed = true; //TODO: Actually add allowed origins
     if (!allowed) {
       console.log("Received a message from disallowed origin " + e.origin);
       return;

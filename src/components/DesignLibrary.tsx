@@ -80,9 +80,7 @@ export function DesignLibrary() {
           <div className={styles["search-container"]}>
             <DesignLibraryControls />
             {isFetchingResults && <LoadingIndicator />}
-            {designResults &&
-              designResults.designs.length === 0 &&
-              !isFetchingResults && <h3>No results</h3>}
+            {!designResults && !isFetchingResults && <h3>No results</h3>}
             {designResults &&
               designResults.designs.length > 0 &&
               !isFetchingResults && (

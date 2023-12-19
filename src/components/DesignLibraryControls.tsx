@@ -48,10 +48,16 @@ export function DesignLibraryControls() {
     } else {
       newParams.category = isChecked ? "Quick Search" : undefined;
       newParams.subcategory = isChecked ? filterName : undefined;
-      newParams.featuredOnly = false;
+      newParams.featuredOnly = !isChecked;
     }
     requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }
+
+  const allDesignsButtonChecked =
+    designQueryParams &&
+    !designQueryParams.featuredOnly &&
+    !designQueryParams.category &&
+    !designQueryParams.subcategory;
 
   return (
     <div className={styles["settings-container"]}>
@@ -78,8 +84,7 @@ export function DesignLibraryControls() {
               name={button}
               id={`${buttonIdPrefix}${button}`}
               checked={
-                (button === "All Designs" &&
-                  !designQueryParams?.featuredOnly) ||
+                (button === "All Designs" && allDesignsButtonChecked) ||
                 button === selectedSubcategory
               }
               onChange={(e) => clickQuickFilterButton(e, button)}

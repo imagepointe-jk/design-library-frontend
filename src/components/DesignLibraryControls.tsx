@@ -17,7 +17,7 @@ export function DesignLibraryControls() {
     new URLSearchParams(parentWindowLocation?.search)
   );
   const buttonIdPrefix = "library-page-filter-button-";
-  const checkboxButtons = ["New Designs", "Best Sellers", "Featured"];
+  const checkboxButtons = ["New Designs", "Best Sellers", "All Designs"];
   const selectedSubcategory = designQueryParams.subcategory;
   const selectedDesignType = designQueryParams.designType;
 
@@ -41,10 +41,10 @@ export function DesignLibraryControls() {
       pageNumber: 1,
     };
 
-    if (filterName === "Featured") {
+    if (filterName === "All Designs") {
       newParams.category = undefined;
       newParams.subcategory = undefined;
-      newParams.featuredOnly = isChecked;
+      newParams.featuredOnly = !isChecked;
     } else {
       newParams.category = isChecked ? "Quick Search" : undefined;
       newParams.subcategory = isChecked ? filterName : undefined;
@@ -78,7 +78,8 @@ export function DesignLibraryControls() {
               name={button}
               id={`${buttonIdPrefix}${button}`}
               checked={
-                (button === "Featured" && designQueryParams?.featuredOnly) ||
+                (button === "All Designs" &&
+                  !designQueryParams?.featuredOnly) ||
                 button === selectedSubcategory
               }
               onChange={(e) => clickQuickFilterButton(e, button)}

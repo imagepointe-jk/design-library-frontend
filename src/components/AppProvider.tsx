@@ -5,11 +5,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getSubcategories as getSubcategoriesData } from "../fetch";
-import { SubcategoryData } from "../types";
+import { getCategories, getSubcategories } from "../fetch";
+import { CategoryHierarchy } from "../types";
 
 type AppContextType = {
-  subcategoriesData: SubcategoryData[] | null;
+  categories: CategoryHierarchy[] | null;
   parentWindowLocation: {
     origin: string;
     url: string;
@@ -23,14 +23,14 @@ const AppContext = createContext(null as AppContextType | null);
 export function useApp() {
   const context = useContext(AppContext);
   return {
-    subcategoriesData: context?.subcategoriesData,
+    categories: context?.categories,
     parentWindowLocation: context?.parentWindowLocation,
   };
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [subcategoriesData, setSubcategoriesData] = useState(
-    null as SubcategoryData[] | null
+  const [categories, setCategories] = useState(
+    null as CategoryHierarchy[] | null
   );
   const [parentWindowLocation, setParentWindowLocation] = useState({
     origin: "",
@@ -39,10 +39,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
     search: "",
   });
 
-  async function fetchSubcategories() {
+  async function fetchCategories() {
     try {
-      const fetchedSubcategoriesData = await getSubcategoriesData();
-      setSubcategoriesData(fetchedSubcategoriesData);
+      const categories = await getCategories();
+      const subcategories = await getSubcategories();
+      const categoriesWithHierarchy: CategoryHierarchy[] = categories.map(
+        (category) => {
+          const categoryHierarchy: CategoryHierarchy = {
+            DesignType: category.DesignType,
+            Name: category.Name,
+            Subcategories: subcategories.filter(
+              (subcategory) => subcategory.ParentCategory === category.Name
+            ),
+          };
+          return categoryHierarchy;
+        }
+      );
+      setCategories(categoriesWithHierarchy);
     } catch (error) {
       console.error(error);
     }
@@ -66,7 +79,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    fetchSubcategories();
+    fetchCategories();
     window.addEventListener("message", handleMessage);
     window.parent.postMessage(
       {
@@ -84,7 +97,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   return (
     <AppContext.Provider
       value={{
-        subcategoriesData,
+        categories,
         parentWindowLocation,
       }}
     >

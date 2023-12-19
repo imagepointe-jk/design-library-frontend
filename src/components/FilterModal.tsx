@@ -11,10 +11,10 @@ import { ErrorPage } from "./ErrorScreen";
 import styles from "./styles/FilterModal.module.css";
 import { DesignScrollView } from "./DesignScrollView";
 
-const maxSubcategoriesBeforeScrollable = 31;
+const maxSubcategoriesBeforeScrollable = 15;
 
 export function FilterModal() {
-  const { subcategoriesData, parentWindowLocation } = useApp();
+  const { categories, parentWindowLocation } = useApp();
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
   );
@@ -27,41 +27,34 @@ export function FilterModal() {
   const queryParamsToUse = pendingQueryParams
     ? pendingQueryParams
     : designQueryParams;
-  const selectedCategory = queryParamsToUse.category;
-  const selectedSubcategory = queryParamsToUse.subcategory;
+  const selectedCategoryInParams = queryParamsToUse.category;
+  const selectedSubcategoryInParams = queryParamsToUse.subcategory;
 
-  const parentCategories =
-    subcategoriesData &&
-    deduplicateStrings(
-      subcategoriesData.map((subcategoryData) => subcategoryData.ParentCategory)
-    );
-
-  const subcategoriesToShow =
-    subcategoriesData &&
-    subcategoriesData.filter(
-      (subcategory) => subcategory.ParentCategory === queryParamsToUse?.category
-    );
+  const selectedCategory = categories?.find(
+    (category) => category.Name === queryParamsToUse.category
+  );
+  const categoriesToShow = categories?.filter(
+    (category) => category.DesignType === queryParamsToUse.designType
+  );
+  const subcategoriesToShow = selectedCategory
+    ? selectedCategory.Subcategories
+    : [];
 
   const buttonIdPrefix = "filter-modal-filter-button-";
 
   function clickFilterButton(
-    buttonType: "Featured" | "Category" | "Subcategory",
+    buttonType: "Category" | "Subcategory",
     value: string | null
   ) {
     const newParams: DesignQueryParams = { ...queryParamsToUse };
 
-    if (buttonType === "Featured") {
-      newParams.category = undefined;
-      newParams.subcategory = undefined;
-      newParams.featuredOnly = value !== null;
-    } else if (buttonType === "Category") {
+    if (buttonType === "Category") {
       newParams.category = value || undefined;
       newParams.subcategory = undefined;
-      newParams.featuredOnly = false;
     } else {
       newParams.subcategory = value || undefined;
-      newParams.featuredOnly = false;
     }
+    newParams.featuredOnly = false;
 
     setPendingQueryParams(newParams);
   }
@@ -82,7 +75,7 @@ export function FilterModal() {
     previewDesignsQueryParams
   );
 
-  if (!parentCategories || !subcategoriesToShow) return <ErrorPage />;
+  if (!categories) return <ErrorPage />;
 
   return (
     <>
@@ -92,27 +85,23 @@ export function FilterModal() {
       </p>
       <div className={styles["main-flex"]}>
         <div className={styles["parent-category-column"]}>
-          {["Featured", ...parentCategories].map((buttonName) => (
+          {categoriesToShow?.map((category) => (
             <>
               <input
                 className="button-styled-checkbox"
                 type="checkbox"
                 name="parent-category"
-                id={`${buttonIdPrefix}${buttonName}`}
+                id={`${buttonIdPrefix}${category.Name}`}
                 onChange={(e) =>
                   clickFilterButton(
-                    buttonName === "Featured" ? "Featured" : "Category",
-                    e.target.checked ? buttonName : null
+                    "Category",
+                    e.target.checked ? category.Name : null
                   )
                 }
-                checked={
-                  (buttonName === "Featured" &&
-                    queryParamsToUse.featuredOnly) ||
-                  buttonName === selectedCategory
-                }
+                checked={category.Name === selectedCategoryInParams}
               />
-              <label htmlFor={`${buttonIdPrefix}${buttonName}`}>
-                {buttonName}
+              <label htmlFor={`${buttonIdPrefix}${category.Name}`}>
+                {category.Name}
               </label>
             </>
           ))}
@@ -139,7 +128,7 @@ export function FilterModal() {
                     e.target.checked ? subcategory.Name : null
                   )
                 }
-                checked={subcategory.Name === selectedSubcategory}
+                checked={subcategory.Name === selectedSubcategoryInParams}
               />
               <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>
                 {subcategory.Name}

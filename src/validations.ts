@@ -4,7 +4,11 @@ import {
   tempDesignResultsSchema,
   tempDesignWithImagesSchema,
 } from "./sharedTypes";
-import { DesignQueryParams, subcategoryDataSchema } from "./types";
+import {
+  DesignQueryParams,
+  categoryDataSchema,
+  subcategoryDataSchema,
+} from "./types";
 import { makeStringTitleCase } from "./utility";
 
 export function validateDesignResultsJson(json: any) {
@@ -13,6 +17,10 @@ export function validateDesignResultsJson(json: any) {
 
 export function validateSingleDesignJson(json: any) {
   return tempDesignWithImagesSchema.parse(json);
+}
+
+export function validateCategories(json: any) {
+  return z.array(categoryDataSchema).parse(json);
 }
 
 export function validateSubcategories(json: any) {
@@ -64,3 +72,5 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
 
   return parsedSearchParams;
 }
+
+export function parseCategories(categories: any[], subcategories: any[]) {}

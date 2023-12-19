@@ -1,4 +1,6 @@
+import { CategoryHierarchy } from "./types";
 import {
+  validateCategories,
   validateDesignResultsJson,
   validateSingleDesignJson,
   validateSubcategories,
@@ -54,4 +56,40 @@ export async function getSubcategories() {
   }
 
   return validateSubcategories(json);
+}
+
+export async function getCategories() {
+  var requestOptions = {
+    method: "GET",
+  };
+
+  const response = await fetch(`${serverURL()}/categories`, requestOptions);
+  const json = await response.json();
+  if (!response.ok) {
+    console.error(
+      `Error ${response.status} while retrieving categories. Message: ${json.message}`
+    );
+    throw new Error();
+  }
+
+  return validateCategories(json);
+}
+
+export async function getCategoriesWithHierarchy() {
+  const categories = await getCategories();
+  const subcategories = await getSubcategories();
+  const categoriesWithHierarchy: CategoryHierarchy[] = categories.map(
+    (category) => {
+      const categoryHierarchy: CategoryHierarchy = {
+        DesignType: category.DesignType,
+        Name: category.Name,
+        Subcategories: subcategories.filter(
+          (subcategory) => subcategory.ParentCategory === category.Name
+        ),
+      };
+      return categoryHierarchy;
+    }
+  );
+
+  return categoriesWithHierarchy;
 }

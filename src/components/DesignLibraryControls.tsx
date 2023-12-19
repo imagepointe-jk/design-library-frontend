@@ -26,6 +26,9 @@ export function DesignLibraryControls() {
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       designType: newType,
+      category: undefined,
+      subcategory: undefined,
+      featuredOnly: true,
     };
     requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }

@@ -20,12 +20,15 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  flex-wrap: wrap;
+  row-gap: 5px;
 }
 
 .settings-subcontainer {
   display: flex;
   align-items: center;
   gap: 15px;
+  flex-wrap: wrap;
 }
 
 .settings-button {

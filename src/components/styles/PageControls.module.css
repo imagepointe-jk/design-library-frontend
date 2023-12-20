@@ -31,3 +31,12 @@
   padding: 10px;
   text-align: center;
 }
+
+@media screen and (max-width: 600px) {
+  .main {
+    flex-direction: column;
+    justify-content: initial;
+    align-items: center;
+    gap: 10px;
+  }
+}

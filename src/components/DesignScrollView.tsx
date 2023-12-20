@@ -12,6 +12,7 @@ type DesignScrollViewProps = {
   width?: number;
   overrideImages?: string[];
   imageClassname?: string;
+  containerClassname?: string;
 };
 
 const defaultScrollDistance = 250;
@@ -22,6 +23,7 @@ export function DesignScrollView({
   width,
   overrideImages,
   imageClassname,
+  containerClassname,
 }: DesignScrollViewProps) {
   const [designs, setDesigns] = useState([] as TempDesignWithImages[]);
   const [isLoading, setIsLoading] = useState(overrideImages === undefined);
@@ -61,7 +63,10 @@ export function DesignScrollView({
   }, [queryString]);
 
   return (
-    <div className={styles["main"]} style={{ width: width }}>
+    <div
+      className={`${styles["main"]} ${containerClassname}`}
+      style={{ width: width }}
+    >
       {!overrideImages && isLoading && <LoadingIndicator />}
       {!overrideImages && !isLoading && designs.length === 0 && (
         <div className={styles["no-results"]}>No Results</div>

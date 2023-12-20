@@ -21,6 +21,7 @@ export function Home() {
           queryString={queryString}
           imageClassname={styles["featured-image"]}
           scrollDistance={200}
+          containerClassname={styles["featured-image-container"]}
         />
       </div>
     </div>

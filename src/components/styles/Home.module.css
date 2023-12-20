@@ -18,3 +18,23 @@
 .featured-image {
   width: 200px;
 }
+
+.featured-image-container {
+  width: 94%;
+}
+
+@media screen and (max-width: 768px) {
+  .featured-image-container {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main {
+    height: 380px;
+  }
+
+  .featured-image-container {
+    width: 85%;
+  }
+}

@@ -15,16 +15,12 @@
   width: 200px;
 }
 
-.featured-image {
-  width: 200px;
-}
-
-.featured-image-container {
+#featured-image-container {
   width: 94%;
 }
 
 @media screen and (max-width: 768px) {
-  .featured-image-container {
+  #featured-image-container {
     width: 90%;
   }
 }
@@ -34,7 +30,7 @@
     height: 380px;
   }
 
-  .featured-image-container {
+  #featured-image-container {
     width: 85%;
   }
 }

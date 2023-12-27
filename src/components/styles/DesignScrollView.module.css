@@ -24,10 +24,11 @@
   display: flex;
   position: absolute;
   transition: 0.2s;
+  height: 100%;
 }
 
 .design-image {
-  width: 250px;
+  height: 100%;
 }
 
 .left-button,

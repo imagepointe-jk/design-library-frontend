@@ -36,7 +36,6 @@ export function DesignPage({ designId }: DesignPageProps) {
           <div className={styles["gallery-container"]}>
             <DesignScrollView
               overrideImages={design.ImageURLs}
-              imageClassname={styles["design-image"]}
               scrollDistance={520}
             />
           </div>

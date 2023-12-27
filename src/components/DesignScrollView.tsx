@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./styles/DesignScrollView.module.css";
 import { TempDesignWithImages } from "../sharedTypes";
 import { getDesigns } from "../fetch";
@@ -11,26 +11,27 @@ type DesignScrollViewProps = {
   scrollDistance?: number;
   width?: number;
   overrideImages?: string[];
-  imageClassname?: string;
-  containerClassname?: string;
+  squareContainer?: boolean;
+  containerId?: string;
 };
 
-const defaultScrollDistance = 250;
+const defaultImageSize = 250;
 
 export function DesignScrollView({
   queryString,
   scrollDistance,
   width,
   overrideImages,
-  imageClassname,
-  containerClassname,
+  squareContainer,
+  containerId,
 }: DesignScrollViewProps) {
   const [designs, setDesigns] = useState([] as TempDesignWithImages[]);
   const [isLoading, setIsLoading] = useState(overrideImages === undefined);
   const [scrollIndex, setScrollIndex] = useState(0);
+  const containerRef = useRef(null);
   const scrollDistanceToUse = scrollDistance
     ? scrollDistance
-    : defaultScrollDistance;
+    : defaultImageSize;
   const totalImages = overrideImages
     ? overrideImages.filter((image) => image !== "").length
     : designs.length;
@@ -64,8 +65,9 @@ export function DesignScrollView({
 
   return (
     <div
-      className={`${styles["main"]} ${containerClassname}`}
-      style={{ width: width }}
+      className={styles["main"]}
+      id={containerId}
+      style={{ width: width, aspectRatio: squareContainer ? 1 : undefined }}
     >
       {!overrideImages && isLoading && <LoadingIndicator />}
       {!overrideImages && !isLoading && designs.length === 0 && (
@@ -81,7 +83,7 @@ export function DesignScrollView({
             {!overrideImages &&
               designs.map((design) => (
                 <img
-                  className={imageClassname || styles["design-image"]}
+                  className={styles["design-image"]}
                   src={design.ImageURLs[0]}
                 />
               ))}
@@ -89,10 +91,7 @@ export function DesignScrollView({
               overrideImages.map((image) => (
                 <>
                   {image !== "" && (
-                    <img
-                      className={imageClassname || styles["design-image"]}
-                      src={image}
-                    />
+                    <img className={styles["design-image"]} src={image} />
                   )}
                 </>
               ))}

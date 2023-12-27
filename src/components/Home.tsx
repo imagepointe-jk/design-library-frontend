@@ -17,12 +17,7 @@ export function Home() {
     <div className={`inner-body`}>
       <div className={styles["main"]}>
         <SearchArea />
-        <DesignScrollView
-          queryString={queryString}
-          imageClassname={styles["featured-image"]}
-          scrollDistance={200}
-          containerClassname={styles["featured-image-container"]}
-        />
+        <DesignScrollView queryString={queryString} scrollDistance={200} />
       </div>
     </div>
   );

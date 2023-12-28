@@ -74,6 +74,20 @@ export function requestParentWindowModalOpen(
   );
 }
 
+export function requestParentWindowResizeApp(newSize: {
+  width?: number;
+  height?: number;
+}) {
+  window.parent.postMessage(
+    {
+      type: "design-library-resize-app",
+      width: newSize.width,
+      height: newSize.height,
+    },
+    "*"
+  );
+}
+
 export function requestParentWindowQueryChange(
   currentUrl: string,
   newParams: DesignQueryParams

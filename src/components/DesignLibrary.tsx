@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { getDesigns } from "../fetch";
-import { TempDesignResults } from "../sharedTypes";
-import { DesignQueryParams } from "../types";
+import { DesignQueryParams, TempDesignResults } from "../types";
 import {
   buildDesignQueryParams,
   requestParentWindowQueryChange,
+  requestParentWindowResizeApp,
 } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
@@ -32,6 +32,12 @@ export function DesignLibrary() {
       );
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
+      //wait briefly for DOM to update, then request iframe resize based on content length
+      setTimeout(() => {
+        requestParentWindowResizeApp({
+          height: document.querySelector(".inner-body")?.scrollHeight,
+        });
+      }, 100);
     } catch (error) {
       setIsFetchingResults(false);
       console.error(error);

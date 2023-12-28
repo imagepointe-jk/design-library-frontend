@@ -10,27 +10,25 @@ function App() {
   const { parentWindowLocation } = useApp();
 
   const ownPathname = window.location.pathname.replace("/", "");
-  const ownDesignNumber = !isNaN(+ownPathname) ? +ownPathname : undefined;
+  const ownDesignNumber = ownPathname.match(/^E?\d+$/g)
+    ? ownPathname
+    : undefined;
   const searchParams = new URLSearchParams(parentWindowLocation?.search);
   const parentDesignNumberStr = searchParams.get("designId");
-  const parentDesignNumber =
-    parentDesignNumberStr && !isNaN(+parentDesignNumberStr)
-      ? +parentDesignNumberStr
-      : undefined;
 
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
   const showLibrary =
     parentWindowLocation?.pathname === "/design-library-new-designs/";
   const designNumberToUse = ownDesignNumber
     ? ownDesignNumber
-    : parentDesignNumber;
+    : parentDesignNumberStr;
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
   if (showHome) return <Home />;
   if (showSearch) return <SearchArea />;
   if (showFilters) return <FilterModal />;
-  if (designNumberToUse) return <DesignPage designId={designNumberToUse} />;
+  if (designNumberToUse) return <DesignPage designNumber={designNumberToUse} />;
   if (showLibrary) return <DesignLibrary />;
 }
 

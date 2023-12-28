@@ -5,10 +5,10 @@ import styles from "./styles/DesignPage.module.css";
 import { DesignScrollView } from "./DesignScrollView";
 
 type DesignPageProps = {
-  designId: number;
+  designNumber: string;
 };
 
-export function DesignPage({ designId }: DesignPageProps) {
+export function DesignPage({ designNumber }: DesignPageProps) {
   const [design, setDesign] = useState<TempDesignWithImages | undefined>(
     undefined
   );
@@ -16,7 +16,7 @@ export function DesignPage({ designId }: DesignPageProps) {
 
   async function getDesignToDisplay() {
     try {
-      const fetchedDesign = await getDesignById(designId);
+      const fetchedDesign = await getDesignById(designNumber);
       setDesign(fetchedDesign);
     } catch (error) {
       console.error(error);

@@ -23,14 +23,17 @@ export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
         });
       }}
     >
-      <img
-        className={"design-img"}
-        src={imgUrl}
-        alt={`design ${designNumber}`}
-        onError={(e) => {
-          (e.target as any).src = "https://placehold.co/300x300?text=Not+Found";
-        }}
-      />
+      <div className={styles["img-container"]}>
+        <img
+          className={"design-img"}
+          src={imgUrl}
+          alt={`design ${designNumber}`}
+          onError={(e) => {
+            (e.target as any).src =
+              "https://placehold.co/300x300?text=Not+Found";
+          }}
+        />
+      </div>
       <div className={styles["design-card-id"]}>{designNumber}</div>
     </a>
   );

@@ -4,10 +4,10 @@ export const designTypes = ["Screen Print", "Embroidery"] as const;
 export const designTypeSchema = z.enum(designTypes);
 
 export const tempDesignSchema = z.object({
-  Name: z.string(),
+  Name: z.string().optional(),
   Description: z.string().optional(),
   DefaultBackgroundColor: z.string(),
-  Subcategory1: z.string(),
+  Subcategory1: z.string().optional(),
   Subcategory2: z.string().optional(),
   Subcategory3: z.string().optional(),
   Subcategory4: z.string().optional(),
@@ -25,7 +25,7 @@ export const tempDesignSchema = z.object({
   DropboxImagePath5: z.string().optional(),
   DropboxImagePath6: z.string().optional(),
   DropboxImagePath7: z.string().optional(),
-  DesignNumber: z.number(),
+  DesignNumber: z.string(),
   Featured: z.boolean(),
 });
 
@@ -34,14 +34,25 @@ export const tempDesignWithImagesSchema = z.intersection(
   z.object({ ImageURLs: z.array(z.string()) })
 );
 
-export const tempDesignResultsSchema = z.object({
-  pageNumber: z.number(),
-  perPage: z.number(),
-  total: z.number(),
-  designs: z.array(tempDesignWithImagesSchema),
+export const tempCategorySchema = z.object({
+  Name: z.string(),
+  DesignType: z.string(),
+});
+
+export const tempSubcategorySchema = z.object({
+  Name: z.string(),
+  ParentCategory: z.string(),
+  Hierarchy: z.string().regex(/^.+ > .+$/g),
+});
+
+export const tempDbSchema = z.object({
+  Designs: z.array(tempDesignSchema),
+  Tags: z.array(z.object({ Name: z.string() })),
+  Categories: z.array(tempCategorySchema),
+  Subcategories: z.array(tempSubcategorySchema),
 });
 
 export type DesignType = z.infer<typeof designTypeSchema>;
 export type TempDesign = z.infer<typeof tempDesignSchema>;
 export type TempDesignWithImages = z.infer<typeof tempDesignWithImagesSchema>;
-export type TempDesignResults = z.infer<typeof tempDesignResultsSchema>;
+export type TempDb = z.infer<typeof tempDbSchema>;

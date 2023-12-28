@@ -71,7 +71,7 @@ export function DesignScrollView({
     >
       {!overrideImages && isLoading && <LoadingIndicator />}
       {!overrideImages && !isLoading && designs.length === 0 && (
-        <div className={styles["no-results"]}>No Results</div>
+        <div className={`text-minor ${styles["no-results"]}`}>No Results</div>
       )}
 
       {!isLoading && totalImages > 0 && (

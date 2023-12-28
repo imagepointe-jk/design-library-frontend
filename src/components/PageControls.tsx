@@ -19,7 +19,7 @@ export function PageControls({ totalPages }: PageControlsProps) {
   const arr = Array.from({ length: consecutiveButtons }, () => 0);
   const curPageNumber = designQueryParams.pageNumber;
   const curPerPage = designQueryParams.countPerPage;
-  const perPageChoices = [3, 5, 7];
+  const perPageChoices = [18, 30, 50];
 
   function clickPageButton(pageNumber: number) {
     if (!parentWindowLocation) return;

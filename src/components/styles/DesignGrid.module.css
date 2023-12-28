@@ -17,3 +17,8 @@
   color: black;
   text-align: initial;
 }
+
+.img-container {
+  width: 320px;
+  height: 320px;
+}

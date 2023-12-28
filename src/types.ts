@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DesignType } from "./sharedTypes";
+import { DesignType, tempDesignWithImagesSchema } from "./sharedTypes";
 
 export const categoryDataSchema = z.object({
   Name: z.string(),
@@ -17,6 +17,13 @@ const categoryHierarchySchema = z.intersection(
   z.object({ Subcategories: z.array(subcategoryDataSchema) })
 );
 
+export const tempDesignResultsSchema = z.object({
+  pageNumber: z.number(),
+  perPage: z.number(),
+  total: z.number(),
+  designs: z.array(tempDesignWithImagesSchema),
+});
+
 export type DesignQueryParams = {
   designType: DesignType;
   category?: string;
@@ -31,3 +38,4 @@ export type DesignQueryParams = {
 export type CategoryData = z.infer<typeof categoryDataSchema>;
 export type SubcategoryData = z.infer<typeof subcategoryDataSchema>;
 export type CategoryHierarchy = z.infer<typeof categoryHierarchySchema>;
+export type TempDesignResults = z.infer<typeof tempDesignResultsSchema>;

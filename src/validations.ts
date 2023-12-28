@@ -1,13 +1,10 @@
 import { z } from "zod";
-import {
-  designTypeSchema,
-  tempDesignResultsSchema,
-  tempDesignWithImagesSchema,
-} from "./sharedTypes";
+import { designTypeSchema, tempDesignWithImagesSchema } from "./sharedTypes";
 import {
   DesignQueryParams,
   categoryDataSchema,
   subcategoryDataSchema,
+  tempDesignResultsSchema,
 } from "./types";
 import { makeStringTitleCase } from "./utility";
 

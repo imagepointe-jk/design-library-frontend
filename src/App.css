@@ -102,11 +102,15 @@ input[type="search"] {
 }
 
 .design-img {
-  width: 320px;
+  height: 100%;
 }
 
 .bold {
   font-weight: 700;
+}
+
+.text-minor {
+  color: lightgray;
 }
 
 .loading-spinner {

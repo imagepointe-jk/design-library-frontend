@@ -28,6 +28,20 @@ export function DesignPage({ designId }: DesignPageProps) {
   }, []);
 
   const bgColorToUse = bgColor ? bgColor : design?.DefaultBackgroundColor;
+  const filters = [
+    design?.Subcategory1,
+    design?.Subcategory2,
+    design?.Subcategory3,
+    design?.Subcategory4,
+    design?.Subcategory5,
+  ].filter((sub) => sub !== undefined);
+  const tags = [
+    design?.Tag1,
+    design?.Tag2,
+    design?.Tag3,
+    design?.Tag4,
+    design?.Tag5,
+  ].filter((sub) => sub !== undefined);
 
   return (
     <>
@@ -41,9 +55,7 @@ export function DesignPage({ designId }: DesignPageProps) {
           </div>
           <div className={styles["details-area"]}>
             <div>
-              <h2
-                className={styles["heading"]}
-              >{`${design.Name} (#${design.DesignNumber})`}</h2>
+              <h2 className={styles["heading"]}>{`#${design.DesignNumber}`}</h2>
               <p className={styles["subheading"]}>
                 Design details and description here
               </p>
@@ -69,36 +81,24 @@ export function DesignPage({ designId }: DesignPageProps) {
                 <div>
                   <p className="bold">Filters</p>
                   <p>
-                    {[
-                      design.Subcategory1,
-                      design.Subcategory2,
-                      design.Subcategory3,
-                      design.Subcategory4,
-                      design.Subcategory5,
-                    ]
-                      .filter((sub) => sub !== undefined)
-                      .map((sub, i, array) => {
+                    {filters.length > 0 &&
+                      filters.map((sub, i, array) => {
                         const onlySubcategory = sub && sub.split(" > ")[1];
                         const comma = i < array.length - 1;
                         return `${onlySubcategory}${comma ? ", " : ""}`;
                       })}
+                    {filters.length === 0 && "No filters"}
                   </p>
                 </div>
                 <div>
                   <p className="bold">Search Tags</p>
                   <p>
-                    {[
-                      design.Tag1,
-                      design.Tag2,
-                      design.Tag3,
-                      design.Tag4,
-                      design.Tag5,
-                    ]
-                      .filter((sub) => sub !== undefined)
-                      .map((sub, i, array) => {
+                    {tags.length > 0 &&
+                      tags.map((sub, i, array) => {
                         const comma = i < array.length - 1;
                         return `${sub}${comma ? ", " : ""}`;
                       })}
+                    {tags.length === 0 && "No tags"}
                   </p>
                 </div>
               </div>

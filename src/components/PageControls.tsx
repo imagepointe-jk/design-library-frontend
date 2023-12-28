@@ -1,5 +1,9 @@
 import { DesignQueryParams } from "../types";
-import { requestParentWindowQueryChange } from "../utility";
+import {
+  addEllipsisToNumberArray,
+  getPageControlNumbers,
+  requestParentWindowQueryChange,
+} from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import styles from "./styles/PageControls.module.css";
@@ -14,12 +18,12 @@ export function PageControls({ totalPages }: PageControlsProps) {
     new URLSearchParams(parentWindowLocation?.search)
   );
 
-  const useSplitView = totalPages > 5; //whether we should show page buttons as: 1, 2, 3, ... 23 (for example)
-  const consecutiveButtons = useSplitView ? 3 : totalPages;
-  const arr = Array.from({ length: consecutiveButtons }, () => 0);
   const curPageNumber = designQueryParams.pageNumber;
   const curPerPage = designQueryParams.countPerPage;
   const perPageChoices = [18, 30, 50];
+  const pageControlNumbers = addEllipsisToNumberArray(
+    getPageControlNumbers(totalPages, curPageNumber)
+  );
 
   function clickPageButton(pageNumber: number) {
     if (!parentWindowLocation) return;
@@ -65,40 +69,26 @@ export function PageControls({ totalPages }: PageControlsProps) {
   return (
     <div className={styles["main"]}>
       <div className={styles["controls-subsection"]}>
-        {arr.map((_, i) => (
-          <button
-            className={
-              curPageNumber === i + 1
-                ? styles["page-active"]
-                : styles["page-inactive"]
-            }
-            style={{
-              pointerEvents: curPageNumber === i + 1 ? "none" : "initial",
-            }}
-            onClick={() => clickPageButton(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-        {useSplitView && (
-          <>
-            <div>...</div>
-            <button
-              className={
-                curPageNumber === totalPages
-                  ? styles["page-active"]
-                  : styles["page-inactive"]
-              }
-              style={{
-                pointerEvents:
-                  curPageNumber === totalPages ? "none" : "initial",
-              }}
-              onClick={() => clickPageButton(totalPages)}
-            >
-              {totalPages}
-            </button>
-          </>
-        )}
+        {pageControlNumbers.map((numberOrEllipsis) => {
+          if (numberOrEllipsis === "...") return <div>...</div>;
+          else
+            return (
+              <button
+                className={
+                  curPageNumber === numberOrEllipsis
+                    ? styles["page-active"]
+                    : styles["page-inactive"]
+                }
+                style={{
+                  pointerEvents:
+                    curPageNumber === numberOrEllipsis ? "none" : "initial",
+                }}
+                onClick={() => clickPageButton(numberOrEllipsis)}
+              >
+                {numberOrEllipsis}
+              </button>
+            );
+        })}
       </div>
       <div className={styles["controls-subsection"]}>
         <div>Jump To</div>

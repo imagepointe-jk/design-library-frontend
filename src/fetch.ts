@@ -28,7 +28,7 @@ export async function getDesigns(queryParamsString: string) {
   return validateDesignResultsJson(json);
 }
 
-export async function getDesignById(designId: string) {
+export async function getDesignById(designId: number) {
   const response = await fetch(`${serverURL()}/designs/${designId}`);
   const json = await response.json();
   if (!response.ok) {

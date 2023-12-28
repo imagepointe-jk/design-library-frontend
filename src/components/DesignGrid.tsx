@@ -11,8 +11,9 @@ export function DesignGrid({ designs }: DesignGridProps) {
     <div className={styles["design-grid"]}>
       {designs.map((design) => (
         <DesignCard
-          key={design.DesignNumber}
+          key={design.Id}
           designNumber={design.DesignNumber}
+          designId={design.Id}
           imgUrl={design.ImageURLs[0]}
         />
       ))}

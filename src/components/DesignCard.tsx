@@ -4,21 +4,26 @@ import { useApp } from "./AppProvider";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignCardProps = {
-  designNumber: number;
+  designId: number;
+  designNumber: string;
   imgUrl: string;
 };
 
-export function DesignCard({ designNumber, imgUrl }: DesignCardProps) {
+export function DesignCard({
+  designNumber,
+  imgUrl,
+  designId,
+}: DesignCardProps) {
   const { parentWindowLocation } = useApp();
   const domain = parentWindowLocation?.origin;
 
   return (
     <a
       className={styles["design-card"]}
-      href={`${domain}/design-library-new-designs/?designId=${designNumber}`}
+      href={`${domain}/design-library-new-designs/?designId=${designId}`}
       onClick={(e) => {
         e.preventDefault();
-        requestParentWindowModalOpen(`${designNumber}`, {
+        requestParentWindowModalOpen(`${designId}`, {
           height: defaultModalHeight,
         });
       }}

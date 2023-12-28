@@ -31,6 +31,9 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     ? `pageNumber=${params.pageNumber}`
     : undefined;
   const featuredParam = params.featuredOnly ? "featured=true" : undefined;
+  const allowDuplicatesParam = params.allowDuplicateDesignNumbers
+    ? "allowDuplicateDesignNumbers=true"
+    : undefined;
 
   return [
     designTypeParam,
@@ -41,6 +44,7 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     tagsParam,
     keywordsParam,
     featuredParam,
+    allowDuplicatesParam,
   ]
     .filter((item) => item !== undefined)
     .join("&");

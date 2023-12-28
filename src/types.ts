@@ -33,6 +33,7 @@ export type DesignQueryParams = {
   countPerPage?: number;
   pageNumber: number;
   featuredOnly: boolean;
+  allowDuplicateDesignNumbers?: boolean;
 };
 
 export type CategoryData = z.infer<typeof categoryDataSchema>;

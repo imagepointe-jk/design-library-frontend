@@ -41,6 +41,7 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
   const countPerPageFromParams = params.get("perPage");
   const pageNumberFromParams = params.get("pageNumber");
   const featuredFromParams = params.get("featured");
+  const allowDuplicateDesignNumbers = params.get("allowDuplicateDesignNumbers");
 
   const parsedDesignType =
     tryParseDesignType(makeStringTitleCase(`${designTypeFromParams}`)) ||
@@ -65,6 +66,7 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
         : 1,
     tags: tagsFromParams ? tagsFromParams.split(",") : undefined,
     featuredOnly: featuredFromParams === "true",
+    allowDuplicateDesignNumbers: allowDuplicateDesignNumbers === "true",
   };
 
   return parsedSearchParams;

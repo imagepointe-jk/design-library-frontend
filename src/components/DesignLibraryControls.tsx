@@ -29,6 +29,7 @@ export function DesignLibraryControls() {
       category: undefined,
       subcategory: undefined,
       featuredOnly: true,
+      pageNumber: 1,
     };
     requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }

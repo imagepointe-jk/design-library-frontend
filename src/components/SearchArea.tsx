@@ -23,6 +23,7 @@ export function SearchArea() {
       pageNumber: 1,
       keywords: keywords?.toString().split(" "),
       featuredOnly: true,
+      allowDuplicateDesignNumbers: true,
     };
     if ((designType as DesignType) === "Embroidery")
       newParams.designType = "Embroidery";

@@ -50,6 +50,7 @@ export function DesignLibrary() {
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       keywords: undefined,
+      allowDuplicateDesignNumbers: false,
     };
     requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }

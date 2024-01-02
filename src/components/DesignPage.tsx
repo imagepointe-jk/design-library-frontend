@@ -1,65 +1,79 @@
 import { useEffect, useState } from "react";
-import { getDesignById } from "../fetch";
+import { getDesignsRelatedToId } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
-import styles from "./styles/DesignPage.module.css";
 import { DesignScrollView } from "./DesignScrollView";
+import styles from "./styles/DesignPage.module.css";
 
 type DesignPageProps = {
   designId: number;
 };
 
 export function DesignPage({ designId }: DesignPageProps) {
-  const [design, setDesign] = useState<TempDesignWithImages | undefined>(
-    undefined
-  );
+  const [relatedDesigns, setRelatedDesigns] = useState<
+    TempDesignWithImages[] | null
+  >(null);
+  const [viewedIndex, setViewedIndex] = useState(0);
   const [bgColor, setBgColor] = useState<string | undefined>(undefined);
 
-  async function getDesignToDisplay() {
+  async function getDesignsToDisplay() {
     try {
-      const fetchedDesign = await getDesignById(designId);
-      setDesign(fetchedDesign);
+      const related = await getDesignsRelatedToId(designId);
+      related.sort((a) => (a.Id === designId ? -1 : 1));
+      setRelatedDesigns(related);
     } catch (error) {
       console.error(error);
     }
   }
 
+  function onScrollFn(direction: "left" | "right") {
+    const increment = direction === "left" ? -1 : 1;
+    setViewedIndex(viewedIndex + increment);
+  }
+
   useEffect(() => {
-    getDesignToDisplay();
+    getDesignsToDisplay();
   }, []);
 
-  const bgColorToUse = bgColor ? bgColor : design?.DefaultBackgroundColor;
+  // const bgColorToUse = bgColor ? bgColor : design?.DefaultBackgroundColor;
+  const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
   const filters = [
-    design?.Subcategory1,
-    design?.Subcategory2,
-    design?.Subcategory3,
-    design?.Subcategory4,
-    design?.Subcategory5,
+    viewedDesign?.Subcategory1,
+    viewedDesign?.Subcategory2,
+    viewedDesign?.Subcategory3,
+    viewedDesign?.Subcategory4,
+    viewedDesign?.Subcategory5,
   ].filter((sub) => sub !== undefined);
   const tags = [
-    design?.Tag1,
-    design?.Tag2,
-    design?.Tag3,
-    design?.Tag4,
-    design?.Tag5,
+    viewedDesign?.Tag1,
+    viewedDesign?.Tag2,
+    viewedDesign?.Tag3,
+    viewedDesign?.Tag4,
+    viewedDesign?.Tag5,
   ].filter((sub) => sub !== undefined);
+  const images = relatedDesigns
+    ? relatedDesigns.map((design) => design.ImageURLs[0] || "")
+    : [];
 
   return (
     <>
-      {design && (
+      {viewedDesign && (
         <div className={styles["main-flex"]}>
           <div className={styles["gallery-container"]}>
             <DesignScrollView
-              overrideImages={design.ImageURLs}
+              overrideImages={images}
               scrollDistance={520}
+              onScrollFn={onScrollFn}
             />
           </div>
           <div className={styles["details-area"]}>
             <div>
-              <h2 className={styles["heading"]}>{`#${design.DesignNumber}`}</h2>
+              <h2
+                className={styles["heading"]}
+              >{`#${viewedDesign.DesignNumber}`}</h2>
               <p className={styles["subheading"]}>
                 Design details and description here
               </p>
-              <p>{design.Description}</p>
+              <p>{viewedDesign.Description}</p>
               <a className={styles["try-design-button"]} href="#">
                 TRY THIS DESIGN
               </a>

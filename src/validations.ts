@@ -16,6 +16,10 @@ export function validateSingleDesignJson(json: any) {
   return tempDesignWithImagesSchema.parse(json);
 }
 
+export function validateDesignArrayJson(json: any) {
+  return z.array(tempDesignWithImagesSchema).parse(json);
+}
+
 export function validateCategories(json: any) {
   return z.array(categoryDataSchema).parse(json);
 }

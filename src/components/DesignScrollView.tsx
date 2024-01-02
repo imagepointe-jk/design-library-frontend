@@ -11,8 +11,10 @@ type DesignScrollViewProps = {
   scrollDistance?: number;
   width?: number;
   overrideImages?: string[];
+  overrideScrollIndex?: number;
   squareContainer?: boolean;
   containerId?: string;
+  onScrollFn?: (scrollDirection: "left" | "right") => void;
 };
 
 const defaultImageSize = 250;
@@ -22,8 +24,10 @@ export function DesignScrollView({
   scrollDistance,
   width,
   overrideImages,
+  overrideScrollIndex,
   squareContainer,
   containerId,
+  onScrollFn,
 }: DesignScrollViewProps) {
   const [designs, setDesigns] = useState([] as TempDesignWithImages[]);
   const [isLoading, setIsLoading] = useState(overrideImages === undefined);
@@ -32,6 +36,9 @@ export function DesignScrollView({
   const scrollDistanceToUse = scrollDistance
     ? scrollDistance
     : defaultImageSize;
+  const scrollIndexToUse = overrideScrollIndex
+    ? overrideScrollIndex
+    : scrollIndex;
   const totalImages = overrideImages
     ? overrideImages.filter((image) => image !== "").length
     : designs.length;
@@ -56,6 +63,9 @@ export function DesignScrollView({
     const increment = direction === "left" ? -1 : 1;
     const newSliderIndex = clamp(scrollIndex + increment, 0, totalImages - 1);
     setScrollIndex(newSliderIndex);
+    if (onScrollFn) {
+      onScrollFn(direction);
+    }
   }
 
   useEffect(() => {
@@ -78,7 +88,7 @@ export function DesignScrollView({
         <div className={styles["designs-overflow-container"]}>
           <div
             className={styles["designs-row"]}
-            style={{ left: `${-1 * scrollDistanceToUse * scrollIndex}px` }}
+            style={{ left: `${-1 * scrollDistanceToUse * scrollIndexToUse}px` }}
           >
             {!overrideImages &&
               designs.map((design) => (
@@ -102,13 +112,13 @@ export function DesignScrollView({
       <ArrowButton
         className={styles["left-button"]}
         direction="left"
-        disabled={scrollIndex === 0}
+        disabled={scrollIndexToUse === 0}
         onClick={() => scroll("left")}
       />
       <ArrowButton
         className={styles["right-button"]}
         direction="right"
-        disabled={scrollIndex >= totalImages - 1}
+        disabled={scrollIndexToUse >= totalImages - 1}
         onClick={() => scroll("right")}
       />
     </div>

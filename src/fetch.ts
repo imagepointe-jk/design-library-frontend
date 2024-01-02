@@ -1,6 +1,7 @@
 import { CategoryHierarchy } from "./types";
 import {
   validateCategories,
+  validateDesignArrayJson,
   validateDesignResultsJson,
   validateSingleDesignJson,
   validateSubcategories,
@@ -39,6 +40,21 @@ export async function getDesignById(designId: number) {
   }
 
   return validateSingleDesignJson(json);
+}
+
+export async function getDesignsRelatedToId(designId: number) {
+  const response = await fetch(
+    `${serverURL()}/designs/${designId}?getRelatedToId=true`
+  );
+  const json = await response.json();
+  if (!response.ok) {
+    console.error(
+      `Error ${response.status} while retrieving designs. Message: ${json.message}`
+    );
+    throw new Error();
+  }
+
+  return validateDesignArrayJson(json);
 }
 
 export async function getSubcategories() {

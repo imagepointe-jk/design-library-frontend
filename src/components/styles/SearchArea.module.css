@@ -3,7 +3,6 @@
   justify-content: center;
   position: relative;
   max-width: 600px;
-  margin: auto;
   gap: 5px;
 }
 
@@ -30,6 +29,18 @@
   display: flex;
   justify-content: center;
   gap: 150px;
+}
+
+.form-in-modal {
+  height: 225px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 50px;
+}
+
+.form-in-modal .radio-buttons-container {
+  margin-top: 0;
 }
 
 @media screen and (max-width: 480px) {

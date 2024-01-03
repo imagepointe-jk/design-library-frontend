@@ -1,4 +1,8 @@
-import { defaultModalHeight } from "../constants";
+import {
+  defaultModalHeight,
+  searchModalHeight,
+  searchModalMaxWidth,
+} from "../constants";
 import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import {
@@ -8,8 +12,6 @@ import {
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import styles from "./styles/DesignLibrary.module.css";
-
-const searchModalHeight = 300;
 
 export function DesignLibraryControls() {
   const { parentWindowLocation } = useApp();
@@ -99,9 +101,13 @@ export function DesignLibraryControls() {
         <button
           className={styles["settings-button"]}
           onClick={() => {
-            requestParentWindowModalOpen("filters", {
-              height: defaultModalHeight,
-            });
+            requestParentWindowModalOpen(
+              "filters",
+              {
+                height: defaultModalHeight,
+              },
+              "default"
+            );
           }}
         >
           <i className="fa-solid fa-sliders"></i>
@@ -110,9 +116,13 @@ export function DesignLibraryControls() {
         <button
           className={styles["settings-button"]}
           onClick={() =>
-            requestParentWindowModalOpen("search", {
-              height: searchModalHeight,
-            })
+            requestParentWindowModalOpen(
+              "search",
+              {
+                height: searchModalHeight,
+              },
+              searchModalMaxWidth
+            )
           }
         >
           <i className="fa-solid fa-magnifying-glass"></i>

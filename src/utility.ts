@@ -65,7 +65,8 @@ export function requestParentWindowModalOpen(
   iframeSize: {
     width?: number;
     height?: number;
-  }
+  },
+  windowMaxWidth: number | "default"
 ) {
   window.parent.postMessage(
     {
@@ -73,6 +74,7 @@ export function requestParentWindowModalOpen(
       iframePathname,
       width: iframeSize.width,
       height: iframeSize.height,
+      windowMaxWidth,
     },
     "*"
   );

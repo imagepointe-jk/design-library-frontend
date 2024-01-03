@@ -9,6 +9,8 @@ import styles from "./styles/SearchArea.module.css";
 
 export function SearchArea() {
   const { parentWindowLocation } = useApp();
+  const ownPathName = window.location.pathname;
+  const isInModal = ownPathName === "/search"; //should display slightly differently when in modal
 
   function submitSearch(e: React.FormEvent<HTMLFormElement>) {
     if (!parentWindowLocation) return;
@@ -36,7 +38,10 @@ export function SearchArea() {
   }
 
   return (
-    <form onSubmit={submitSearch}>
+    <form
+      onSubmit={submitSearch}
+      className={isInModal ? styles["form-in-modal"] : undefined}
+    >
       <div className={styles["search-row"]}>
         <input
           type="search"

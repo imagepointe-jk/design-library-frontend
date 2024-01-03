@@ -23,9 +23,13 @@ export function DesignCard({
       href={`${domain}/design-library-new-designs/?designId=${designId}`}
       onClick={(e) => {
         e.preventDefault();
-        requestParentWindowModalOpen(`${designId}`, {
-          height: defaultModalHeight,
-        });
+        requestParentWindowModalOpen(
+          `${designId}`,
+          {
+            height: defaultModalHeight,
+          },
+          "default"
+        );
       }}
     >
       <div className={styles["img-container"]}>

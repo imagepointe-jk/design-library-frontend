@@ -45,11 +45,13 @@ export function Home() {
     <div className={`inner-body`}>
       <div className={styles["main"]}>
         <SearchArea />
-        <ImageScrollView
-          images={images}
-          scrollDistance={200}
-          isLoading={featuredDesignsLoading}
-        />
+        <div className={styles["featured-image-container"]}>
+          <ImageScrollView
+            images={images}
+            scrollDistance={200}
+            isLoading={featuredDesignsLoading}
+          />
+        </div>
       </div>
     </div>
   );

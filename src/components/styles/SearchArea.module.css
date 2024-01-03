@@ -36,4 +36,8 @@
   .search-row {
     flex-direction: column;
   }
+
+  .radio-buttons-container {
+    gap: 10px;
+  }
 }

@@ -4,7 +4,6 @@
 
 .main-flex {
   display: flex;
-  justify-content: space-between;
   justify-content: center;
   gap: 60px;
 }
@@ -37,6 +36,9 @@
 .subcategories-container {
   height: 300px;
   width: 250px;
+  border: 1px solid lightgray;
+  border-radius: 20px;
+  padding: 10px;
 }
 
 .preview-designs-area {
@@ -69,4 +71,30 @@
 
 .preview-design-image {
   width: 230px;
+}
+
+@media screen and (max-width: 1000px) {
+  .main-flex {
+    flex-direction: column;
+  }
+
+  .parent-category-column {
+    width: 300px;
+    margin: auto;
+  }
+
+  .subcategories-container {
+    width: 280px;
+    height: 200px;
+    margin: auto;
+  }
+
+  .subcategories-container label {
+    text-align: center;
+  }
+
+  .preview-designs-area {
+    margin: auto;
+    height: 300px;
+  }
 }

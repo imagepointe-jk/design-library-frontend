@@ -10,6 +10,7 @@ import { CategoryHierarchy } from "../types";
 
 type AppContextType = {
   categories: CategoryHierarchy[] | null;
+  categoriesLoading: boolean;
   parentWindowLocation: {
     origin: string;
     url: string;
@@ -24,6 +25,7 @@ export function useApp() {
   const context = useContext(AppContext);
   return {
     categories: context?.categories,
+    categoriesLoading: context?.categoriesLoading,
     parentWindowLocation: context?.parentWindowLocation,
   };
 }
@@ -32,6 +34,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState(
     null as CategoryHierarchy[] | null
   );
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [parentWindowLocation, setParentWindowLocation] = useState({
     origin: "",
     url: "",
@@ -56,8 +59,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
       );
       setCategories(categoriesWithHierarchy);
+      setCategoriesLoading(false);
     } catch (error) {
       console.error(error);
+      setCategoriesLoading(false);
     }
   }
 
@@ -98,6 +103,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     <AppContext.Provider
       value={{
         categories,
+        categoriesLoading,
         parentWindowLocation,
       }}
     >

@@ -12,11 +12,12 @@ import styles from "./styles/FilterModal.module.css";
 import { ImageScrollView } from "./ImageScrollView";
 import { TempDesignWithImages } from "../sharedTypes";
 import { getDesigns } from "../fetch";
+import { LoadingIndicator } from "./LoadingIndicator";
 
 const maxSubcategoriesBeforeScrollable = 15;
 
 export function FilterModal() {
-  const { categories, parentWindowLocation } = useApp();
+  const { categories, categoriesLoading, parentWindowLocation } = useApp();
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
   );
@@ -111,6 +112,7 @@ export function FilterModal() {
     getPreviewDesigns();
   }, [parentWindowLocation, pendingQueryParams]);
 
+  if (categoriesLoading) return <LoadingIndicator />;
   if (!categories) return <ErrorPage />;
 
   return (

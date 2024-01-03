@@ -28,7 +28,8 @@
 .radio-buttons-container {
   margin-top: 50px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 150px;
 }
 
 @media screen and (max-width: 480px) {

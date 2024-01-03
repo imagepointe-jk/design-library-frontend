@@ -11,3 +11,30 @@
 .nav-img-container {
   height: 100px;
 }
+
+@media screen and (max-width: 1000px) {
+  .main {
+    align-items: center;
+  }
+
+  .main-img-container {
+    width: 480px;
+    height: 480px;
+  }
+
+  .nav-img-container {
+    width: 480px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-img-container {
+    width: 240px;
+    height: 240px;
+  }
+
+  .nav-img-container {
+    width: 240px;
+    height: 60px;
+  }
+}

@@ -85,3 +85,37 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 1000px) {
+  .main-flex {
+    flex-direction: column;
+    margin: auto;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: initial;
+  }
+
+  .details-area {
+    justify-content: initial;
+    gap: 20px;
+  }
+
+  .description {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .bg-color-container {
+    flex-direction: column;
+  }
+}

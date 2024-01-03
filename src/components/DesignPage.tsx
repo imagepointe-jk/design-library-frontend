@@ -58,6 +58,9 @@ export function DesignPage({ designId }: DesignPageProps) {
     <>
       {viewedDesign && (
         <div className={styles["main-flex"]}>
+          <h2
+            className={`${styles["heading"]} ${styles["mobile-only"]}`}
+          >{`#${viewedDesign.DesignNumber}`}</h2>
           <div className={styles["gallery-container"]}>
             <DesignScrollView
               images={images}
@@ -70,12 +73,11 @@ export function DesignPage({ designId }: DesignPageProps) {
           <div className={styles["details-area"]}>
             <div>
               <h2
-                className={styles["heading"]}
+                className={`${styles["heading"]} ${styles["desktop-only"]}`}
               >{`#${viewedDesign.DesignNumber}`}</h2>
-              <p className={styles["subheading"]}>
-                Design details and description here
+              <p className={styles["description"]}>
+                {viewedDesign.Description}
               </p>
-              <p>{viewedDesign.Description}</p>
               <a className={styles["try-design-button"]} href="#">
                 TRY THIS DESIGN
               </a>

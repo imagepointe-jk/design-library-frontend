@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getDesignsRelatedToId } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
-import { DesignScrollView } from "./DesignScrollView";
 import styles from "./styles/DesignPage.module.css";
+import { DesignScrollView } from "./DesignScrollView";
 
 type DesignPageProps = {
   designId: number;
@@ -21,7 +21,7 @@ export function DesignPage({ designId }: DesignPageProps) {
       related.sort((a) => (a.Id === designId ? -1 : 1));
       setRelatedDesigns(related);
     } catch (error) {
-      console.error(error);
+      console.error("Error getting related designs: ", error);
     }
   }
 
@@ -60,9 +60,11 @@ export function DesignPage({ designId }: DesignPageProps) {
         <div className={styles["main-flex"]}>
           <div className={styles["gallery-container"]}>
             <DesignScrollView
-              overrideImages={images}
-              scrollDistance={520}
+              images={images}
+              mainScrollDistance={520}
               onScrollFn={onScrollFn}
+              viewedIndex={viewedIndex}
+              setViewedIndex={setViewedIndex}
             />
           </div>
           <div className={styles["details-area"]}>

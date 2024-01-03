@@ -9,7 +9,9 @@ import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
 import styles from "./styles/FilterModal.module.css";
-import { DesignScrollView } from "./DesignScrollView";
+import { ImageScrollView } from "./ImageScrollView";
+import { TempDesignWithImages } from "../sharedTypes";
+import { getDesigns } from "../fetch";
 
 const maxSubcategoriesBeforeScrollable = 15;
 
@@ -24,6 +26,10 @@ export function FilterModal() {
   const [pendingQueryParams, setPendingQueryParams] = useState(
     null as DesignQueryParams | null
   );
+  const [previewDesigns, setPreviewDesigns] = useState(
+    null as TempDesignWithImages[] | null
+  );
+  const [previewDesignsLoading, setPreviewDesignsLoading] = useState(true);
   const queryParamsToUse = pendingQueryParams
     ? pendingQueryParams
     : designQueryParams;
@@ -41,6 +47,9 @@ export function FilterModal() {
     : [];
 
   const buttonIdPrefix = "filter-modal-filter-button-";
+  const previewDesignImages = previewDesigns
+    ? previewDesigns.map((design) => design.ImageURLs[0])
+    : undefined;
 
   function clickFilterButton(
     buttonType: "Category" | "Subcategory",
@@ -67,13 +76,40 @@ export function FilterModal() {
     );
   }
 
-  const previewDesignsQueryParams: DesignQueryParams = {
-    ...queryParamsToUse,
-    countPerPage: 5,
-  };
-  const previewDesignsQueryString = buildDesignQueryParams(
-    previewDesignsQueryParams
-  );
+  async function getPreviewDesigns() {
+    if (
+      queryParamsToUse.category === undefined &&
+      queryParamsToUse.subcategory === undefined
+    ) {
+      setPreviewDesigns(null);
+      setPreviewDesignsLoading(false);
+      return;
+    }
+
+    const previewDesignsQueryParams: DesignQueryParams = {
+      ...queryParamsToUse,
+      countPerPage: 5,
+    };
+    const previewDesignsQueryString = buildDesignQueryParams(
+      previewDesignsQueryParams
+    );
+    try {
+      setPreviewDesignsLoading(true);
+      const results = await getDesigns(previewDesignsQueryString);
+      if (!results)
+        throw new Error("No design found for the filter selection.");
+      setPreviewDesigns(results.designs);
+      setPreviewDesignsLoading(false);
+    } catch (error) {
+      console.error("Couldn't get preview designs: ", error);
+      setPreviewDesigns(null);
+      setPreviewDesignsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getPreviewDesigns();
+  }, [parentWindowLocation, pendingQueryParams]);
 
   if (!categories) return <ErrorPage />;
 
@@ -138,7 +174,11 @@ export function FilterModal() {
         </div>
         <div className={styles["preview-designs-area"]}>
           <h4>Preview</h4>
-          <DesignScrollView queryString={previewDesignsQueryString} />
+          <ImageScrollView
+            images={previewDesignImages}
+            noImagesText="No Designs"
+            isLoading={previewDesignsLoading}
+          />
         </div>
       </div>
       <div className={styles["filter-action-button-row"]}>

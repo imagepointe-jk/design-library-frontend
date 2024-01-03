@@ -1,47 +1,13 @@
 .main {
-  height: 100%;
-  width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.no-results {
-  font-weight: 700;
-  font-size: var(--size-20);
+.main-img-container {
+  height: 520px;
 }
 
-.designs-overflow-container {
-  overflow: hidden;
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
-
-.designs-row {
-  display: flex;
-  position: absolute;
-  transition: 0.2s;
-  height: 100%;
-}
-
-.design-image {
-  height: 100%;
-}
-
-.left-button,
-.right-button {
-  position: absolute;
-  top: 50%;
-}
-
-.left-button {
-  left: 0;
-  translate: -70% -50%;
-}
-
-.right-button {
-  right: 0;
-  translate: 70% -50%;
+.nav-img-container {
+  height: 100px;
 }

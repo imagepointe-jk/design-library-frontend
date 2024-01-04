@@ -26,7 +26,14 @@
   height: 100%;
 }
 
+.single-image-container {
+  height: 100%;
+  aspect-ratio: 1;
+}
+
 .design-image {
+  display: block;
+  margin: auto;
   height: 100%;
 }
 

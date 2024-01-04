@@ -120,17 +120,19 @@ export function ImageScrollView({
               images.map((image, i) => (
                 <>
                   {image !== "" && (
-                    <img
-                      className={`${styles["design-image"]} ${
-                        highlightImageIndex !== undefined &&
-                        highlightImageIndex !== i
-                          ? styles["inactive-img"]
-                          : ""
-                      }`}
-                      src={image}
-                      onClick={onClickImg ? () => onClickImg(i) : undefined}
-                      style={{ cursor: onClickImg ? "pointer" : undefined }}
-                    />
+                    <div className={styles["single-image-container"]}>
+                      <img
+                        className={`${styles["design-image"]} ${
+                          highlightImageIndex !== undefined &&
+                          highlightImageIndex !== i
+                            ? styles["inactive-img"]
+                            : ""
+                        }`}
+                        src={image}
+                        onClick={onClickImg ? () => onClickImg(i) : undefined}
+                        style={{ cursor: onClickImg ? "pointer" : undefined }}
+                      />
+                    </div>
                   )}
                 </>
               ))}

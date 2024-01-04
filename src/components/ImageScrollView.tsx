@@ -1,26 +1,27 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clamp } from "../utility";
 import { ArrowButton } from "./ArrowButton";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ImageScrollView.module.css";
 
 type ImageScrollViewProps = {
-  scrollDistance?: number;
   height?: number;
   images?: string[];
   overrideScrollIndex?: number;
   highlightImageIndex?: number;
   isLoading?: boolean;
   noImagesText?: string;
-  onScrollFn?: (scrollDirection: "left" | "right") => void;
+  onScrollFn?: (
+    scrollDirection: "left" | "right",
+    maxScrollIndex: number
+  ) => void;
   onClickImg?: (clickedIndex: number) => void;
 };
 
-const defaultImageSize = 250;
 const defaultNoImagesText = "No Images";
 
+//TODO: The max scroll index, scroll distance, etc. need to derive from the width of some DOM elements. The below implementation is messy and unreliable. Should be refactored when there is time.
 export function ImageScrollView({
-  scrollDistance,
   images,
   overrideScrollIndex,
   highlightImageIndex,
@@ -30,24 +31,68 @@ export function ImageScrollView({
   noImagesText,
 }: ImageScrollViewProps) {
   const [scrollIndex, setScrollIndex] = useState(0);
-  const containerRef = useRef(null);
-  const scrollDistanceToUse = scrollDistance
-    ? scrollDistance
-    : defaultImageSize;
+  const [maxScrollIndex, setMaxScrollIndex] = useState(0);
+  const overflowContainerRef = useRef<null | HTMLDivElement>(null);
+  const imageRowRef = useRef<null | HTMLDivElement>(null);
   const scrollIndexToUse =
     overrideScrollIndex !== undefined ? overrideScrollIndex : scrollIndex;
   const totalImages = images
     ? images.filter((image) => image !== "").length
     : 0;
+  const scrollDistance = imageRowRef.current
+    ? imageRowRef.current.getBoundingClientRect().width / totalImages
+    : 0;
+
+  function calculateMaxScrollIndex() {
+    if (!overflowContainerRef.current || !imageRowRef.current) return 0;
+
+    const totalImages = images
+      ? images.filter((image) => image !== "").length
+      : 0;
+    const imageStripWidth = imageRowRef.current.getBoundingClientRect().width;
+    const viewWidth =
+      overflowContainerRef.current.getBoundingClientRect().width;
+    const imageWidth = totalImages > 0 ? imageStripWidth / totalImages : 0;
+    const calculated =
+      imageWidth > 0
+        ? Math.ceil((imageStripWidth - viewWidth) / imageWidth)
+        : 0;
+    const clampedToImgCount = clamp(calculated, 0, totalImages - 1);
+    return clampedToImgCount;
+  }
 
   function scroll(direction: "left" | "right") {
-    const increment = direction === "left" ? -1 : 1;
-    const newSliderIndex = clamp(scrollIndex + increment, 0, totalImages - 1);
-    setScrollIndex(newSliderIndex);
+    if (overrideScrollIndex === undefined) {
+      const increment = direction === "left" ? -1 : 1;
+      const newScrollIndex = scrollIndex + increment;
+      const clampedScrollIndex = clamp(newScrollIndex, 0, maxScrollIndex);
+      setScrollIndex(clampedScrollIndex);
+    }
+
     if (onScrollFn) {
-      onScrollFn(direction);
+      onScrollFn(direction, maxScrollIndex);
     }
   }
+
+  function updateMaxScroll() {
+    const newMaxScrollIndex = calculateMaxScrollIndex();
+    setMaxScrollIndex(newMaxScrollIndex);
+  }
+
+  useEffect(() => {
+    updateMaxScroll();
+  }, [images]);
+
+  useEffect(() => {
+    if (!imageRowRef.current) return;
+
+    const resizeObserver = new ResizeObserver(updateMaxScroll);
+    resizeObserver.observe(imageRowRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   const imagesReady =
     images !== undefined && images !== null && totalImages > 0;
@@ -62,10 +107,14 @@ export function ImageScrollView({
       )}
 
       {!isLoading && totalImages > 0 && (
-        <div className={styles["designs-overflow-container"]}>
+        <div
+          ref={overflowContainerRef}
+          className={styles["designs-overflow-container"]}
+        >
           <div
+            ref={imageRowRef}
             className={styles["designs-row"]}
-            style={{ left: `${-1 * scrollDistanceToUse * scrollIndexToUse}px` }}
+            style={{ left: `${-1 * scrollDistance * scrollIndexToUse}px` }}
           >
             {images &&
               images.map((image, i) => (
@@ -98,7 +147,7 @@ export function ImageScrollView({
       <ArrowButton
         className={styles["right-button"]}
         direction="right"
-        disabled={scrollIndexToUse >= totalImages - 1}
+        disabled={scrollIndexToUse >= maxScrollIndex}
         onClick={() => scroll("right")}
       />
     </div>

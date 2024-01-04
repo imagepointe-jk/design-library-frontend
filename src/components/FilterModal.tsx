@@ -51,6 +51,7 @@ export function FilterModal() {
   const previewDesignImages = previewDesigns
     ? previewDesigns.map((design) => design.ImageURLs[0])
     : undefined;
+  const scrollViewKey = btoa(JSON.stringify(previewDesignImages));
 
   function clickFilterButton(
     buttonType: "Category" | "Subcategory",
@@ -177,6 +178,7 @@ export function FilterModal() {
         <div className={styles["preview-designs-area"]}>
           <h4>Preview</h4>
           <ImageScrollView
+            key={scrollViewKey}
             images={previewDesignImages}
             noImagesText="No Designs"
             isLoading={previewDesignsLoading}

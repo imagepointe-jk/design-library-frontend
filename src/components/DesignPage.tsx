@@ -3,6 +3,7 @@ import { getDesignsRelatedToId } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
 import styles from "./styles/DesignPage.module.css";
 import { DesignScrollView } from "./DesignScrollView";
+import { clamp } from "../utility";
 
 type DesignPageProps = {
   designId: number;
@@ -25,9 +26,14 @@ export function DesignPage({ designId }: DesignPageProps) {
     }
   }
 
-  function onScrollFn(direction: "left" | "right") {
+  function onScrollFn(direction: "left" | "right", maxScrollIndex: number) {
     const increment = direction === "left" ? -1 : 1;
-    setViewedIndex(viewedIndex + increment);
+    const clampedViewedIndex = clamp(
+      viewedIndex + increment,
+      0,
+      maxScrollIndex
+    );
+    setViewedIndex(clampedViewedIndex);
   }
 
   useEffect(() => {
@@ -64,7 +70,6 @@ export function DesignPage({ designId }: DesignPageProps) {
           <div className={styles["gallery-container"]}>
             <DesignScrollView
               images={images}
-              mainScrollDistance={520}
               onScrollFn={onScrollFn}
               viewedIndex={viewedIndex}
               setViewedIndex={setViewedIndex}

@@ -46,11 +46,7 @@ export function Home() {
       <div className={styles["main"]}>
         <SearchArea />
         <div className={styles["featured-image-container"]}>
-          <ImageScrollView
-            images={images}
-            scrollDistance={200}
-            isLoading={featuredDesignsLoading}
-          />
+          <ImageScrollView images={images} isLoading={featuredDesignsLoading} />
         </div>
       </div>
     </div>

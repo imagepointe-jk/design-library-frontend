@@ -1,3 +1,4 @@
+import { TempDesign } from "./sharedTypes";
 import { DesignQueryParams } from "./types";
 
 export function deduplicateStrings(strings: string[]) {
@@ -165,4 +166,35 @@ export function addEllipsisToNumberArray(array: number[]): (number | "...")[] {
     if (deltaToNext > 1) newArr.push("...");
   }
   return newArr;
+}
+
+export function getDesignTags(design: TempDesign) {
+  const {
+    Tag1,
+    Tag2,
+    Tag3,
+    Tag4,
+    Tag5,
+    Tag6,
+    Tag7,
+    Tag8,
+    Tag9,
+    Tag10,
+    Tag11,
+    Tag12,
+  } = design;
+  return [
+    Tag1,
+    Tag2,
+    Tag3,
+    Tag4,
+    Tag5,
+    Tag6,
+    Tag7,
+    Tag8,
+    Tag9,
+    Tag10,
+    Tag11,
+    Tag12,
+  ];
 }

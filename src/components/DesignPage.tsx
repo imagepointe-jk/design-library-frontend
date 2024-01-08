@@ -3,7 +3,7 @@ import { getDesignsRelatedToId } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
 import styles from "./styles/DesignPage.module.css";
 import { DesignScrollView } from "./DesignScrollView";
-import { clamp } from "../utility";
+import { clamp, getDesignTags } from "../utility";
 
 type DesignPageProps = {
   designId: number;
@@ -49,13 +49,9 @@ export function DesignPage({ designId }: DesignPageProps) {
     viewedDesign?.Subcategory4,
     viewedDesign?.Subcategory5,
   ].filter((sub) => sub !== undefined);
-  const tags = [
-    viewedDesign?.Tag1,
-    viewedDesign?.Tag2,
-    viewedDesign?.Tag3,
-    viewedDesign?.Tag4,
-    viewedDesign?.Tag5,
-  ].filter((sub) => sub !== undefined);
+  const tags = viewedDesign
+    ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
+    : [];
   const images = relatedDesigns
     ? relatedDesigns.map((design) => design.ImageURLs[0] || "")
     : [];

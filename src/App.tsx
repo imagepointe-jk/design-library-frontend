@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./App.css";
 import { useApp } from "./components/AppProvider";
 import { DesignLibrary } from "./components/DesignLibrary";
@@ -29,17 +30,21 @@ function App() {
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
-  if (
-    !showHome &&
-    !showLibrary &&
-    designIdToUse === undefined &&
-    !showSearch &&
-    !showFilters
-  ) {
-    console.log("Routing error");
-  } else {
-    console.log("No routing error");
-  }
+  useEffect(() => {
+    setTimeout(() => {
+      if (
+        !showHome &&
+        !showLibrary &&
+        designIdToUse === undefined &&
+        !showSearch &&
+        !showFilters
+      ) {
+        console.error(
+          `Routing error detected! parent path name = ${parentWindowLocation?.pathname}, ownDesignId = ${ownDesignId}, parentDesignId = ${parentDesignId}, own path name = ${ownPathname}`
+        );
+      }
+    }, 10000);
+  }, []);
 
   if (showHome) return <Home />;
   if (showSearch) return <SearchArea />;

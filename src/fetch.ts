@@ -15,7 +15,7 @@ const serverURL = () =>
       import.meta.env.VITE_SERVER_URL;
 
 export async function getDesigns(queryParamsString: string) {
-  console.log(`fetch url ${serverURL()}/designs?${queryParamsString}`);
+  console.error(`fetch url ${serverURL()}/designs?${queryParamsString}`);
   const response = await fetch(`${serverURL()}/designs?${queryParamsString}`);
   const json = await response.json();
   if (response.status === 404) {

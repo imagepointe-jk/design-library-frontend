@@ -99,6 +99,9 @@ export function FilterModal() {
     );
     try {
       setPreviewDesignsLoading(true);
+      console.log(
+        `Trying to get preview designs with string ${previewDesignsQueryString}`
+      );
       const results = await getDesigns(previewDesignsQueryString);
       if (!results)
         throw new Error("No design found for the filter selection.");

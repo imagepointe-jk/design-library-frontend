@@ -97,19 +97,14 @@ export function FilterModal() {
     const previewDesignsQueryString = buildDesignQueryParams(
       previewDesignsQueryParams
     );
-    console.log("message 1");
     try {
       setPreviewDesignsLoading(true);
-      console.log(
-        `Trying to get preview designs with string ${previewDesignsQueryString}`
-      );
       const results = await getDesigns(previewDesignsQueryString);
       if (!results)
         throw new Error("No design found for the filter selection.");
       setPreviewDesigns(results.designs);
       setPreviewDesignsLoading(false);
     } catch (error) {
-      console.log("message 2");
       console.error("Couldn't get preview designs: ", error);
       setPreviewDesigns(null);
       setPreviewDesignsLoading(false);

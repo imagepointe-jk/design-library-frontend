@@ -97,6 +97,7 @@ export function FilterModal() {
     const previewDesignsQueryString = buildDesignQueryParams(
       previewDesignsQueryParams
     );
+    console.log("message 1");
     try {
       setPreviewDesignsLoading(true);
       console.log(
@@ -108,6 +109,7 @@ export function FilterModal() {
       setPreviewDesigns(results.designs);
       setPreviewDesignsLoading(false);
     } catch (error) {
+      console.log("message 2");
       console.error("Couldn't get preview designs: ", error);
       setPreviewDesigns(null);
       setPreviewDesignsLoading(false);

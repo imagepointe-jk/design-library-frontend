@@ -66,6 +66,7 @@ export function FilterModal() {
       newParams.subcategory = value || undefined;
     }
     newParams.featuredOnly = false;
+    newParams.pageNumber = 1;
 
     setPendingQueryParams(newParams);
   }
@@ -90,6 +91,7 @@ export function FilterModal() {
 
     const previewDesignsQueryParams: DesignQueryParams = {
       ...queryParamsToUse,
+      pageNumber: 1,
       countPerPage: 5,
     };
     const previewDesignsQueryString = buildDesignQueryParams(

@@ -16,10 +16,10 @@ export function makeStringTitleCase(str: string) {
 export function buildDesignQueryParams(params: DesignQueryParams) {
   const tagsParam = params.tags ? `tags=${params.tags.join(",")}` : undefined;
   const subcategoryParam = params.subcategory
-    ? `subcategories=${params.subcategory}` //this will be a comma separated list if we decide to allow multiple subcategories
+    ? `subcategories=${encodeURIComponent(params.subcategory)}` //this will be a comma separated list if we decide to allow multiple subcategories
     : undefined;
   const categoryParam = params.category
-    ? `category=${params.category}`
+    ? `category=${encodeURIComponent(params.category)}`
     : undefined;
   const keywordsParam = params.keywords
     ? `keywords=${params.keywords.join(",")}`

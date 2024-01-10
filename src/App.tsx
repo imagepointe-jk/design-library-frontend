@@ -29,6 +29,18 @@ function App() {
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
+  if (
+    !showHome &&
+    !showLibrary &&
+    designIdToUse === undefined &&
+    !showSearch &&
+    !showFilters
+  ) {
+    console.log("Routing error");
+  } else {
+    console.log("No routing error");
+  }
+
   if (showHome) return <Home />;
   if (showSearch) return <SearchArea />;
   if (showFilters) return <FilterModal />;

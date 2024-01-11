@@ -28,6 +28,10 @@ export function validateSubcategories(json: any) {
   return z.array(subcategoryDataSchema).parse(json);
 }
 
+export function validateColors(json: any) {
+  return z.array(z.string()).parse(json);
+}
+
 function tryParseDesignType(str: string) {
   try {
     return designTypeSchema.parse(str);

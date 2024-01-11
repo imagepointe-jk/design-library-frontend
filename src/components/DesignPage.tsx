@@ -3,7 +3,13 @@ import { getDesignsRelatedToId } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
 import styles from "./styles/DesignPage.module.css";
 import { DesignScrollView } from "./DesignScrollView";
-import { clamp, getDesignTags } from "../utility";
+import {
+  clamp,
+  getDesignDefaultBackgroundColor,
+  getDesignTags,
+  getFirstHexCodeInString,
+} from "../utility";
+import { useApp } from "./AppProvider";
 
 type DesignPageProps = {
   designId: number;
@@ -14,7 +20,7 @@ export function DesignPage({ designId }: DesignPageProps) {
     TempDesignWithImages[] | null
   >(null);
   const [viewedIndex, setViewedIndex] = useState(0);
-  const [bgColor, setBgColor] = useState<string | undefined>(undefined);
+  const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
 
   async function getDesignsToDisplay() {
     try {
@@ -34,14 +40,23 @@ export function DesignPage({ designId }: DesignPageProps) {
       maxScrollIndex
     );
     setViewedIndex(clampedViewedIndex);
+    setSelectedBgColor(null);
+  }
+
+  function onClickColor(clickedColor: string) {
+    setSelectedBgColor(clickedColor);
   }
 
   useEffect(() => {
     getDesignsToDisplay();
   }, []);
 
-  // const bgColorToUse = bgColor ? bgColor : design?.DefaultBackgroundColor;
   const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
+  const viewedDesignBgColor =
+    (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
+  const selectedHexCode =
+    selectedBgColor && getFirstHexCodeInString(selectedBgColor);
+  const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
   const filters = [
     viewedDesign?.Subcategory1,
     viewedDesign?.Subcategory2,
@@ -69,6 +84,7 @@ export function DesignPage({ designId }: DesignPageProps) {
               onScrollFn={onScrollFn}
               viewedIndex={viewedIndex}
               setViewedIndex={setViewedIndex}
+              backgroundColor={bgColorToUse}
             />
           </div>
           <div className={styles["details-area"]}>
@@ -84,18 +100,10 @@ export function DesignPage({ designId }: DesignPageProps) {
               </a>
             </div>
             <div>
-              <div className={styles["bg-color-container"]}>
-                <div>Change Background</div>
-                <button className={styles["bg-color-button"]}>
-                  <input
-                    className={styles["color-picker"]}
-                    type="color"
-                    onChange={(e) => setBgColor(e.target.value)}
-                  />
-                  <img src="/colorwheel.png" alt="color wheel" />
-                  <div>Choose a Color</div>
-                </button>
-              </div>
+              <BackgroundColorChanger
+                selectedColor={selectedBgColor}
+                onClickColor={onClickColor}
+              />
               <div className={styles["filters-tags-container"]}>
                 <div>
                   <p className="bold">Filters</p>
@@ -126,5 +134,68 @@ export function DesignPage({ designId }: DesignPageProps) {
         </div>
       )}
     </>
+  );
+}
+
+type BackgroundColorChangerProps = {
+  selectedColor: string | null;
+  onClickColor: (clickedColor: string) => void;
+};
+
+function BackgroundColorChanger({
+  onClickColor,
+  selectedColor,
+}: BackgroundColorChangerProps) {
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const { colors } = useApp();
+
+  // const selectedColorName = selectedColor?.split(" - ")[1];
+
+  //code for showing selected color name is commented out
+  //until the feature is requested
+  return (
+    <div className={styles["bg-color-container"]}>
+      <div>
+        <div>Change Background</div>
+        {/* {selectedColorName && (
+          <div>
+            {"("}Viewing:{" "}
+            <span className={styles["selected-color-name"]}>
+              {selectedColorName}
+            </span>
+            {")"}
+          </div>
+        )} */}
+      </div>
+      <button
+        className={styles["bg-color-button"]}
+        onClick={() => setShowColorPicker(!showColorPicker)}
+      >
+        <img src="/colorwheel.png" alt="color wheel" />
+        <div>Choose a Color</div>
+        {showColorPicker && (
+          <div
+            className={styles["color-picker"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles["color-picker-swatches-container"]}>
+              {colors &&
+                colors.map((color) => (
+                  <div
+                    className={`${styles["color-picker-swatch"]} ${
+                      color === selectedColor ? styles["selected-swatch"] : ""
+                    }`}
+                    style={{
+                      backgroundColor:
+                        getFirstHexCodeInString(color) || "white",
+                    }}
+                    onClick={() => onClickColor(color)}
+                  ></div>
+                ))}
+            </div>
+          </div>
+        )}
+      </button>
+    </div>
   );
 }

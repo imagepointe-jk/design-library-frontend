@@ -9,6 +9,7 @@ type DesignScrollViewProps = {
     scrollDirection: "left" | "right",
     maxScrollIndex: number
   ) => void;
+  backgroundColor?: string;
 };
 
 export function DesignScrollView({
@@ -16,10 +17,15 @@ export function DesignScrollView({
   images,
   viewedIndex,
   setViewedIndex,
+  backgroundColor,
 }: DesignScrollViewProps) {
   return (
     <div className={styles["main"]}>
       <div className={styles["main-img-container"]}>
+        <div
+          className={styles["bg-color-backdrop"]}
+          style={{ backgroundColor: backgroundColor || "white" }}
+        ></div>
         <ImageScrollView
           images={images}
           onScrollFn={onScrollFn}

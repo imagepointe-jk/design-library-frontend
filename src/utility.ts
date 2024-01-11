@@ -198,3 +198,17 @@ export function getDesignTags(design: TempDesign) {
     Tag12,
   ];
 }
+
+export function getFirstHexCodeInString(str: string) {
+  const match = str.match(/#[a-zA-Z\d]{6}/g);
+  return match ? match[0] : null;
+}
+
+export function getDesignDefaultBackgroundColor(design: TempDesign) {
+  const hexCode = getFirstHexCodeInString(design.DefaultBackgroundColor);
+  if (!hexCode)
+    console.error(
+      `Couldn't find hex code in ${design.DefaultBackgroundColor} for design ${design.DesignNumber}`
+    );
+  return hexCode;
+}

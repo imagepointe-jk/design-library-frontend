@@ -26,6 +26,7 @@
   font-size: initial;
   cursor: pointer;
   position: relative;
+  width: 220px;
 }
 
 .try-design-button {
@@ -70,11 +71,38 @@
 
 .color-picker {
   position: absolute;
-  opacity: 0;
-  left: 50%;
-  translate: -50% 0;
-  scale: 340% 180%;
-  cursor: pointer;
+  min-height: 100px;
+  left: -5px;
+  right: -5px;
+  top: 0;
+  translate: 0% -107%;
+  border-radius: 10px;
+  padding: 8px;
+  border: 3px solid var(--color-alpha);
+  background-color: white;
+}
+
+.color-picker-swatches-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.color-picker-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;
+  border: 1px solid black;
+}
+
+.selected-swatch {
+  scale: 125%;
+  border-width: 2px;
+}
+
+.selected-color-name {
+  font-weight: 700;
 }
 
 .filters-tags-container div {

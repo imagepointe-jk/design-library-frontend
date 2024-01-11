@@ -35,6 +35,8 @@
   display: block;
   margin: auto;
   height: 100%;
+  scale: 90%;
+  /* temporarily scaled down to show background color feature */
 }
 
 .left-button,

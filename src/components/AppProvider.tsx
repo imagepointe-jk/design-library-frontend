@@ -5,10 +5,11 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getCategories, getSubcategories } from "../fetch";
+import { getCategories, getColors, getSubcategories } from "../fetch";
 import { CategoryHierarchy } from "../types";
 
 type AppContextType = {
+  colors: string[] | null;
   categories: CategoryHierarchy[] | null;
   categoriesLoading: boolean;
   parentWindowLocation: {
@@ -24,6 +25,7 @@ const AppContext = createContext(null as AppContextType | null);
 export function useApp() {
   const context = useContext(AppContext);
   return {
+    colors: context?.colors,
     categories: context?.categories,
     categoriesLoading: context?.categoriesLoading,
     parentWindowLocation: context?.parentWindowLocation,
@@ -34,6 +36,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState(
     null as CategoryHierarchy[] | null
   );
+  const [colors, setColors] = useState(null as string[] | null);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [parentWindowLocation, setParentWindowLocation] = useState({
     origin: "",
@@ -41,6 +44,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     pathname: "",
     search: "",
   });
+
+  async function fetchColors() {
+    try {
+      const colors = await getColors();
+      setColors(colors);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function fetchCategories() {
     try {
@@ -84,6 +96,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
+    fetchColors();
     fetchCategories();
     window.addEventListener("message", handleMessage);
     window.parent.postMessage(
@@ -102,6 +115,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   return (
     <AppContext.Provider
       value={{
+        colors,
         categories,
         categoriesLoading,
         parentWindowLocation,

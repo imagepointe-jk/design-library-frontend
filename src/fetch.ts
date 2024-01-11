@@ -1,6 +1,7 @@
 import { CategoryHierarchy } from "./types";
 import {
   validateCategories,
+  validateColors,
   validateDesignArrayJson,
   validateDesignResultsJson,
   validateSingleDesignJson,
@@ -108,4 +109,17 @@ export async function getCategoriesWithHierarchy() {
   );
 
   return categoriesWithHierarchy;
+}
+
+export async function getColors() {
+  const response = await fetch(`${serverURL()}/colors`);
+  const json = await response.json();
+  if (!response.ok) {
+    console.error(
+      `Error ${response.status} while retrieving colors. Message: ${json.message}`
+    );
+    throw new Error();
+  }
+
+  return validateColors(json);
 }

@@ -7,7 +7,11 @@ import {
 import { useApp } from "./AppProvider";
 import styles from "./styles/SearchArea.module.css";
 
-export function SearchArea() {
+type SearchAreaProps = {
+  onChangeDesignType?: (clickedValue: string) => void;
+};
+
+export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
   const { parentWindowLocation } = useApp();
   const ownPathName = window.location.pathname;
   const isInModal = ownPathName === "/search"; //should display slightly differently when in modal
@@ -60,6 +64,9 @@ export function SearchArea() {
               id={`search-modal-${designType}`}
               defaultChecked={designType === "Screen Print"}
               value={designType}
+              onChange={(e) => {
+                if (onChangeDesignType) onChangeDesignType(e.target.value);
+              }}
             />
             {designType}
           </label>

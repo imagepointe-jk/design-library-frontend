@@ -4,8 +4,9 @@ import { ImageScrollView } from "./ImageScrollView";
 import { SearchArea } from "./SearchArea";
 import styles from "./styles/Home.module.css";
 import { useEffect, useState } from "react";
-import { TempDesignWithImages } from "../sharedTypes";
+import { DesignType, TempDesignWithImages } from "../sharedTypes";
 import { getDesigns } from "../fetch";
+import { tryParseDesignType } from "../validations";
 
 export function Home() {
   const [featuredDesigns, setFeaturedDesigns] = useState(
@@ -13,9 +14,9 @@ export function Home() {
   );
   const [featuredDesignsLoading, setFeaturedDesignsLoading] = useState(true);
 
-  async function getFeaturedDesigns() {
+  async function getFeaturedDesigns(designType: DesignType) {
     const featuredQueryParams: DesignQueryParams = {
-      designType: "Screen Print",
+      designType,
       featuredOnly: true,
       pageNumber: 1,
       countPerPage: 20,
@@ -33,8 +34,13 @@ export function Home() {
     }
   }
 
+  function onChangeDesignType(clickedValue: string) {
+    const parsed = tryParseDesignType(clickedValue);
+    if (parsed) getFeaturedDesigns(parsed);
+  }
+
   useEffect(() => {
-    getFeaturedDesigns();
+    getFeaturedDesigns("Screen Print");
   }, []);
 
   const images = featuredDesigns
@@ -44,7 +50,7 @@ export function Home() {
   return (
     <div className={`inner-body`}>
       <div className={styles["main"]}>
-        <SearchArea />
+        <SearchArea onChangeDesignType={onChangeDesignType} />
         <div className={styles["featured-image-container"]}>
           <ImageScrollView images={images} isLoading={featuredDesignsLoading} />
         </div>

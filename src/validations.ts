@@ -32,7 +32,7 @@ export function validateColors(json: any) {
   return z.array(z.string()).parse(json);
 }
 
-function tryParseDesignType(str: string) {
+export function tryParseDesignType(str: string) {
   try {
     return designTypeSchema.parse(str);
   } catch (_) {

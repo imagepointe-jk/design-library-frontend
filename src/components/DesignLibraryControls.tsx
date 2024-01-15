@@ -30,7 +30,7 @@ export function DesignLibraryControls() {
       designType: newType,
       category: undefined,
       subcategory: undefined,
-      featuredOnly: true,
+      featuredOnly: newType === "Screen Print",
       pageNumber: 1,
     };
     requestParentWindowQueryChange(parentWindowLocation.url, newParams);

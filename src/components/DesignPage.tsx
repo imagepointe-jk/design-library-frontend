@@ -70,6 +70,8 @@ export function DesignPage({ designId }: DesignPageProps) {
   const images = relatedDesigns
     ? relatedDesigns.map((design) => design.ImageURLs[0] || "")
     : [];
+  const showColorChangeSection =
+    relatedDesigns && relatedDesigns[0].DesignType === "Screen Print";
 
   return (
     <>
@@ -100,10 +102,12 @@ export function DesignPage({ designId }: DesignPageProps) {
               </a>
             </div>
             <div>
-              <BackgroundColorChanger
-                selectedColor={selectedBgColor}
-                onClickColor={onClickColor}
-              />
+              {showColorChangeSection && (
+                <BackgroundColorChanger
+                  selectedColor={selectedBgColor}
+                  onClickColor={onClickColor}
+                />
+              )}
               <div className={styles["filters-tags-container"]}>
                 <div>
                   <p className="bold">Filters</p>

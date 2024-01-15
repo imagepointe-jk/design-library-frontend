@@ -97,9 +97,6 @@ export function DesignPage({ designId }: DesignPageProps) {
               <p className={styles["description"]}>
                 {viewedDesign.Description}
               </p>
-              <a className={styles["try-design-button"]} href="#">
-                TRY THIS DESIGN
-              </a>
             </div>
             <div>
               {showColorChangeSection && (
@@ -133,6 +130,9 @@ export function DesignPage({ designId }: DesignPageProps) {
                   </p>
                 </div>
               </div>
+              <a className={styles["try-design-button"]} href="#">
+                TRY THIS DESIGN
+              </a>
             </div>
           </div>
         </div>

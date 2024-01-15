@@ -120,7 +120,7 @@ export function FilterModal() {
 
   return (
     <>
-      <h2>Screen Print Design Library Filters</h2>
+      <h2>{designQueryParams.designType} Design Library Filters</h2>
       <p className={styles["instructions"]}>
         Select a main category on the left and a subcategory below
       </p>

@@ -6,6 +6,7 @@ import { DesignPage } from "./components/DesignPage";
 import { FilterModal } from "./components/FilterModal";
 import { Home } from "./components/Home";
 import { SearchArea } from "./components/SearchArea";
+import { ErrorPage } from "./components/ErrorScreen";
 
 function App() {
   const { parentWindowLocation } = useApp();
@@ -30,27 +31,28 @@ function App() {
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
-  function handleMessage(e: MessageEvent) {
-    if (e.data.type === "design-library-status-check") {
-      console.log(
-        `Received status check from parent window; showHome = ${showHome}, showLibrary = ${showLibrary}, designIdToUse = ${designIdToUse}, showSearch = ${showSearch}, showFilters = ${showFilters}`
-      );
-    }
-  }
+  // function handleMessage(e: MessageEvent) {
+  //   if (e.data.type === "design-library-status-check") {
+  //     console.log(
+  //       `Received status check from parent window; showHome = ${showHome}, showLibrary = ${showLibrary}, designIdToUse = ${designIdToUse}, showSearch = ${showSearch}, showFilters = ${showFilters}`
+  //     );
+  //   }
+  // }
 
-  useEffect(() => {
-    window.addEventListener("message", handleMessage);
+  // useEffect(() => {
+  //   window.addEventListener("message", handleMessage);
 
-    return () => {
-      window.removeEventListener("message", handleMessage);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("message", handleMessage);
+  //   };
+  // }, []);
 
   if (showHome) return <Home />;
-  if (showSearch) return <SearchArea />;
-  if (showFilters) return <FilterModal />;
-  if (designIdToUse) return <DesignPage designId={designIdToUse} />;
-  if (showLibrary) return <DesignLibrary />;
+  else if (showSearch) return <SearchArea />;
+  else if (showFilters) return <FilterModal />;
+  else if (designIdToUse) return <DesignPage designId={designIdToUse} />;
+  else if (showLibrary) return <DesignLibrary />;
+  else return <ErrorPage />;
 }
 
 export default App;

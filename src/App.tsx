@@ -31,22 +31,6 @@ function App() {
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
-  // function handleMessage(e: MessageEvent) {
-  //   if (e.data.type === "design-library-status-check") {
-  //     console.log(
-  //       `Received status check from parent window; showHome = ${showHome}, showLibrary = ${showLibrary}, designIdToUse = ${designIdToUse}, showSearch = ${showSearch}, showFilters = ${showFilters}`
-  //     );
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   window.addEventListener("message", handleMessage);
-
-  //   return () => {
-  //     window.removeEventListener("message", handleMessage);
-  //   };
-  // }, []);
-
   if (showHome) return <Home />;
   else if (showSearch) return <SearchArea />;
   else if (showFilters) return <FilterModal />;

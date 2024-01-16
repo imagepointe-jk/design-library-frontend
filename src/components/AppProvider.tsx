@@ -91,10 +91,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       if (e.data.type === "design-library-url-retrieve-response") {
         const ready =
-          e.origin !== "" &&
-          e.data.pathname !== "" &&
-          e.data.search !== "" &&
-          e.data.url !== "";
+          e.origin !== "" && e.data.pathname !== "" && e.data.url !== "";
         if (ready) {
           setParentWindowLocation({
             origin: e.origin,

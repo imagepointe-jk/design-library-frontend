@@ -112,6 +112,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("Parent window location changed to", parentWindowLocation);
+  }, [parentWindowLocation]);
+
   return (
     <AppContext.Provider
       value={{

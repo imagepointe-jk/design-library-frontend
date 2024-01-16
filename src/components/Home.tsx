@@ -17,7 +17,7 @@ export function Home() {
   async function getFeaturedDesigns(designType: DesignType) {
     const featuredQueryParams: DesignQueryParams = {
       designType,
-      featuredOnly: true,
+      featuredOnly: designType === "Screen Print",
       pageNumber: 1,
       countPerPage: 20,
     };

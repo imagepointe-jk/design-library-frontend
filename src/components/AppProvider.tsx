@@ -115,8 +115,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  useEffect(() => {}, [parentWindowLocation]);
-
   return (
     <AppContext.Provider
       value={{

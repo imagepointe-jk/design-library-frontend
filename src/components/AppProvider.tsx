@@ -79,53 +79,87 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function handleMessage(e: MessageEvent) {
-    const allowed = true; //TODO: Actually add allowed origins
-    if (!allowed) {
-      console.log("Received a message from disallowed origin " + e.origin);
-      return;
-    }
+  // function handleMessage(e: MessageEvent) {
+  //   const allowed = true; //TODO: Actually add allowed origins
+  //   if (!allowed) {
+  //     console.log("Received a message from disallowed origin " + e.origin);
+  //     return;
+  //   }
 
-    if (e.data.type === "design-library-url-retrieve-response") {
-      const ready =
-        e.origin !== "" &&
-        e.data.pathname !== "" &&
-        e.data.search !== "" &&
-        e.data.url !== "";
-      console.log(
-        `Received URL retrieval response; is origin empty? origin = ${
-          e.origin
-        }, ${e.origin === ""}; is pathname empty? pathname = ${
-          e.data.pathname
-        }, ${e.data.pathname === ""}; is search empty? search = ${
-          e.data.search
-        }, ${e.data.search === ""}; is url empty? url = ${e.data.url}, ${
-          e.data.url === ""
-        }`
-      );
-      if (ready) {
-        setParentWindowLocation({
-          origin: e.origin,
-          pathname: e.data.pathname,
-          search: e.data.search,
-          url: e.data.url,
-        });
-      } else {
-        setTimeout(() => {
-          requestParentWindowURL();
-        }, 1000);
-      }
-    }
-  }
+  //   if (e.data.type === "design-library-url-retrieve-response") {
+  //     const ready =
+  //       e.origin !== "" &&
+  //       e.data.pathname !== "" &&
+  //       e.data.search !== "" &&
+  //       e.data.url !== "";
+  //     console.log(
+  //       `Received URL retrieval response; is origin empty? origin = ${
+  //         e.origin
+  //       }, ${e.origin === ""}; is pathname empty? pathname = ${
+  //         e.data.pathname
+  //       }, ${e.data.pathname === ""}; is search empty? search = ${
+  //         e.data.search
+  //       }, ${e.data.search === ""}; is url empty? url = ${e.data.url}, ${
+  //         e.data.url === ""
+  //       }`
+  //     );
+  //     if (ready) {
+  //       setParentWindowLocation({
+  //         origin: e.origin,
+  //         pathname: e.data.pathname,
+  //         search: e.data.search,
+  //         url: e.data.url,
+  //       });
+  //     } else {
+  //       setTimeout(() => {
+  //         requestParentWindowURL();
+  //       }, 1000);
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     fetchColors();
     fetchCategories();
-    window.addEventListener("message", handleMessage);
-    requestParentWindowURL();
+
+    const handleResponse = (e: MessageEvent) => {
+      if (e.data.type === "design-library-url-retrieve-response") {
+        const ready =
+          e.origin !== "" &&
+          e.data.pathname !== "" &&
+          e.data.search !== "" &&
+          e.data.url !== "";
+        console.log(
+          `Received URL retrieval response; is origin empty? origin = ${
+            e.origin
+          }, ${e.origin === ""}; is pathname empty? pathname = ${
+            e.data.pathname
+          }, ${e.data.pathname === ""}; is search empty? search = ${
+            e.data.search
+          }, ${e.data.search === ""}; is url empty? url = ${e.data.url}, ${
+            e.data.url === ""
+          }`
+        );
+        if (ready) {
+          setParentWindowLocation({
+            origin: e.origin,
+            pathname: e.data.pathname,
+            search: e.data.search,
+            url: e.data.url,
+          });
+          clearInterval(requestUrlInterval);
+        }
+      }
+    };
+
+    window.addEventListener("message", handleResponse);
+    const requestUrlInterval = setInterval(() => {
+      requestParentWindowURL();
+    }, 1000);
 
     return () => {
-      window.removeEventListener("message", handleMessage);
+      window.removeEventListener("message", handleResponse);
+      clearInterval(requestUrlInterval);
     };
   }, []);
 

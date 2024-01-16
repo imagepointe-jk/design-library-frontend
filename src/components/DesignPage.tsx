@@ -150,56 +150,28 @@ function BackgroundColorChanger({
   onClickColor,
   selectedColor,
 }: BackgroundColorChangerProps) {
-  const [showColorPicker, setShowColorPicker] = useState(false);
   const { colors } = useApp();
 
-  // const selectedColorName = selectedColor?.split(" - ")[1];
+  const selectedColorName = selectedColor?.split(" - ")[1];
 
-  //code for showing selected color name is commented out
-  //until the feature is requested
   return (
     <div className={styles["bg-color-container"]}>
-      <div>
-        <div>Change Background</div>
-        {/* {selectedColorName && (
-          <div>
-            {"("}Viewing:{" "}
-            <span className={styles["selected-color-name"]}>
-              {selectedColorName}
-            </span>
-            {")"}
-          </div>
-        )} */}
+      <div>Change Background</div>
+      <div className={styles["selected-color-name"]}>{selectedColorName}</div>
+      <div className={styles["color-picker-swatches-container"]}>
+        {colors &&
+          colors.map((color) => (
+            <div
+              className={`${styles["color-picker-swatch"]} ${
+                color === selectedColor ? styles["selected-swatch"] : ""
+              }`}
+              style={{
+                backgroundColor: getFirstHexCodeInString(color) || "white",
+              }}
+              onClick={() => onClickColor(color)}
+            ></div>
+          ))}
       </div>
-      <button
-        className={styles["bg-color-button"]}
-        onClick={() => setShowColorPicker(!showColorPicker)}
-      >
-        <img src="/colorwheel.png" alt="color wheel" />
-        <div>Choose a Color</div>
-        {showColorPicker && (
-          <div
-            className={styles["color-picker"]}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={styles["color-picker-swatches-container"]}>
-              {colors &&
-                colors.map((color) => (
-                  <div
-                    className={`${styles["color-picker-swatch"]} ${
-                      color === selectedColor ? styles["selected-swatch"] : ""
-                    }`}
-                    style={{
-                      backgroundColor:
-                        getFirstHexCodeInString(color) || "white",
-                    }}
-                    onClick={() => onClickColor(color)}
-                  ></div>
-                ))}
-            </div>
-          </div>
-        )}
-      </button>
     </div>
   );
 }

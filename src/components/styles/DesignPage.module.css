@@ -10,24 +10,10 @@
 .bg-color-container {
   background-color: lightgray;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 15px;
-}
-
-.bg-color-button {
-  display: flex;
-  background: none;
-  border: 3px solid var(--color-alpha);
-  padding: 5px 10px;
+  flex-direction: column;
   align-items: center;
   gap: 10px;
-  color: black;
-  font-size: initial;
-  cursor: pointer;
-  position: relative;
-  width: 220px;
+  padding: 15px;
 }
 
 .try-design-button {
@@ -70,19 +56,6 @@
   width: 520px;
 }
 
-.color-picker {
-  position: absolute;
-  min-height: 100px;
-  left: -5px;
-  right: -5px;
-  top: 0;
-  translate: 0% -107%;
-  border-radius: 10px;
-  padding: 8px;
-  border: 3px solid var(--color-alpha);
-  background-color: white;
-}
-
 .color-picker-swatches-container {
   display: flex;
   flex-wrap: wrap;
@@ -93,8 +66,8 @@
 .color-picker-swatch {
   width: 24px;
   height: 24px;
-  border-radius: 100px;
   border: 1px solid black;
+  cursor: pointer;
 }
 
 .selected-swatch {
@@ -140,11 +113,5 @@
 
   .description {
     text-align: center;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .bg-color-container {
-    flex-direction: column;
   }
 }

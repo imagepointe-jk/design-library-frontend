@@ -30,20 +30,20 @@ function App() {
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
+  function handleMessage(e: MessageEvent) {
+    if (e.data.type === "design-library-status-check") {
+      console.log(
+        `Received status check from parent window; showHome = ${showHome}, showLibrary = ${showLibrary}, designIdToUse = ${designIdToUse}, showSearch = ${showSearch}, showFilters = ${showFilters}`
+      );
+    }
+  }
+
   useEffect(() => {
-    setTimeout(() => {
-      if (
-        !showHome &&
-        !showLibrary &&
-        designIdToUse === undefined &&
-        !showSearch &&
-        !showFilters
-      ) {
-        console.error(
-          `Routing error detected! parent path name = ${parentWindowLocation?.pathname}, ownDesignId = ${ownDesignId}, parentDesignId = ${parentDesignId}, own path name = ${ownPathname}`
-        );
-      }
-    }, 10000);
+    window.addEventListener("message", handleMessage);
+
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
   }, []);
 
   if (showHome) return <Home />;

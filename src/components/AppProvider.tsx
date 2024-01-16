@@ -7,6 +7,7 @@ import {
 } from "react";
 import { getCategories, getColors, getSubcategories } from "../fetch";
 import { CategoryHierarchy } from "../types";
+import { requestParentWindowURL } from "../utility";
 
 type AppContextType = {
   colors: string[] | null;
@@ -86,12 +87,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
 
     if (e.data.type === "design-library-url-retrieve-response") {
-      setParentWindowLocation({
-        origin: e.origin,
-        pathname: e.data.pathname,
-        search: e.data.search,
-        url: e.data.url,
-      });
+      const ready =
+        e.origin !== "" &&
+        e.data.pathname !== "" &&
+        e.data.search !== "" &&
+        e.data.url !== "";
+      if (ready) {
+        setParentWindowLocation({
+          origin: e.origin,
+          pathname: e.data.pathname,
+          search: e.data.search,
+          url: e.data.url,
+        });
+      } else {
+        setTimeout(() => {
+          requestParentWindowURL();
+        }, 1000);
+      }
     }
   }
 
@@ -99,13 +111,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     fetchColors();
     fetchCategories();
     window.addEventListener("message", handleMessage);
-    window.parent.postMessage(
-      {
-        type: "design-library-url-retrieve-request",
-        originPathname: window.location.pathname,
-      },
-      "*"
-    );
+    requestParentWindowURL();
 
     return () => {
       window.removeEventListener("message", handleMessage);

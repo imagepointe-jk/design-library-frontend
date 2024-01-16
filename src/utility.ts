@@ -106,6 +106,16 @@ export function requestParentWindowQueryChange(
   requestParentWindowUrlChange(newUrl);
 }
 
+export function requestParentWindowURL() {
+  window.parent.postMessage(
+    {
+      type: "design-library-url-retrieve-request",
+      originPathname: window.location.pathname,
+    },
+    "*"
+  );
+}
+
 export function handleAnchorClick(
   e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
 ) {

@@ -3,8 +3,16 @@ export function ErrorPage() {
     <>
       <h1>Error</h1>
       <p>
-        Something's wrong with our page. We're working hard to fix it! Please
-        try again later.
+        Something's wrong with our page. We're working hard to fix it! The issue
+        might fix itself if you wait, or if you refresh the page. Otherwise,
+        feel free to{" "}
+        <a
+          className="normal-link"
+          href="https://www.imagepointe.com/contact-us/"
+        >
+          contact us
+        </a>{" "}
+        and let us know what's wrong.
       </p>
     </>
   );

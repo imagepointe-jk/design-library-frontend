@@ -42,6 +42,17 @@ button {
   cursor: pointer;
 }
 
+.normal-link {
+  background-color: revert;
+  font-size: revert;
+  color: revert;
+  padding: revert;
+  border: revert;
+  text-decoration: revert;
+  display: revert;
+  text-align: revert;
+}
+
 button:disabled {
   cursor: initial;
 }

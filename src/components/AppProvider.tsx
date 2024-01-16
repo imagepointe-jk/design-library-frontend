@@ -92,6 +92,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
         e.data.pathname !== "" &&
         e.data.search !== "" &&
         e.data.url !== "";
+      console.log(
+        `Received URL retrieval response; is origin empty? origin = ${
+          e.origin
+        }, ${e.origin === ""}; is pathname empty? pathname = ${
+          e.data.pathname
+        }, ${e.data.pathname === ""}; is search empty? search = ${
+          e.data.search
+        }, ${e.data.search === ""}; is url empty? url = ${e.data.url}, ${
+          e.data.url === ""
+        }`
+      );
       if (ready) {
         setParentWindowLocation({
           origin: e.origin,

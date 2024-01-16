@@ -107,6 +107,7 @@ export function requestParentWindowQueryChange(
 }
 
 export function requestParentWindowURL() {
+  console.log("requesting parent window url");
   window.parent.postMessage(
     {
       type: "design-library-url-retrieve-request",

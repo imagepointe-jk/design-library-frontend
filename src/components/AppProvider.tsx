@@ -122,7 +122,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     fetchColors();
     fetchCategories();
     window.addEventListener("message", handleMessage);
-    console.log("requesting parent window url");
     requestParentWindowURL();
 
     return () => {

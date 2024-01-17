@@ -95,6 +95,15 @@ export function requestParentWindowResizeApp(newSize: {
   );
 }
 
+export function requestParentWindowAdaptToAppHeight() {
+  //wait briefly for DOM to update, then request iframe resize based on content length
+  setTimeout(() => {
+    requestParentWindowResizeApp({
+      height: document.querySelector(".inner-body")?.scrollHeight,
+    });
+  }, 100);
+}
+
 export function requestParentWindowQueryChange(
   currentUrl: string,
   newParams: DesignQueryParams
@@ -221,4 +230,12 @@ export function getDesignDefaultBackgroundColor(design: TempDesign) {
       `Couldn't find hex code in ${design.DefaultBackgroundColor} for design ${design.DesignNumber}`
     );
   return hexCode;
+}
+
+export function splitDesignCategoryHierarchy(hierarchy: string) {
+  const split = hierarchy.split(" > ");
+  return {
+    category: split[0],
+    subcategory: split[1],
+  };
 }

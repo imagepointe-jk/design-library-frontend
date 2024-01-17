@@ -3,8 +3,9 @@ import { getDesigns } from "../fetch";
 import { DesignQueryParams, TempDesignResults } from "../types";
 import {
   buildDesignQueryParams,
+  requestParentWindowAdaptToAppHeight,
   requestParentWindowQueryChange,
-  requestParentWindowResizeApp,
+  splitDesignCategoryHierarchy,
 } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
@@ -13,12 +14,13 @@ import { DesignLibraryControls } from "./DesignLibraryControls";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { PageControls } from "./PageControls";
 import styles from "./styles/DesignLibrary.module.css";
+import { HierarchyItem, HierarchyList } from "./HierarchyList";
 
 export function DesignLibrary() {
   const [designResults, setDesignResults] = useState<TempDesignResults | null>(
     null
   );
-  const { parentWindowLocation } = useApp();
+  const { parentWindowLocation, categories } = useApp();
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
   );
@@ -32,12 +34,7 @@ export function DesignLibrary() {
       );
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
-      //wait briefly for DOM to update, then request iframe resize based on content length
-      setTimeout(() => {
-        requestParentWindowResizeApp({
-          height: document.querySelector(".inner-body")?.scrollHeight,
-        });
-      }, 100);
+      requestParentWindowAdaptToAppHeight();
     } catch (error) {
       setIsFetchingResults(false);
       console.error(error);
@@ -55,6 +52,21 @@ export function DesignLibrary() {
     requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }
 
+  function handleClickSidebarSubcategory(hierarchy: string) {
+    if (!parentWindowLocation) return;
+    const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);
+
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      category: hierarchySplit.category,
+      subcategory: hierarchySplit.subcategory,
+      featuredOnly: false,
+      pageNumber: 1,
+    };
+
+    requestParentWindowQueryChange(parentWindowLocation?.url, newParams);
+  }
+
   useEffect(() => {
     getDesignsToDisplay();
   }, []);
@@ -66,6 +78,24 @@ export function DesignLibrary() {
   const pageCount = designResults
     ? Math.ceil(designResults.total / designResults.perPage)
     : 0;
+
+  const filterSidebarHierarchy: HierarchyItem[] = categories
+    ? categories
+        .filter(
+          (category) => category.DesignType === designQueryParams.designType
+        )
+        .map((category) => ({
+          parentName: category.Name,
+          selected: designQueryParams.category === category.Name,
+          onClickParent: () => requestParentWindowAdaptToAppHeight(),
+          children: category.Subcategories.map((subcategory) => ({
+            childName: subcategory.Name,
+            selected: subcategory.Name === designQueryParams.subcategory,
+            onClickChild: () =>
+              handleClickSidebarSubcategory(subcategory.Hierarchy),
+          })),
+        }))
+    : [];
 
   return (
     <>
@@ -84,19 +114,32 @@ export function DesignLibrary() {
               </button>
             </div>
           )}
-          <div className={styles["search-container"]}>
-            <DesignLibraryControls />
-            {isFetchingResults && <LoadingIndicator />}
-            {!designResults && !isFetchingResults && <h3>No results</h3>}
-            {designResults &&
-              designResults.designs.length > 0 &&
-              !isFetchingResults && (
-                <DesignGrid designs={designResults.designs} />
+          <div className={styles["main-flex"]}>
+            <HierarchyList
+              hierarchy={filterSidebarHierarchy}
+              defaultExpandedParent={designQueryParams.category}
+              mainClassName={styles["sidebar"]}
+              parentClassName={styles["sidebar-parent"]}
+              parentSelectedClassName={styles["sidebar-parent-selected"]}
+              childClassName={styles["sidebar-child"]}
+              childSelectedClassName={styles["sidebar-child-selected"]}
+            />
+            <div>
+              <div className={styles["search-container"]}>
+                <DesignLibraryControls />
+                {isFetchingResults && <LoadingIndicator />}
+                {!designResults && !isFetchingResults && <h3>No results</h3>}
+                {designResults &&
+                  designResults.designs.length > 0 &&
+                  !isFetchingResults && (
+                    <DesignGrid designs={designResults.designs} />
+                  )}
+              </div>
+              {designResults && !isFetchingResults && (
+                <PageControls totalPages={pageCount} />
               )}
+            </div>
           </div>
-          {designResults && !isFetchingResults && (
-            <PageControls totalPages={pageCount} />
-          )}
         </div>
       </div>
     </>

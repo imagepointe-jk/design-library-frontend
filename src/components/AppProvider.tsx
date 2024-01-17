@@ -13,6 +13,7 @@ type AppContextType = {
   colors: string[] | null;
   categories: CategoryHierarchy[] | null;
   categoriesLoading: boolean;
+  waitingForParent: boolean;
   parentWindowLocation: {
     origin: string;
     url: string;
@@ -22,6 +23,9 @@ type AppContextType = {
 };
 
 const AppContext = createContext(null as AppContextType | null);
+//there are lots of factors that determine when (if ever) the iframe's parent window will respond.
+//wait for this long before assuming something went wrong and showing the user an error message.
+const waitForParentMs = 4000;
 
 export function useApp() {
   const context = useContext(AppContext);
@@ -29,6 +33,7 @@ export function useApp() {
     colors: context?.colors,
     categories: context?.categories,
     categoriesLoading: context?.categoriesLoading,
+    waitingForParent: context?.waitingForParent,
     parentWindowLocation: context?.parentWindowLocation,
   };
 }
@@ -39,6 +44,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
   const [colors, setColors] = useState(null as string[] | null);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [waitingForParent, setWaitingForParent] = useState(true);
   const [parentWindowLocation, setParentWindowLocation] = useState({
     origin: "",
     url: "",
@@ -109,6 +115,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       requestParentWindowURL();
     }, 1000);
 
+    setTimeout(() => {
+      setWaitingForParent(false);
+    }, waitForParentMs);
+
     return () => {
       window.removeEventListener("message", handleResponse);
       clearInterval(requestUrlInterval);
@@ -121,6 +131,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         colors,
         categories,
         categoriesLoading,
+        waitingForParent,
         parentWindowLocation,
       }}
     >

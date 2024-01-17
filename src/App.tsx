@@ -7,9 +7,10 @@ import { FilterModal } from "./components/FilterModal";
 import { Home } from "./components/Home";
 import { SearchArea } from "./components/SearchArea";
 import { ErrorPage } from "./components/ErrorScreen";
+import { LoadingIndicator } from "./components/LoadingIndicator";
 
 function App() {
-  const { parentWindowLocation } = useApp();
+  const { parentWindowLocation, waitingForParent } = useApp();
 
   const ownPathname = window.location.pathname.replace("/", "");
   const pathNameSplit = ownPathname.split("/");
@@ -36,6 +37,7 @@ function App() {
   else if (showFilters) return <FilterModal />;
   else if (designIdToUse) return <DesignPage designId={designIdToUse} />;
   else if (showLibrary) return <DesignLibrary />;
+  else if (waitingForParent) return <LoadingIndicator />;
   else return <ErrorPage />;
 }
 

@@ -79,5 +79,3 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
 
   return parsedSearchParams;
 }
-
-export function parseCategories(categories: any[], subcategories: any[]) {}

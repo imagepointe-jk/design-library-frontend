@@ -1,13 +1,12 @@
-import { useEffect } from "react";
 import "./App.css";
 import { useApp } from "./components/AppProvider";
 import { DesignLibrary } from "./components/DesignLibrary";
 import { DesignPage } from "./components/DesignPage";
+import { ErrorPage } from "./components/ErrorScreen";
 import { FilterModal } from "./components/FilterModal";
 import { Home } from "./components/Home";
-import { SearchArea } from "./components/SearchArea";
-import { ErrorPage } from "./components/ErrorScreen";
 import { LoadingIndicator } from "./components/LoadingIndicator";
+import { SearchArea } from "./components/SearchArea";
 
 function App() {
   const { parentWindowLocation, waitingForParent } = useApp();

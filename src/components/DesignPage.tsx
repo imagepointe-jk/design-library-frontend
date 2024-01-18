@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { getDesignsRelatedToId } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
-import styles from "./styles/DesignPage.module.css";
-import { DesignScrollView } from "./DesignScrollView";
 import {
   clamp,
+  getDesignCategoryHierarchies,
   getDesignDefaultBackgroundColor,
   getDesignTags,
   getFirstHexCodeInString,
 } from "../utility";
 import { useApp } from "./AppProvider";
+import { DesignScrollView } from "./DesignScrollView";
+import styles from "./styles/DesignPage.module.css";
 
 type DesignPageProps = {
   designId: number;
@@ -57,13 +58,11 @@ export function DesignPage({ designId }: DesignPageProps) {
   const selectedHexCode =
     selectedBgColor && getFirstHexCodeInString(selectedBgColor);
   const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
-  const filters = [
-    viewedDesign?.Subcategory1,
-    viewedDesign?.Subcategory2,
-    viewedDesign?.Subcategory3,
-    viewedDesign?.Subcategory4,
-    viewedDesign?.Subcategory5,
-  ].filter((sub) => sub !== undefined);
+  const filters = viewedDesign
+    ? getDesignCategoryHierarchies(viewedDesign).filter(
+        (sub) => sub !== undefined
+      )
+    : [];
   const tags = viewedDesign
     ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
     : [];

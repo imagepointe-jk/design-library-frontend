@@ -11,10 +11,11 @@ import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
+import { HierarchyItem, HierarchyList } from "./HierarchyList";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { PageControls } from "./PageControls";
 import styles from "./styles/DesignLibrary.module.css";
-import { HierarchyItem, HierarchyList } from "./HierarchyList";
+import { pageSizeChoices } from "../constants";
 
 export function DesignLibrary() {
   const [designResults, setDesignResults] = useState<TempDesignResults | null>(
@@ -65,6 +66,36 @@ export function DesignLibrary() {
     };
 
     requestParentWindowQueryChange(parentWindowLocation?.url, newParams);
+  }
+
+  function clickPageButton(pageNumber: number) {
+    if (!parentWindowLocation) return;
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      pageNumber: pageNumber,
+    };
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+  }
+
+  function jumpToPage(jumpToPage: number) {
+    if (!parentWindowLocation) return;
+
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      pageNumber: +jumpToPage,
+    };
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+  }
+
+  function changeResultsPerPage(count: number) {
+    if (!parentWindowLocation) return;
+
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      pageNumber: 1,
+      countPerPage: count,
+    };
+    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
   }
 
   useEffect(() => {
@@ -136,7 +167,15 @@ export function DesignLibrary() {
                   )}
               </div>
               {designResults && !isFetchingResults && (
-                <PageControls totalPages={pageCount} />
+                <PageControls
+                  totalPages={pageCount}
+                  pageSizeChoices={pageSizeChoices}
+                  curItemsPerPage={designQueryParams.countPerPage || 0}
+                  curPageNumber={designQueryParams.pageNumber}
+                  onClickPageNumber={clickPageButton}
+                  onSubmitJumpToPage={jumpToPage}
+                  onClickPageSizeButton={changeResultsPerPage}
+                />
               )}
             </div>
           </div>

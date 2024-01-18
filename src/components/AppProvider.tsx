@@ -8,6 +8,7 @@ import {
 import { getCategories, getColors, getSubcategories } from "../fetch";
 import { CategoryHierarchy } from "../types";
 import { requestParentWindowURL } from "../utility";
+import { waitForParentMs } from "../constants";
 
 type AppContextType = {
   colors: string[] | null;
@@ -23,9 +24,6 @@ type AppContextType = {
 };
 
 const AppContext = createContext(null as AppContextType | null);
-//there are lots of factors that determine when (if ever) the iframe's parent window will respond.
-//wait for this long before assuming something went wrong and showing the user an error message.
-const waitForParentMs = 4000;
 
 export function useApp() {
   const context = useContext(AppContext);
@@ -96,6 +94,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         return;
       }
       if (e.data.type === "design-library-url-retrieve-response") {
+        //the parent will sometimes respond to the url request with empty data; ignore when this happens
         const ready =
           e.origin !== "" && e.data.pathname !== "" && e.data.url !== "";
         if (ready) {

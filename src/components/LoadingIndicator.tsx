@@ -1,7 +1,9 @@
+import styles from "./styles/LoadingSpinner.module.css";
+
 export function LoadingIndicator() {
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <img src="/spinner1.png" alt="spinner" className="loading-spinner" />
+    <div className={styles["container"]}>
+      <img src="/spinner1.png" alt="spinner" className={styles["spinner"]} />
     </div>
   );
 }

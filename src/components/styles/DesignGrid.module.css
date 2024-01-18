@@ -4,6 +4,10 @@
   border-radius: initial;
 }
 
+.design-img {
+  height: 100%;
+}
+
 .design-grid {
   display: flex;
   flex-wrap: wrap;

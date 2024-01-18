@@ -20,7 +20,6 @@ type ImageScrollViewProps = {
 
 const defaultNoImagesText = "No Images";
 
-//TODO: The max scroll index, scroll distance, etc. need to derive from the width of some DOM elements. The below implementation is messy and unreliable. Should be refactored when there is time.
 export function ImageScrollView({
   images,
   overrideScrollIndex,
@@ -42,6 +41,7 @@ export function ImageScrollView({
   const scrollDistance = imageRowRef.current
     ? imageRowRef.current.getBoundingClientRect().width / totalImages
     : 0;
+  const imagesReady = images && totalImages > 0;
 
   function calculateMaxScrollIndex() {
     if (!overflowContainerRef.current || !imageRowRef.current) return 0;
@@ -94,9 +94,6 @@ export function ImageScrollView({
     };
   }, []);
 
-  const imagesReady =
-    images !== undefined && images !== null && totalImages > 0;
-
   return (
     <div className={styles["main"]}>
       {!imagesReady && isLoading && <LoadingIndicator />}
@@ -109,11 +106,11 @@ export function ImageScrollView({
       {!isLoading && totalImages > 0 && (
         <div
           ref={overflowContainerRef}
-          className={styles["designs-overflow-container"]}
+          className={styles["images-overflow-container"]}
         >
           <div
             ref={imageRowRef}
-            className={styles["designs-row"]}
+            className={styles["images-row"]}
             style={{ left: `${-1 * scrollDistance * scrollIndexToUse}px` }}
           >
             {images &&
@@ -122,7 +119,7 @@ export function ImageScrollView({
                   {image !== "" && (
                     <div className={styles["single-image-container"]}>
                       <img
-                        className={`${styles["design-image"]} ${
+                        className={`${styles["single-image"]} ${
                           highlightImageIndex !== undefined &&
                           highlightImageIndex !== i
                             ? styles["inactive-img"]

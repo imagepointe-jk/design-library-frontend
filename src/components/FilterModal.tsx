@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { DesignQueryParams } from "../types";
+import { getDesigns } from "../fetch";
+import { TempDesignWithImages } from "../sharedTypes";
+import { CategoryData, DesignQueryParams, SubcategoryData } from "../types";
 import {
   buildDesignQueryParams,
-  deduplicateStrings,
   requestParentWindowQueryChange,
 } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
-import styles from "./styles/FilterModal.module.css";
 import { ImageScrollView } from "./ImageScrollView";
-import { TempDesignWithImages } from "../sharedTypes";
-import { getDesigns } from "../fetch";
 import { LoadingIndicator } from "./LoadingIndicator";
+import styles from "./styles/FilterModal.module.css";
 
 const maxSubcategoriesBeforeScrollable = 15;
+const buttonIdPrefix = "filter-modal-filter-button-";
 
 export function FilterModal() {
   const { categories, categoriesLoading, parentWindowLocation } = useApp();
@@ -40,14 +40,15 @@ export function FilterModal() {
   const selectedCategory = categories?.find(
     (category) => category.Name === queryParamsToUse.category
   );
-  const categoriesToShow = categories?.filter(
-    (category) => category.DesignType === queryParamsToUse.designType
-  );
+  const categoriesToShow = categories
+    ? categories.filter(
+        (category) => category.DesignType === queryParamsToUse.designType
+      )
+    : [];
   const subcategoriesToShow = selectedCategory
     ? selectedCategory.Subcategories
     : [];
 
-  const buttonIdPrefix = "filter-modal-filter-button-";
   const previewDesignImages = previewDesigns
     ? previewDesigns.map((design) => design.ImageURLs[0])
     : undefined;
@@ -125,58 +126,16 @@ export function FilterModal() {
         Select a main category on the left and a subcategory below
       </p>
       <div className={styles["main-flex"]}>
-        <div className={styles["parent-category-column"]}>
-          {categoriesToShow?.map((category) => (
-            <>
-              <input
-                className="button-styled-checkbox"
-                type="checkbox"
-                name="parent-category"
-                id={`${buttonIdPrefix}${category.Name}`}
-                onChange={(e) =>
-                  clickFilterButton(
-                    "Category",
-                    e.target.checked ? category.Name : null
-                  )
-                }
-                checked={category.Name === selectedCategoryInParams}
-              />
-              <label htmlFor={`${buttonIdPrefix}${category.Name}`}>
-                {category.Name}
-              </label>
-            </>
-          ))}
-        </div>
-        <div
-          className={styles["subcategories-container"]}
-          style={{
-            overflowY:
-              subcategoriesToShow.length > maxSubcategoriesBeforeScrollable
-                ? "scroll"
-                : undefined,
-          }}
-        >
-          {subcategoriesToShow.map((subcategory) => (
-            <>
-              <input
-                className="text-styled-checkbox"
-                type="checkbox"
-                name="subcategory"
-                id={`${buttonIdPrefix}${subcategory.Name}`}
-                onChange={(e) =>
-                  clickFilterButton(
-                    "Subcategory",
-                    e.target.checked ? subcategory.Name : null
-                  )
-                }
-                checked={subcategory.Name === selectedSubcategoryInParams}
-              />
-              <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>
-                {subcategory.Name}
-              </label>
-            </>
-          ))}
-        </div>
+        <ParentCategories
+          categoriesToShow={categoriesToShow}
+          selectedCategory={selectedCategoryInParams}
+          onClickFilterButton={clickFilterButton}
+        />
+        <Subcategories
+          subcategories={subcategoriesToShow}
+          selectedSubcategory={selectedSubcategoryInParams}
+          onClickFilterButton={clickFilterButton}
+        />
         <div className={styles["preview-designs-area"]}>
           <h4>Preview</h4>
           <ImageScrollView
@@ -204,5 +163,93 @@ export function FilterModal() {
         </button>
       </div>
     </>
+  );
+}
+
+type ParentCategoriesProps = {
+  categoriesToShow: CategoryData[] | null;
+  selectedCategory: string | undefined;
+  onClickFilterButton: (
+    buttonType: "Category" | "Subcategory",
+    value: string | null
+  ) => void;
+};
+
+function ParentCategories({
+  categoriesToShow,
+  selectedCategory,
+  onClickFilterButton,
+}: ParentCategoriesProps) {
+  return (
+    <div className={styles["parent-category-column"]}>
+      {categoriesToShow?.map((category) => (
+        <>
+          <input
+            className="button-styled-checkbox"
+            type="checkbox"
+            name="parent-category"
+            id={`${buttonIdPrefix}${category.Name}`}
+            onChange={(e) =>
+              onClickFilterButton(
+                "Category",
+                e.target.checked ? category.Name : null
+              )
+            }
+            checked={category.Name === selectedCategory}
+          />
+          <label htmlFor={`${buttonIdPrefix}${category.Name}`}>
+            {category.Name}
+          </label>
+        </>
+      ))}
+    </div>
+  );
+}
+
+type SubcategoriesProps = {
+  subcategories: SubcategoryData[];
+  selectedSubcategory: string | undefined;
+  onClickFilterButton: (
+    buttonType: "Category" | "Subcategory",
+    value: string | null
+  ) => void;
+};
+
+function Subcategories({
+  subcategories,
+  selectedSubcategory,
+  onClickFilterButton,
+}: SubcategoriesProps) {
+  return (
+    <div
+      className={styles["subcategories-container"]}
+      style={{
+        overflowY:
+          subcategories.length > maxSubcategoriesBeforeScrollable
+            ? "scroll"
+            : undefined,
+      }}
+    >
+      {subcategories.map((subcategory) => (
+        <>
+          <input
+            className="text-styled-checkbox"
+            type="checkbox"
+            name="subcategory"
+            id={`${buttonIdPrefix}${subcategory.Name}`}
+            onChange={(e) =>
+              onClickFilterButton(
+                "Subcategory",
+                e.target.checked ? subcategory.Name : null
+              )
+            }
+            checked={subcategory.Name === selectedSubcategory}
+          />
+          <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>
+            {subcategory.Name}
+          </label>
+        </>
+      ))}
+    </div>
   );
 }

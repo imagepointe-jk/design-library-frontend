@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
+import { getDesigns } from "../fetch";
+import { DesignType, TempDesignWithImages } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { buildDesignQueryParams } from "../utility";
+import { tryParseDesignType } from "../validations";
 import { ImageScrollView } from "./ImageScrollView";
 import { SearchArea } from "./SearchArea";
 import styles from "./styles/Home.module.css";
-import { useEffect, useState } from "react";
-import { DesignType, TempDesignWithImages } from "../sharedTypes";
-import { getDesigns } from "../fetch";
-import { tryParseDesignType } from "../validations";
 
 export function Home() {
   const [featuredDesigns, setFeaturedDesigns] = useState(

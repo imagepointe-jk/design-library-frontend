@@ -1,3 +1,7 @@
-export const defaultModalHeight = 700;
-export const searchModalHeight = 250;
-export const searchModalMaxWidth = 550;
+export const defaultModalHeight = 700,
+  searchModalHeight = 250,
+  searchModalMaxWidth = 550,
+  pageSizeChoices = [3, 5, 7],
+  //there are lots of factors that determine when (if ever) the iframe's parent window will respond.
+  //wait for this long before assuming something went wrong and showing the user an error message.
+  waitForParentMs = 4000;

@@ -1,4 +1,4 @@
-import styles from "./styles/ArrowButton.module.css";
+import styles from "./styles/ImageScrollView.module.css";
 
 type ArrowButtonProps = {
   direction: "left" | "right";
@@ -16,7 +16,7 @@ export function ArrowButton({
   return (
     <button
       disabled={disabled}
-      className={`${styles["main"]} ${className}`}
+      className={`${styles["arrow-button"]} ${className}`}
       onClick={onClick}
     >
       <i className={`fa-solid fa-chevron-${direction}`}></i>

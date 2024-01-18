@@ -1,9 +1,10 @@
-import { DesignType, designTypes } from "../sharedTypes";
+import { designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import {
   buildDesignQueryParams,
   requestParentWindowUrlChange,
 } from "../utility";
+import { tryParseDesignType } from "../validations";
 import { useApp } from "./AppProvider";
 import styles from "./styles/SearchArea.module.css";
 
@@ -23,16 +24,14 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const keywords = formData.get("search");
-    const designType = formData.get("design-type");
+    const designType = tryParseDesignType(`${formData.get("design-type")}`);
     const newParams: DesignQueryParams = {
-      designType: "Screen Print",
+      designType: designType ? designType : "Screen Print",
       pageNumber: 1,
       keywords: keywords?.toString().split(" "),
       featuredOnly: true,
       allowDuplicateDesignNumbers: true,
     };
-    if ((designType as DesignType) === "Embroidery")
-      newParams.designType = "Embroidery";
 
     requestParentWindowUrlChange(
       `${

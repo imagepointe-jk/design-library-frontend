@@ -17,24 +17,26 @@ export function DesignCard({
   const { parentWindowLocation } = useApp();
   const domain = parentWindowLocation?.origin;
 
+  function handleClickCard(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    e.preventDefault();
+    requestParentWindowModalOpen(
+      `${designId}`,
+      {
+        height: defaultModalHeight,
+      },
+      "default"
+    );
+  }
+
   return (
     <a
       className={styles["design-card"]}
       href={`${domain}/design-library-new-designs/?designId=${designId}`}
-      onClick={(e) => {
-        e.preventDefault();
-        requestParentWindowModalOpen(
-          `${designId}`,
-          {
-            height: defaultModalHeight,
-          },
-          "default"
-        );
-      }}
+      onClick={handleClickCard}
     >
       <div className={styles["img-container"]}>
         <img
-          className={"design-img"}
+          className={styles["design-img"]}
           src={imgUrl}
           alt={`design ${designNumber}`}
           onError={(e) => {

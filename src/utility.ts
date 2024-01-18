@@ -125,66 +125,10 @@ export function requestParentWindowURL() {
   );
 }
 
-export function handleAnchorClick(
-  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-) {
-  e.preventDefault();
-  requestParentWindowUrlChange(e.currentTarget.href);
-}
-
 export function clamp(value: number, min: number, max: number) {
   if (value < min) return min;
   if (value > max) return max;
   return value;
-}
-
-export function getPageControlNumbers(
-  totalPages: number,
-  currentPage: number
-): number[] {
-  if (currentPage < 1 || currentPage > totalPages) {
-    console.error("The current page must be between 1 and totalPages.");
-    return [];
-  }
-
-  const pageNumbers = Array.from(
-    { length: totalPages },
-    (_, i) => i + 1
-  ).filter((thisPage, i, arr) => {
-    function distanceCondition(thisPage: number) {
-      const distanceToStart = thisPage - 1;
-      const distanceToEnd = totalPages - thisPage;
-      const distanceToCurrentPage = Math.abs(currentPage - thisPage);
-      const currentPageIsLimit =
-        currentPage === 1 || currentPage === totalPages;
-      return (
-        distanceToStart === 0 ||
-        distanceToEnd === 0 ||
-        (currentPageIsLimit && distanceToCurrentPage < 3) ||
-        (!currentPageIsLimit && distanceToCurrentPage < 2)
-      );
-    }
-    const distanceConditionHere = distanceCondition(thisPage);
-    const distanceConditionPrev = i > 1 ? distanceCondition(arr[i - 1]) : true;
-    const distanceConditionNext =
-      i < totalPages ? distanceCondition(arr[i + 1]) : true;
-
-    return (
-      distanceConditionHere || (distanceConditionPrev && distanceConditionNext)
-    );
-  });
-
-  return pageNumbers;
-}
-
-export function addEllipsisToNumberArray(array: number[]): (number | "...")[] {
-  const newArr: (number | "...")[] = [];
-  for (let i = 0; i < array.length; i++) {
-    newArr.push(array[i]);
-    const deltaToNext = array[i + 1] - array[i];
-    if (deltaToNext > 1) newArr.push("...");
-  }
-  return newArr;
 }
 
 export function getDesignTags(design: TempDesign) {
@@ -216,6 +160,17 @@ export function getDesignTags(design: TempDesign) {
     Tag11,
     Tag12,
   ];
+}
+
+export function getDesignCategoryHierarchies(design: TempDesign) {
+  const {
+    Subcategory1,
+    Subcategory2,
+    Subcategory3,
+    Subcategory4,
+    Subcategory5,
+  } = design;
+  return [Subcategory1, Subcategory2, Subcategory3, Subcategory4, Subcategory5];
 }
 
 export function getFirstHexCodeInString(str: string) {

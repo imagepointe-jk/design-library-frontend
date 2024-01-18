@@ -12,14 +12,14 @@
   font-size: var(--size-20);
 }
 
-.designs-overflow-container {
+.images-overflow-container {
   overflow: hidden;
   position: relative;
   height: 100%;
   width: 100%;
 }
 
-.designs-row {
+.images-row {
   display: flex;
   position: absolute;
   transition: 0.2s;
@@ -31,12 +31,16 @@
   aspect-ratio: 1;
 }
 
-.design-image {
+.single-image {
   display: block;
   margin: auto;
   height: 100%;
   scale: 90%;
   /* temporarily scaled down to show background color feature */
+}
+
+.arrow-button {
+  padding: 15px;
 }
 
 .left-button,

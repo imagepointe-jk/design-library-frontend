@@ -7,12 +7,14 @@ type DesignCardProps = {
   designId: number;
   designNumber: string;
   imgUrl: string;
+  backgroundColor: string;
 };
 
 export function DesignCard({
   designNumber,
   imgUrl,
   designId,
+  backgroundColor,
 }: DesignCardProps) {
   const { parentWindowLocation } = useApp();
   const domain = parentWindowLocation?.origin;
@@ -34,7 +36,7 @@ export function DesignCard({
       href={`${domain}/design-library-new-designs/?designId=${designId}`}
       onClick={handleClickCard}
     >
-      <div className={styles["img-container"]}>
+      <div className={styles["img-container"]} style={{ backgroundColor }}>
         <img
           className={styles["design-img"]}
           src={imgUrl}

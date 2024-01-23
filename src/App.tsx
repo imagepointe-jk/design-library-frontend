@@ -27,14 +27,16 @@ function App() {
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
   const showLibrary =
     parentWindowLocation?.pathname === "/design-library-new-designs/";
-  const designIdToUse = ownDesignId ? ownDesignId : parentDesignId;
+  const designIdToUse =
+    ownDesignId !== undefined ? ownDesignId : parentDesignId;
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
   if (showHome) return <Home />;
   else if (showSearch) return <SearchArea />;
   else if (showFilters) return <FilterModal />;
-  else if (designIdToUse) return <DesignPage designId={designIdToUse} />;
+  else if (designIdToUse !== undefined)
+    return <DesignPage designId={designIdToUse} />;
   else if (showLibrary) return <DesignLibrary />;
   else if (waitingForParent) return <LoadingIndicator />;
   else return <ErrorPage />;

@@ -67,10 +67,14 @@ export function DesignPage({ designId }: DesignPageProps) {
     ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
     : [];
   const images = relatedDesigns
-    ? relatedDesigns.map((design) => design.ImageURLs[0] || "")
+    ? relatedDesigns.map((design) => design.ImageData[0].url || "")
     : [];
+  const viewedDesignHasTransparency =
+    viewedDesign?.ImageData[0].hasTransparency || false;
   const showColorChangeSection =
-    relatedDesigns && relatedDesigns[0].DesignType === "Screen Print";
+    relatedDesigns &&
+    relatedDesigns[0].DesignType === "Screen Print" &&
+    viewedDesignHasTransparency;
 
   return (
     <>

@@ -15,7 +15,7 @@ export function DesignGrid({ designs }: DesignGridProps) {
           key={design.Id}
           designNumber={design.DesignNumber}
           designId={design.Id}
-          imgUrl={design.ImageURLs[0]}
+          imgUrl={design.ImageData[0].url}
           backgroundColor={getDesignDefaultBackgroundColor(design) || "#000000"}
         />
       ))}

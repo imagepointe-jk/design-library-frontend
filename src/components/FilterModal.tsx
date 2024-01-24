@@ -50,7 +50,7 @@ export function FilterModal() {
     : [];
 
   const previewDesignImages = previewDesigns
-    ? previewDesigns.map((design) => design.ImageURLs[0])
+    ? previewDesigns.map((design) => design.ImageData[0].url)
     : undefined;
   const scrollViewKey = btoa(JSON.stringify(previewDesignImages));
 

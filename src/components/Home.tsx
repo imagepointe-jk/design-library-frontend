@@ -44,7 +44,7 @@ export function Home() {
   }, []);
 
   const images = featuredDesigns
-    ? featuredDesigns.map((design) => design.ImageURLs[0])
+    ? featuredDesigns.map((design) => design.ImageData[0].url)
     : undefined;
 
   return (

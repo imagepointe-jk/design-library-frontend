@@ -66,10 +66,19 @@ button:disabled {
 }
 
 input[type="text"],
-input[type="search"] {
+input[type="search"],
+input[type="email"],
+input[type="tel"],
+textarea {
   padding: 10px;
-  font-size: var(--size-20);
   border-radius: 10px;
+}
+
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="tel"] {
+  font-size: var(--size-20);
 }
 
 .link-black {

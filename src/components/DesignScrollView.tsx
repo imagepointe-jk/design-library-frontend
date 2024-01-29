@@ -10,6 +10,8 @@ type DesignScrollViewProps = {
     maxScrollIndex: number
   ) => void;
   backgroundColor?: string;
+  showArrowButtons?: boolean;
+  showNavGallery?: boolean;
 };
 
 export function DesignScrollView({
@@ -18,6 +20,8 @@ export function DesignScrollView({
   viewedIndex,
   setViewedIndex,
   backgroundColor,
+  showArrowButtons,
+  showNavGallery,
 }: DesignScrollViewProps) {
   return (
     <div className={styles["main"]}>
@@ -30,15 +34,19 @@ export function DesignScrollView({
           images={images}
           onScrollFn={onScrollFn}
           overrideScrollIndex={viewedIndex}
+          showArrowButtons={showArrowButtons}
         />
       </div>
-      <div className={styles["nav-img-container"]}>
-        <ImageScrollView
-          images={images}
-          onClickImg={setViewedIndex}
-          highlightImageIndex={viewedIndex}
-        />
-      </div>
+      {showNavGallery !== false && (
+        <div className={styles["nav-img-container"]}>
+          <ImageScrollView
+            images={images}
+            onClickImg={setViewedIndex}
+            highlightImageIndex={viewedIndex}
+            showArrowButtons={showArrowButtons}
+          />
+        </div>
+      )}
     </div>
   );
 }

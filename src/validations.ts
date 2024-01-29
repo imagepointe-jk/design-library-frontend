@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { designTypeSchema, tempDesignWithImagesSchema } from "./sharedTypes";
+import {
+  designTypeSchema,
+  quoteRequestSchema,
+  tempDesignWithImagesSchema,
+} from "./sharedTypes";
 import {
   DesignQueryParams,
   categoryDataSchema,
@@ -78,4 +82,12 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
   };
 
   return parsedSearchParams;
+}
+
+export function validateQuoteRequest(data: any) {
+  return quoteRequestSchema.parse(data);
+}
+
+export function validateEmail(str: string) {
+  return z.string().email().parse(str);
 }

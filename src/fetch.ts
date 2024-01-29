@@ -1,3 +1,4 @@
+import { QuoteRequest } from "./sharedTypes";
 import { CategoryHierarchy } from "./types";
 import {
   validateCategories,
@@ -122,4 +123,25 @@ export async function getColors() {
   }
 
   return validateColors(json);
+}
+
+export async function sendQuoteRequest(quoteRequest: QuoteRequest) {
+  //@ts-ignore
+  const password = import.meta.env.VITE_QUOTE_REQUEST_AUTH_PASSWORD;
+  if (!password) {
+    throw new Error("Couldn't find the quote request auth password!");
+  }
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Authorization", `Bearer ${password}`);
+
+  const raw = JSON.stringify(quoteRequest);
+
+  const requestOptions = {
+    method: "POST",
+    headers: headers,
+    body: raw,
+  };
+
+  return fetch("http://localhost:3000/quote-request", requestOptions);
 }

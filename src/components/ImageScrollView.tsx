@@ -11,6 +11,7 @@ type ImageScrollViewProps = {
   highlightImageIndex?: number;
   isLoading?: boolean;
   noImagesText?: string;
+  showArrowButtons?: boolean;
   onScrollFn?: (
     scrollDirection: "left" | "right",
     maxScrollIndex: number
@@ -28,6 +29,7 @@ export function ImageScrollView({
   onClickImg,
   isLoading,
   noImagesText,
+  showArrowButtons,
 }: ImageScrollViewProps) {
   const [scrollIndex, setScrollIndex] = useState(0);
   const [maxScrollIndex, setMaxScrollIndex] = useState(0);
@@ -137,18 +139,22 @@ export function ImageScrollView({
         </div>
       )}
 
-      <ArrowButton
-        className={styles["left-button"]}
-        direction="left"
-        disabled={scrollIndexToUse === 0}
-        onClick={() => scroll("left")}
-      />
-      <ArrowButton
-        className={styles["right-button"]}
-        direction="right"
-        disabled={scrollIndexToUse >= maxScrollIndex}
-        onClick={() => scroll("right")}
-      />
+      {showArrowButtons !== false && (
+        <>
+          <ArrowButton
+            className={styles["left-button"]}
+            direction="left"
+            disabled={scrollIndexToUse === 0}
+            onClick={() => scroll("left")}
+          />
+          <ArrowButton
+            className={styles["right-button"]}
+            direction="right"
+            disabled={scrollIndexToUse >= maxScrollIndex}
+            onClick={() => scroll("right")}
+          />
+        </>
+      )}
     </div>
   );
 }

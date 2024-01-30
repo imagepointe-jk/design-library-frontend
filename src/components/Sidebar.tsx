@@ -1,8 +1,13 @@
-import { requestParentWindowAdaptToAppHeight } from "../utility";
+import { DesignQueryParams } from "../types";
+import {
+  requestParentWindowAdaptToAppHeight,
+  requestParentWindowQueryChange,
+} from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { HierarchyItem, HierarchyList } from "./HierarchyList";
 import { submitSearch } from "./SearchArea";
+import "./styles/Sidebar.css";
 import styles from "./styles/Sidebar.module.css";
 
 type SidebarProps = {
@@ -35,6 +40,23 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
         }))
     : [];
 
+  const filtersActive =
+    designQueryParams.category !== undefined ||
+    designQueryParams.subcategory !== undefined;
+
+  function handleClearFilters() {
+    if (!parentWindowLocation) return;
+
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      category: undefined,
+      subcategory: undefined,
+      pageNumber: 1,
+    };
+
+    requestParentWindowQueryChange(parentWindowLocation?.url, newParams);
+  }
+
   return (
     <div className={styles["main"]}>
       <form
@@ -50,6 +72,14 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
       </form>
       <i className="fa-solid fa-sliders"></i>
       <h2 className={styles["filters-heading"]}>Filters</h2>
+      {filtersActive && (
+        <button
+          id="design-library-sidebar-clear-button"
+          onClick={handleClearFilters}
+        >
+          <i className="fa-solid fa-xmark"></i>clear
+        </button>
+      )}
       <HierarchyList
         hierarchy={filterSidebarHierarchy}
         defaultExpandedParent={designQueryParams.category}

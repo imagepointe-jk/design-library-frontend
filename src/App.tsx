@@ -40,7 +40,13 @@ function App() {
     return <DesignPage designId={designIdToUse} />;
   else if (showLibrary) return <DesignLibrary />;
   else if (waitingForParent) return <LoadingIndicator />;
-  else return <ErrorPage />;
+  else {
+    console.log(
+      "Reached navigation error with parent window location",
+      parentWindowLocation
+    );
+    return <ErrorPage />;
+  }
 }
 
 export default App;

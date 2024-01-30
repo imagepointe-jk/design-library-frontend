@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 10px;
   align-items: center;
+  margin-bottom: 80px;
 }
 
 .featured-image-container {

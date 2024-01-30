@@ -3,12 +3,11 @@ import { getDesigns } from "../fetch";
 import { DesignType, TempDesignWithImages } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { buildDesignQueryParams } from "../utility";
-import { tryParseDesignType } from "../validations";
 import { ImageScrollView } from "./ImageScrollView";
 import { SearchArea } from "./SearchArea";
-import styles from "./styles/Home.module.css";
+import styles from "./styles/TopSection.module.css";
 
-export function Home() {
+export function TopSection() {
   const [featuredDesigns, setFeaturedDesigns] = useState(
     null as TempDesignWithImages[] | null
   );
@@ -34,11 +33,6 @@ export function Home() {
     }
   }
 
-  function onChangeDesignType(clickedValue: string) {
-    const parsed = tryParseDesignType(clickedValue);
-    if (parsed) getFeaturedDesigns(parsed);
-  }
-
   useEffect(() => {
     getFeaturedDesigns("Screen Print");
   }, []);
@@ -48,12 +42,10 @@ export function Home() {
     : undefined;
 
   return (
-    <div className={`inner-body`}>
-      <div className={styles["main"]}>
-        <SearchArea onChangeDesignType={onChangeDesignType} />
-        <div className={styles["featured-image-container"]}>
-          <ImageScrollView images={images} isLoading={featuredDesignsLoading} />
-        </div>
+    <div className={styles["main"]}>
+      <SearchArea />
+      <div className={styles["featured-image-container"]}>
+        <ImageScrollView images={images} isLoading={featuredDesignsLoading} />
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { PageControls } from "./PageControls";
 import styles from "./styles/DesignLibrary.module.css";
 import { pageSizeChoices } from "../constants";
+import { TopSection } from "./TopSection";
 
 export function DesignLibrary() {
   const [designResults, setDesignResults] = useState<TempDesignResults | null>(
@@ -132,6 +133,7 @@ export function DesignLibrary() {
     <>
       <div className={styles["bg"]}>
         <div className="inner-body">
+          <TopSection />
           {keywordsAsString && (
             <div className={styles["searching-for-area"]}>
               <h2>

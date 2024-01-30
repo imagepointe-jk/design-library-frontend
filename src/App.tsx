@@ -27,7 +27,7 @@ function App() {
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
   const showLibrary =
     parentWindowLocation?.pathname === "/design-library-new-designs/" ||
-    parentWindowLocation?.pathname === "/design-library-development";
+    parentWindowLocation?.pathname === "/design-library-development/";
   const designIdToUse =
     ownDesignId !== undefined ? ownDesignId : parentDesignId;
   const showSearch = ownPathname === "search";
@@ -40,13 +40,7 @@ function App() {
     return <DesignPage designId={designIdToUse} />;
   else if (showLibrary) return <DesignLibrary />;
   else if (waitingForParent) return <LoadingIndicator />;
-  else {
-    console.log(
-      "Reached navigation error with parent window location",
-      parentWindowLocation
-    );
-    return <ErrorPage />;
-  }
+  else return <ErrorPage />;
 }
 
 export default App;

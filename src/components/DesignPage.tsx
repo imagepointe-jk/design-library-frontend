@@ -54,6 +54,7 @@ export function DesignPage({ designId }: DesignPageProps) {
     getDesignsToDisplay();
   }, []);
 
+  const singleDesign = relatedDesigns && relatedDesigns.length === 1;
   const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
   const viewedDesignBgColor =
     (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
@@ -92,8 +93,8 @@ export function DesignPage({ designId }: DesignPageProps) {
               viewedIndex={viewedIndex}
               setViewedIndex={setViewedIndex}
               backgroundColor={bgColorToUse}
-              showArrowButtons={!showQuoteForm}
-              showNavGallery={!showQuoteForm}
+              showArrowButtons={!showQuoteForm && !singleDesign}
+              showNavGallery={!showQuoteForm && !singleDesign}
             />
           </div>
           {!showQuoteForm && (

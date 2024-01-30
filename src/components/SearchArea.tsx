@@ -17,32 +17,9 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
   const ownPathName = window.location.pathname;
   const isInModal = ownPathName === "/search"; //should display slightly differently when in modal
 
-  function submitSearch(e: React.FormEvent<HTMLFormElement>) {
-    if (!parentWindowLocation) return;
-    e.preventDefault();
-
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const keywords = formData.get("search");
-    const designType = tryParseDesignType(`${formData.get("design-type")}`);
-    const newParams: DesignQueryParams = {
-      designType: designType ? designType : "Screen Print",
-      pageNumber: 1,
-      keywords: keywords?.toString().split(" "),
-      featuredOnly: true,
-      allowDuplicateDesignNumbers: true,
-    };
-
-    requestParentWindowUrlChange(
-      `${
-        parentWindowLocation.origin
-      }/design-library-new-designs/?${buildDesignQueryParams(newParams)}`
-    );
-  }
-
   return (
     <form
-      onSubmit={submitSearch}
+      onSubmit={(e) => submitSearch(e, parentWindowLocation?.origin || "")}
       className={isInModal ? styles["form-in-modal"] : undefined}
     >
       <div className={styles["search-row"]}>
@@ -72,5 +49,30 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
         ))}
       </div>
     </form>
+  );
+}
+
+export function submitSearch(
+  e: React.FormEvent<HTMLFormElement>,
+  parentWindowOrigin: string
+) {
+  e.preventDefault();
+
+  const form = e.target as HTMLFormElement;
+  const formData = new FormData(form);
+  const keywords = formData.get("search");
+  const designType = tryParseDesignType(`${formData.get("design-type")}`);
+  const newParams: DesignQueryParams = {
+    designType: designType ? designType : "Screen Print",
+    pageNumber: 1,
+    keywords: keywords?.toString().split(" "),
+    featuredOnly: true,
+    allowDuplicateDesignNumbers: true,
+  };
+
+  requestParentWindowUrlChange(
+    `${parentWindowOrigin}/design-library-new-designs/?${buildDesignQueryParams(
+      newParams
+    )}`
   );
 }

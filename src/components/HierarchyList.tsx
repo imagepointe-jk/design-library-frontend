@@ -17,6 +17,7 @@ type HierarchyListProps = {
   mainClassName?: string;
   parentClassName?: string;
   parentSelectedClassName?: string;
+  parentExpandedClassName?: string;
   childClassName?: string;
   childSelectedClassName?: string;
 };
@@ -27,6 +28,7 @@ export function HierarchyList({
   mainClassName,
   parentClassName,
   parentSelectedClassName,
+  parentExpandedClassName,
   childClassName,
   childSelectedClassName,
 }: HierarchyListProps) {
@@ -48,6 +50,10 @@ export function HierarchyList({
             <div
               className={`${parentClassName} ${
                 parent.selected ? parentSelectedClassName : ""
+              } ${
+                parentExpandedToUse === parent.parentName
+                  ? parentExpandedClassName
+                  : ""
               }`}
               onClick={() => {
                 handleClickParent(parent.parentName);

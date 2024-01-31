@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { sendQuoteRequest } from "../fetch";
 import { requestParentWindowUrlChange } from "../utility";
 import { validateEmail, validateQuoteRequest } from "../validations";
@@ -16,6 +16,7 @@ export function QuoteForm({ designId, onClickBack }: QuoteFormProps) {
   const [submittingRequest, setSubmittingRequest] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null as Status | null);
+  const phoneField = useRef(null as HTMLInputElement | null);
 
   function checkEmail(str: string) {
     try {
@@ -26,6 +27,13 @@ export function QuoteForm({ designId, onClickBack }: QuoteFormProps) {
       setInvalidEmail(true);
       return false;
     }
+  }
+
+  function handlePhoneNumberChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!phoneField.current) return;
+
+    const formatted = e.target.value.replace(/[^\d]/g, "");
+    phoneField.current.value = formatted;
   }
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -104,11 +112,12 @@ export function QuoteForm({ designId, onClickBack }: QuoteFormProps) {
           </div>
         )}
         <input
+          ref={phoneField}
           type="tel"
           name="phone"
           id="phone"
           placeholder="Phone Number"
-          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+          onChange={handlePhoneNumberChange}
         />
         <input
           type="text"

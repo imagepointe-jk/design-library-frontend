@@ -63,7 +63,7 @@ export function submitSearch(
     designType: designType ? designType : "Screen Print",
     pageNumber: 1,
     keywords: keywords?.toString().split(" "),
-    featuredOnly: true,
+    featuredOnly: false,
     allowDuplicateDesignNumbers: true,
   };
 

@@ -1,9 +1,6 @@
 import { designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
-import {
-  buildDesignQueryParams,
-  requestParentWindowUrlChange,
-} from "../utility";
+import { requestParentWindowQueryChange } from "../utility";
 import { tryParseDesignType } from "../validations";
 import { useApp } from "./AppProvider";
 import styles from "./styles/SearchArea.module.css";
@@ -19,7 +16,7 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
 
   return (
     <form
-      onSubmit={(e) => submitSearch(e, parentWindowLocation?.origin || "")}
+      onSubmit={(e) => submitSearch(e, parentWindowLocation?.url || "")}
       className={isInModal ? styles["form-in-modal"] : undefined}
     >
       <div className={styles["search-row"]}>
@@ -54,7 +51,7 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
 
 export function submitSearch(
   e: React.FormEvent<HTMLFormElement>,
-  parentWindowOrigin: string
+  parentWindowUrl: string
 ) {
   e.preventDefault();
 
@@ -70,9 +67,5 @@ export function submitSearch(
     allowDuplicateDesignNumbers: true,
   };
 
-  requestParentWindowUrlChange(
-    `${parentWindowOrigin}/design-library-new-designs/?${buildDesignQueryParams(
-      newParams
-    )}`
-  );
+  requestParentWindowQueryChange(parentWindowUrl, newParams);
 }

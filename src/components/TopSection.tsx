@@ -18,7 +18,8 @@ export function TopSection() {
       designType,
       featuredOnly: designType === "Screen Print",
       pageNumber: 1,
-      countPerPage: 20,
+      countPerPage: 12,
+      sortBy: "priority",
     };
     const queryString = buildDesignQueryParams(featuredQueryParams);
     try {

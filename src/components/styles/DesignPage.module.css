@@ -5,6 +5,8 @@
   padding: 30px;
   justify-content: center;
   background-color: white;
+  max-width: 1024px;
+  margin: auto;
 }
 
 .bg-color-container {

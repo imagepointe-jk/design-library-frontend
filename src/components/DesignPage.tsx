@@ -12,6 +12,7 @@ import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
 import styles from "./styles/DesignPage.module.css";
 import { QuoteForm } from "./QuoteForm";
+import { ShareButton } from "./ShareButton";
 
 type DesignPageProps = {
   designId: number;
@@ -87,6 +88,9 @@ export function DesignPage({ designId }: DesignPageProps) {
             className={`${styles["heading"]} ${styles["mobile-only"]}`}
           >{`#${viewedDesign.DesignNumber}`}</h2>
           <div className={styles["gallery-container"]}>
+            <div className={styles["gizmos-container"]}>
+              <ShareButton designId={viewedDesign.Id} />
+            </div>
             <DesignScrollView
               imageUrls={images}
               onScrollFn={onScrollFn}

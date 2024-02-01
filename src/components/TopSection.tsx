@@ -4,6 +4,7 @@ import { DesignType, TempDesignWithImages } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import {
   buildDesignQueryParams,
+  getDesignDefaultBackgroundColor,
   requestParentWindowDesignModalOpen,
   requestParentWindowQueryChange,
 } from "../utility";
@@ -25,7 +26,7 @@ export function TopSection() {
       designType,
       featuredOnly: designType === "Screen Print",
       pageNumber: 1,
-      countPerPage: 12,
+      countPerPage: 9,
       sortBy: "priority",
     };
     const queryString = buildDesignQueryParams(featuredQueryParams);
@@ -61,11 +62,19 @@ export function TopSection() {
   const cards = featuredDesigns
     ? featuredDesigns
         .map((design) => (
-          <ImageWithFallback
-            src={design.ImageData[0].url}
-            onClick={() => requestParentWindowDesignModalOpen(design.Id)}
-            style={{ cursor: "pointer" }}
-          />
+          <div
+            style={{
+              height: "100%",
+              backgroundColor:
+                getDesignDefaultBackgroundColor(design) || "#000000",
+            }}
+          >
+            <ImageWithFallback
+              className={styles["featured-image"]}
+              src={design.ImageData[0].url}
+              onClick={() => requestParentWindowDesignModalOpen(design.Id)}
+            />
+          </div>
         ))
         .concat([
           <div className={styles["view-more-card"]}>

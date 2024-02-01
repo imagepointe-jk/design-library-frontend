@@ -121,6 +121,10 @@
   margin-bottom: 0;
 }
 
+.quote-info {
+  text-align: center;
+}
+
 .mobile-only {
   display: none;
 }

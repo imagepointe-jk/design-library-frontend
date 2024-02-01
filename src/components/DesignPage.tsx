@@ -143,6 +143,10 @@ export function DesignPage({ designId }: DesignPageProps) {
                     </p>
                   </div>
                 </div>
+                <p className={styles["quote-info"]}>
+                  Get a quote to view more background color options and see this
+                  design customized for your union!
+                </p>
                 <button
                   className={styles["try-design-button"]}
                   onClick={() => setShowQuoteForm(true)}

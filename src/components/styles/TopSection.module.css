@@ -12,6 +12,11 @@
   height: 280px;
 }
 
+.featured-image {
+  height: 100%;
+  cursor: pointer;
+}
+
 .view-more-card {
   height: 100%;
   aspect-ratio: 1;

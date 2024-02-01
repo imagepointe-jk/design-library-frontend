@@ -1,4 +1,4 @@
-export const defaultModalHeight = 700,
+export const defaultModalHeight = 725,
   searchModalHeight = 250,
   searchModalMaxWidth = 550,
   pageSizeChoices = [18, 30, 50],

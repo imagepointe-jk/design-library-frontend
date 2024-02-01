@@ -36,6 +36,9 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
   const allowDuplicatesParam = params.allowDuplicateDesignNumbers
     ? "allowDuplicateDesignNumbers=true"
     : undefined;
+  const sortByParam = params.sortBy
+    ? `sortBy=${encodeURIComponent(params.sortBy)}`
+    : undefined;
 
   return [
     designTypeParam,
@@ -47,6 +50,7 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     keywordsParam,
     featuredParam,
     allowDuplicatesParam,
+    sortByParam,
   ]
     .filter((item) => item !== undefined)
     .join("&");

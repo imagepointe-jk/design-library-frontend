@@ -1,5 +1,8 @@
 import { defaultModalHeight } from "../constants";
-import { requestParentWindowModalOpen } from "../utility";
+import {
+  requestParentWindowDesignModalOpen,
+  requestParentWindowModalOpen,
+} from "../utility";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import styles from "./styles/DesignGrid.module.css";
@@ -22,13 +25,7 @@ export function DesignCard({
 
   function handleClickCard(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
     e.preventDefault();
-    requestParentWindowModalOpen(
-      `${designId}`,
-      {
-        height: defaultModalHeight,
-      },
-      "default"
-    );
+    requestParentWindowDesignModalOpen(designId);
   }
 
   return (

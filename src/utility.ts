@@ -1,3 +1,4 @@
+import { defaultModalHeight } from "./constants";
 import { TempDesign } from "./sharedTypes";
 import { DesignQueryParams } from "./types";
 
@@ -78,6 +79,16 @@ export function requestParentWindowModalOpen(
       windowMaxWidth,
     },
     "*"
+  );
+}
+
+export function requestParentWindowDesignModalOpen(designId: number) {
+  requestParentWindowModalOpen(
+    `${designId}`,
+    {
+      height: defaultModalHeight,
+    },
+    "default"
   );
 }
 

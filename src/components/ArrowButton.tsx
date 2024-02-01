@@ -1,4 +1,4 @@
-import styles from "./styles/ImageScrollView.module.css";
+import styles from "./styles/NodeScrollView.module.css";
 
 type ArrowButtonProps = {
   direction: "left" | "right";

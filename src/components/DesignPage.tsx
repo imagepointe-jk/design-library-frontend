@@ -88,7 +88,7 @@ export function DesignPage({ designId }: DesignPageProps) {
           >{`#${viewedDesign.DesignNumber}`}</h2>
           <div className={styles["gallery-container"]}>
             <DesignScrollView
-              images={images}
+              imageUrls={images}
               onScrollFn={onScrollFn}
               viewedIndex={viewedIndex}
               setViewedIndex={setViewedIndex}

@@ -3,9 +3,10 @@ import { getDesigns } from "../fetch";
 import { DesignType, TempDesignWithImages } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { buildDesignQueryParams } from "../utility";
-import { ImageScrollView } from "./ImageScrollView";
+import { NodeScrollView } from "./NodeScrollView";
 import { SearchArea } from "./SearchArea";
 import styles from "./styles/TopSection.module.css";
+import { ImageWithFallback } from "./ImageWithFallback";
 
 export function TopSection() {
   const [featuredDesigns, setFeaturedDesigns] = useState(
@@ -39,14 +40,17 @@ export function TopSection() {
   }, []);
 
   const images = featuredDesigns
-    ? featuredDesigns.map((design) => design.ImageData[0].url)
+    ? featuredDesigns.map((design) => (
+        <ImageWithFallback src={design.ImageData[0].url} />
+      ))
     : undefined;
+  console.log("designs", featuredDesigns);
 
   return (
     <div className={styles["main"]}>
       <SearchArea />
       <div className={styles["featured-image-container"]}>
-        <ImageScrollView images={images} isLoading={featuredDesignsLoading} />
+        <NodeScrollView nodes={images} isLoading={featuredDesignsLoading} />
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ export function TopSection() {
     if (!parentWindowLocation) return;
 
     const newParams: DesignQueryParams = {
-      featuredOnly: true,
+      featuredOnly: false,
       pageNumber: 1,
       category: "Holiday",
       subcategory: "St. Patrick's Day",

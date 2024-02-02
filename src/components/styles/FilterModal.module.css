@@ -57,6 +57,14 @@
   position: relative;
 }
 
+.design-container {
+  height: 100%;
+}
+
+.design-container img {
+  height: 100%;
+}
+
 .no-results {
   font-weight: 700;
   color: lightgray;

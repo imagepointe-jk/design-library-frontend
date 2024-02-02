@@ -36,6 +36,7 @@ export function QuoteForm({ designId, onClickBack }: QuoteFormProps) {
     phoneField.current.value = formatted;
   }
 
+  //TODO: Require phone number to be 9 digits
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 

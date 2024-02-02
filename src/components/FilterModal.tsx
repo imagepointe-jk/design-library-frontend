@@ -4,6 +4,7 @@ import { TempDesignWithImages } from "../sharedTypes";
 import { CategoryData, DesignQueryParams, SubcategoryData } from "../types";
 import {
   buildDesignQueryParams,
+  getDesignDefaultBackgroundColor,
   requestParentWindowQueryChange,
 } from "../utility";
 import { parseSearchParams } from "../validations";
@@ -52,7 +53,15 @@ export function FilterModal() {
 
   const previewDesignImages = previewDesigns
     ? previewDesigns.map((design) => (
-        <ImageWithFallback src={design.ImageData[0].url} />
+        <div
+          className={styles["design-container"]}
+          style={{
+            backgroundColor:
+              getDesignDefaultBackgroundColor(design) || "#000000",
+          }}
+        >
+          <ImageWithFallback src={design.ImageData[0].url} />
+        </div>
       ))
     : undefined;
   const previewDesignUrls = previewDesigns

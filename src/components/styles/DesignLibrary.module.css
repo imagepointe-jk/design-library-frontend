@@ -39,6 +39,15 @@
   flex-wrap: wrap;
 }
 
+.library-switcher-container {
+  font-size: 1.25rem;
+  margin-right: 5px;
+}
+
+.library-switcher-container input[type="radio"] {
+  scale: 125%;
+}
+
 .settings-button {
   padding: 10px;
   font-size: var(--size-16);

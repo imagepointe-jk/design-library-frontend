@@ -28,23 +28,25 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
         />
         <button type="submit">Search</button>
       </div>
-      <div className={styles["radio-buttons-container"]}>
-        {designTypes.map((designType) => (
-          <label htmlFor={`search-modal-${designType}`}>
-            <input
-              type="radio"
-              name={"design-type"}
-              id={`search-modal-${designType}`}
-              defaultChecked={designType === "Screen Print"}
-              value={designType}
-              onChange={(e) => {
-                if (onChangeDesignType) onChangeDesignType(e.target.value);
-              }}
-            />
-            {designType}
-          </label>
-        ))}
-      </div>
+      {isInModal && (
+        <div className={styles["radio-buttons-container"]}>
+          {designTypes.map((designType) => (
+            <label htmlFor={`search-modal-${designType}`}>
+              <input
+                type="radio"
+                name={"design-type"}
+                id={`search-modal-${designType}`}
+                defaultChecked={designType === "Screen Print"}
+                value={designType}
+                onChange={(e) => {
+                  if (onChangeDesignType) onChangeDesignType(e.target.value);
+                }}
+              />
+              {designType}
+            </label>
+          ))}
+        </div>
+      )}
     </form>
   );
 }

@@ -156,7 +156,7 @@ export function QuoteForm({
           type="text"
           name="union"
           id="union"
-          placeholder="Union Name"
+          placeholder="Union/Organization Name"
           required
         />
         <textarea
@@ -164,7 +164,7 @@ export function QuoteForm({
           id="comments"
           cols={30}
           rows={10}
-          placeholder="Comments (Please specify garment type, sizes, etc.)"
+          placeholder="Comments (Please specify garment type, sizes, quantities, etc.)"
         ></textarea>
         {!submittingRequest && submitStatus !== "success" && (
           <button type="submit">Submit Request</button>
@@ -172,7 +172,8 @@ export function QuoteForm({
         {submittingRequest && <LoadingIndicator />}
         {!submittingRequest && submitStatus === "success" && (
           <div>
-            <i className="fa-solid fa-circle-check"></i>Request submitted!
+            <i className="fa-solid fa-circle-check"></i>Request submitted. A
+            salesperson will reach out in 1-2 business days.
           </div>
         )}
         {!submittingRequest && submitStatus === "failure" && (

@@ -87,88 +87,93 @@ export function DesignPage({ designId }: DesignPageProps) {
   return (
     <>
       {viewedDesign && (
-        <div className={styles["main-flex"]}>
-          <h2
-            className={`${styles["heading"]} ${styles["mobile-only"]}`}
-          >{`#${viewedDesign.DesignNumber}`}</h2>
-          <div className={styles["gallery-container"]}>
-            <div className={styles["gizmos-container"]}>
-              <ShareButton designId={viewedDesign.Id} />
-            </div>
-            <DesignScrollView
-              imageUrls={images}
-              onScrollFn={onScrollFn}
-              viewedIndex={viewedIndex}
-              setViewedIndex={setViewedIndex}
-              backgroundColor={bgColorToUse}
-              showArrowButtons={!showQuoteForm && !singleDesign}
-              showNavGallery={!showQuoteForm && !singleDesign}
-            />
-          </div>
-          {!showQuoteForm && (
-            <div className={styles["details-area"]}>
-              <div>
-                <h2
-                  className={`${styles["heading"]} ${styles["desktop-only"]}`}
-                >{`#${viewedDesign.DesignNumber}`}</h2>
-                <p className={styles["description"]}>
-                  {viewedDesign.Description}
-                </p>
+        <>
+          <h4 className={styles["customize-notice"]}>
+            This design is customizable to your union and local.
+          </h4>
+          <div className={styles["main-flex"]}>
+            <h2
+              className={`${styles["heading"]} ${styles["mobile-only"]}`}
+            >{`#${viewedDesign.DesignNumber}`}</h2>
+            <div className={styles["gallery-container"]}>
+              <div className={styles["gizmos-container"]}>
+                <ShareButton designId={viewedDesign.Id} />
               </div>
-              <div>
-                {showColorChangeSection && (
-                  <BackgroundColorChanger
-                    selectedColor={selectedBgColor}
-                    onClickColor={onClickColor}
-                  />
-                )}
-                <div className={styles["filters-tags-container"]}>
-                  <div>
-                    <p className="bold">Filters</p>
-                    <p>
-                      {filters.length > 0 &&
-                        filters.map((sub, i, array) => {
-                          const onlySubcategory = sub && sub.split(" > ")[1];
-                          const comma = i < array.length - 1;
-                          return `${onlySubcategory}${comma ? ", " : ""}`;
-                        })}
-                      {filters.length === 0 && "No filters"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="bold">Search Tags</p>
-                    <p>
-                      {tags.length > 0 &&
-                        tags.map((sub, i, array) => {
-                          const comma = i < array.length - 1;
-                          return `${sub}${comma ? ", " : ""}`;
-                        })}
-                      {tags.length === 0 && "No tags"}
-                    </p>
-                  </div>
+              <DesignScrollView
+                imageUrls={images}
+                onScrollFn={onScrollFn}
+                viewedIndex={viewedIndex}
+                setViewedIndex={setViewedIndex}
+                backgroundColor={bgColorToUse}
+                showArrowButtons={!showQuoteForm && !singleDesign}
+                showNavGallery={!showQuoteForm && !singleDesign}
+              />
+            </div>
+            {!showQuoteForm && (
+              <div className={styles["details-area"]}>
+                <div>
+                  <h2
+                    className={`${styles["heading"]} ${styles["desktop-only"]}`}
+                  >{`#${viewedDesign.DesignNumber}`}</h2>
+                  <p className={styles["description"]}>
+                    {viewedDesign.Description}
+                  </p>
                 </div>
-                <p className={styles["quote-info"]}>
-                  Get a quote to view more background color options and see this
-                  design customized for your union!
-                </p>
-                <button
-                  className={styles["try-design-button"]}
-                  onClick={() => setShowQuoteForm(true)}
-                >
-                  REQUEST QUOTE
-                </button>
+                <div>
+                  {showColorChangeSection && (
+                    <BackgroundColorChanger
+                      selectedColor={selectedBgColor}
+                      onClickColor={onClickColor}
+                    />
+                  )}
+                  <div className={styles["filters-tags-container"]}>
+                    <div>
+                      <p className="bold">Filters</p>
+                      <p>
+                        {filters.length > 0 &&
+                          filters.map((sub, i, array) => {
+                            const onlySubcategory = sub && sub.split(" > ")[1];
+                            const comma = i < array.length - 1;
+                            return `${onlySubcategory}${comma ? ", " : ""}`;
+                          })}
+                        {filters.length === 0 && "No filters"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="bold">Search Tags</p>
+                      <p>
+                        {tags.length > 0 &&
+                          tags.map((sub, i, array) => {
+                            const comma = i < array.length - 1;
+                            return `${sub}${comma ? ", " : ""}`;
+                          })}
+                        {tags.length === 0 && "No tags"}
+                      </p>
+                    </div>
+                  </div>
+                  <p className={styles["quote-info"]}>
+                    Get a quote to view more garment color options and see this
+                    design customized for your union!
+                  </p>
+                  <button
+                    className={styles["try-design-button"]}
+                    onClick={() => setShowQuoteForm(true)}
+                  >
+                    REQUEST QUOTE
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-          {showQuoteForm && (
-            <QuoteForm
-              designId={viewedDesign.Id}
-              designNumber={viewedDesign.DesignNumber}
-              garmentColor={fullColorStringToUse}
-              onClickBack={() => setShowQuoteForm(false)}
-            />
-          )}
-        </div>
+            )}
+            {showQuoteForm && (
+              <QuoteForm
+                designId={viewedDesign.Id}
+                designNumber={viewedDesign.DesignNumber}
+                garmentColor={fullColorStringToUse}
+                onClickBack={() => setShowQuoteForm(false)}
+              />
+            )}
+          </div>
+        </>
       )}
     </>
   );

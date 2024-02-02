@@ -39,6 +39,9 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
   const sortByParam = params.sortBy
     ? `sortBy=${encodeURIComponent(params.sortBy)}`
     : undefined;
+  const excludePrioritizedParam = params.shouldExcludePrioritized
+    ? "excludePrioritized=true"
+    : undefined;
 
   return [
     designTypeParam,
@@ -51,6 +54,7 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     featuredParam,
     allowDuplicatesParam,
     sortByParam,
+    excludePrioritizedParam,
   ]
     .filter((item) => item !== undefined)
     .join("&");

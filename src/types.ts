@@ -35,6 +35,7 @@ export type DesignQueryParams = {
   featuredOnly: boolean;
   allowDuplicateDesignNumbers?: boolean;
   sortBy?: string;
+  shouldExcludePrioritized?: boolean;
 };
 
 export type CategoryData = z.infer<typeof categoryDataSchema>;

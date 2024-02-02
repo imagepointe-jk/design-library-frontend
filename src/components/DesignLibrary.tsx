@@ -29,10 +29,33 @@ export function DesignLibrary() {
   const [isFetchingResults, setIsFetchingResults] = useState(true);
 
   async function getDesignsToDisplay() {
+    const {
+      designType,
+      allowDuplicateDesignNumbers,
+      category,
+      subcategory,
+      pageNumber,
+      tags,
+      keywords,
+      featuredOnly,
+    } = designQueryParams;
+    const shouldExcludePrioritized =
+      designType === "Screen Print" &&
+      !allowDuplicateDesignNumbers &&
+      !category &&
+      !subcategory &&
+      pageNumber === 1 &&
+      !tags &&
+      !keywords &&
+      !featuredOnly;
+    const designQueryParamsToUse = {
+      ...designQueryParams,
+      shouldExcludePrioritized,
+    };
     try {
       setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(
-        buildDesignQueryParams(designQueryParams)
+        buildDesignQueryParams(designQueryParamsToUse)
       );
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);

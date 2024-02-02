@@ -134,6 +134,7 @@ export function DesignLibrary() {
               onClickSidebarSubcategory={handleClickSidebarSubcategory}
             />
             <div>
+              <h2>{designQueryParams.designType} Designs</h2>
               <div className={styles["search-container"]}>
                 <DesignLibraryControls />
                 {isFetchingResults && <LoadingIndicator />}

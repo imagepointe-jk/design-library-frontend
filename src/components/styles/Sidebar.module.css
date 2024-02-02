@@ -1,6 +1,7 @@
 .main {
   width: 200px;
   font-size: 0.85rem;
+  margin-top: 70px;
 }
 
 .main input[type="search"],
@@ -27,7 +28,6 @@
 }
 
 .filter-parent {
-  font-weight: bold;
   padding: 15px;
   user-select: none;
   font-size: 1.125rem;
@@ -42,6 +42,14 @@
   background-color: rgb(168, 168, 168);
 }
 
+.filter-parent::before {
+  content: "+";
+  position: absolute;
+  translate: -115%;
+  transition: 0.5s;
+  rotate: -90deg;
+}
+
 .filter-child,
 .filter-parent {
   cursor: pointer;
@@ -52,8 +60,11 @@
   border-bottom: none;
 }
 
-.filter-child-selected::before,
-.filter-parent-selected::before {
+.filter-parent-selected {
+  color: var(--color-alpha);
+}
+
+.filter-child-selected::before {
   display: block;
   position: absolute;
   left: 0;
@@ -69,8 +80,9 @@
   translate: -125% 40%;
 }
 
-.filter-parent-selected::before {
-  translate: 0% 220%;
+.filter-parent-expanded::before {
+  rotate: 0deg;
+  content: "—";
 }
 
 .filter-parent + ul {

@@ -1,30 +1,53 @@
 import { useRef, useState } from "react";
 import { sendQuoteRequest } from "../fetch";
 import { requestParentWindowUrlChange } from "../utility";
-import { validateEmail, validateQuoteRequest } from "../validations";
+import {
+  validateEmail,
+  validatePhone,
+  validateQuoteRequest,
+} from "../validations";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/QuoteForm.module.css";
 
 type QuoteFormProps = {
   designId: number;
+  designNumber: string;
+  garmentColor: string;
   onClickBack: () => void;
 };
 
 type Status = "success" | "failure";
 
-export function QuoteForm({ designId, onClickBack }: QuoteFormProps) {
+export function QuoteForm({
+  designId,
+  designNumber,
+  garmentColor,
+  onClickBack,
+}: QuoteFormProps) {
   const [submittingRequest, setSubmittingRequest] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
+  const [invalidPhone, setInvalidPhone] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null as Status | null);
   const phoneField = useRef(null as HTMLInputElement | null);
 
-  function checkEmail(str: string) {
+  function checkEmail(email: string) {
     try {
-      validateEmail(str);
+      validateEmail(email);
       setInvalidEmail(false);
       return true;
     } catch (_) {
       setInvalidEmail(true);
+      return false;
+    }
+  }
+
+  function checkPhone(phone: number) {
+    try {
+      validatePhone(phone);
+      setInvalidPhone(false);
+      return true;
+    } catch (_) {
+      setInvalidPhone(true);
       return false;
     }
   }
@@ -43,12 +66,12 @@ export function QuoteForm({ designId, onClickBack }: QuoteFormProps) {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const email = `${formData.get("email")}`;
-    if (!checkEmail(email)) return;
+    const phone = +`${formData.get("phone")}`;
+    if (!checkEmail(email) || !checkPhone(phone)) return;
 
     try {
       const firstName = formData.get("first-name");
       const lastName = formData.get("last-name");
-      const phone = +`${formData.get("phone")}`.replace(/-/g, "");
       const union = formData.get("union");
       const comments = formData.get("comments") || "";
 
@@ -60,6 +83,8 @@ export function QuoteForm({ designId, onClickBack }: QuoteFormProps) {
         union,
         designId,
         comments,
+        designNumber,
+        garmentColor,
       });
       setSubmittingRequest(true);
       const response = await sendQuoteRequest(quoteRequest);
@@ -119,7 +144,14 @@ export function QuoteForm({ designId, onClickBack }: QuoteFormProps) {
           id="phone"
           placeholder="Phone Number"
           onChange={handlePhoneNumberChange}
+          onBlur={(e) => checkPhone(+e.target.value)}
         />
+        {invalidPhone && (
+          <div>
+            <i className="fa-solid fa-triangle-exclamation"></i>Please enter a
+            10-digit phone number.
+          </div>
+        )}
         <input
           type="text"
           name="union"

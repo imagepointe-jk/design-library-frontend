@@ -62,6 +62,10 @@ export function DesignPage({ designId }: DesignPageProps) {
   const selectedHexCode =
     selectedBgColor && getFirstHexCodeInString(selectedBgColor);
   const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
+  const fullColorStringToUse =
+    selectedBgColor ||
+    viewedDesign?.DefaultBackgroundColor ||
+    "(no color selected)";
   const filters = viewedDesign
     ? getDesignCategoryHierarchies(viewedDesign).filter(
         (sub) => sub !== undefined
@@ -159,6 +163,8 @@ export function DesignPage({ designId }: DesignPageProps) {
           {showQuoteForm && (
             <QuoteForm
               designId={viewedDesign.Id}
+              designNumber={viewedDesign.DesignNumber}
+              garmentColor={fullColorStringToUse}
               onClickBack={() => setShowQuoteForm(false)}
             />
           )}

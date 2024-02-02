@@ -91,3 +91,7 @@ export function validateQuoteRequest(data: any) {
 export function validateEmail(str: string) {
   return z.string().email().parse(str);
 }
+
+export function validatePhone(phone: number) {
+  if (`${phone}`.length !== 10) throw new Error();
+}

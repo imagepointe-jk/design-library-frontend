@@ -143,5 +143,8 @@ export async function sendQuoteRequest(quoteRequest: QuoteRequest) {
     body: raw,
   };
 
-  return fetch("http://localhost:3000/quote-request", requestOptions);
+  const url = serverURL();
+  console.log(`Fetching from ${url}`);
+
+  return fetch(`${url}/quote-request`, requestOptions);
 }

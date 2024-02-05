@@ -1,8 +1,9 @@
-import { ImageScrollView } from "./ImageScrollView";
+import { ImageWithFallback } from "./ImageWithFallback";
+import { NodeScrollView } from "./NodeScrollView";
 import styles from "./styles/DesignScrollView.module.css";
 
 type DesignScrollViewProps = {
-  images?: string[];
+  imageUrls?: string[];
   viewedIndex?: number;
   setViewedIndex?: (newIndex: number) => void;
   onScrollFn?: (
@@ -10,15 +11,34 @@ type DesignScrollViewProps = {
     maxScrollIndex: number
   ) => void;
   backgroundColor?: string;
+  showArrowButtons?: boolean;
+  showNavGallery?: boolean;
 };
 
 export function DesignScrollView({
   onScrollFn,
-  images,
+  imageUrls,
   viewedIndex,
   setViewedIndex,
   backgroundColor,
+  showArrowButtons,
+  showNavGallery,
 }: DesignScrollViewProps) {
+  const navImages = imageUrls
+    ? imageUrls.map((url, i) => (
+        <ImageWithFallback
+          src={url}
+          className={`${viewedIndex !== i ? styles["inactive-img"] : ""}`}
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            if (setViewedIndex) setViewedIndex(i);
+          }}
+        />
+      ))
+    : [];
+  const mainImages = imageUrls
+    ? imageUrls.map((url) => <ImageWithFallback src={url} />)
+    : [];
   return (
     <div className={styles["main"]}>
       <div className={styles["main-img-container"]}>
@@ -26,19 +46,23 @@ export function DesignScrollView({
           className={styles["bg-color-backdrop"]}
           style={{ backgroundColor: backgroundColor || "white" }}
         ></div>
-        <ImageScrollView
-          images={images}
+        <NodeScrollView
+          nodes={mainImages}
+          noNodesText="No Images"
           onScrollFn={onScrollFn}
           overrideScrollIndex={viewedIndex}
+          showArrowButtons={showArrowButtons}
         />
       </div>
-      <div className={styles["nav-img-container"]}>
-        <ImageScrollView
-          images={images}
-          onClickImg={setViewedIndex}
-          highlightImageIndex={viewedIndex}
-        />
-      </div>
+      {showNavGallery !== false && (
+        <div className={styles["nav-img-container"]}>
+          <NodeScrollView
+            nodes={navImages}
+            noNodesText="No Images"
+            showArrowButtons={showArrowButtons}
+          />
+        </div>
+      )}
     </div>
   );
 }

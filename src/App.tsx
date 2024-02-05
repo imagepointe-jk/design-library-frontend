@@ -4,7 +4,7 @@ import { DesignLibrary } from "./components/DesignLibrary";
 import { DesignPage } from "./components/DesignPage";
 import { ErrorPage } from "./components/ErrorScreen";
 import { FilterModal } from "./components/FilterModal";
-import { Home } from "./components/Home";
+import { TopSection } from "./components/TopSection";
 import { LoadingIndicator } from "./components/LoadingIndicator";
 import { SearchArea } from "./components/SearchArea";
 
@@ -26,13 +26,14 @@ function App() {
 
   const showHome = parentWindowLocation?.pathname === "/design-library-new/";
   const showLibrary =
-    parentWindowLocation?.pathname === "/design-library-new-designs/";
+    parentWindowLocation?.pathname === "/design-library-new-designs/" ||
+    parentWindowLocation?.pathname === "/design-library-development/";
   const designIdToUse =
     ownDesignId !== undefined ? ownDesignId : parentDesignId;
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
 
-  if (showHome) return <Home />;
+  if (showHome) return <TopSection />;
   else if (showSearch) return <SearchArea />;
   else if (showFilters) return <FilterModal />;
   else if (designIdToUse !== undefined)

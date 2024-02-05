@@ -1,5 +1,5 @@
 .bg {
-  background-color: lightgray;
+  background-color: rgb(194, 194, 194);
   position: absolute;
   left: 0;
   right: 0;
@@ -9,6 +9,8 @@
 
 .main-flex {
   display: flex;
+  justify-content: center;
+  gap: 5px;
 }
 
 .library-text {
@@ -37,10 +39,19 @@
   flex-wrap: wrap;
 }
 
+.library-switcher-container {
+  font-size: 1.25rem;
+  margin-right: 5px;
+}
+
+.library-switcher-container input[type="radio"] {
+  scale: 125%;
+}
+
 .settings-button {
   padding: 10px;
   font-size: var(--size-16);
-  display: flex;
+  display: none;
   gap: 5px;
   cursor: pointer;
 }
@@ -68,63 +79,8 @@
   font-size: var(--size-16);
 }
 
-.sidebar {
-  width: 200px;
-  font-size: 0.85rem;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar-parent {
-  font-weight: bold;
-  padding: 3px;
-  user-select: none;
-}
-
-.sidebar-parent:hover {
-  background-color: rgb(192, 192, 192);
-}
-
-.sidebar-child,
-.sidebar-parent {
-  cursor: pointer;
-  position: relative;
-}
-
-.sidebar-child-selected::before,
-.sidebar-parent-selected::before {
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 10px;
-  height: 10px;
-  background-color: var(--color-alpha);
-  border-radius: 100px;
-  content: "";
-}
-
-.sidebar-child-selected::before {
-  translate: -125% 40%;
-}
-
-.sidebar-parent-selected::before {
-  translate: -125% 70%;
-}
-
-.sidebar-parent + ul {
-  padding-left: 25px;
-}
-
 @media screen and (max-width: 1200px) {
-  .sidebar {
-    display: none;
-  }
-
-  .main-flex {
-    justify-content: center;
+  .settings-button {
+    display: flex;
   }
 }

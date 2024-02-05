@@ -1,6 +1,10 @@
 import { defaultModalHeight } from "../constants";
-import { requestParentWindowModalOpen } from "../utility";
+import {
+  requestParentWindowDesignModalOpen,
+  requestParentWindowModalOpen,
+} from "../utility";
 import { useApp } from "./AppProvider";
+import { ImageWithFallback } from "./ImageWithFallback";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignCardProps = {
@@ -21,13 +25,7 @@ export function DesignCard({
 
   function handleClickCard(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
     e.preventDefault();
-    requestParentWindowModalOpen(
-      `${designId}`,
-      {
-        height: defaultModalHeight,
-      },
-      "default"
-    );
+    requestParentWindowDesignModalOpen(designId);
   }
 
   return (
@@ -37,14 +35,10 @@ export function DesignCard({
       onClick={handleClickCard}
     >
       <div className={styles["img-container"]} style={{ backgroundColor }}>
-        <img
+        <ImageWithFallback
           className={styles["design-img"]}
           src={imgUrl}
           alt={`design ${designNumber}`}
-          onError={(e) => {
-            (e.target as any).src =
-              "https://placehold.co/300x300?text=Not+Found";
-          }}
         />
       </div>
       <div className={styles["design-card-id"]}>{designNumber}</div>

@@ -11,27 +11,51 @@ import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
-import { HierarchyItem, HierarchyList } from "./HierarchyList";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { PageControls } from "./PageControls";
 import styles from "./styles/DesignLibrary.module.css";
 import { pageSizeChoices } from "../constants";
+import { TopSection } from "./TopSection";
+import { Sidebar } from "./Sidebar";
 
 export function DesignLibrary() {
   const [designResults, setDesignResults] = useState<TempDesignResults | null>(
     null
   );
-  const { parentWindowLocation, categories } = useApp();
+  const { parentWindowLocation } = useApp();
   const designQueryParams = parseSearchParams(
     new URLSearchParams(parentWindowLocation?.search)
   );
   const [isFetchingResults, setIsFetchingResults] = useState(true);
 
   async function getDesignsToDisplay() {
+    const {
+      designType,
+      allowDuplicateDesignNumbers,
+      category,
+      subcategory,
+      pageNumber,
+      tags,
+      keywords,
+      featuredOnly,
+    } = designQueryParams;
+    const shouldExcludePrioritized =
+      designType === "Screen Print" &&
+      !allowDuplicateDesignNumbers &&
+      !category &&
+      !subcategory &&
+      pageNumber === 1 &&
+      !tags &&
+      !keywords &&
+      !featuredOnly;
+    const designQueryParamsToUse = {
+      ...designQueryParams,
+      shouldExcludePrioritized,
+    };
     try {
       setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(
-        buildDesignQueryParams(designQueryParams)
+        buildDesignQueryParams(designQueryParamsToUse)
       );
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
@@ -110,28 +134,11 @@ export function DesignLibrary() {
     ? Math.ceil(designResults.total / designResults.perPage)
     : 0;
 
-  const filterSidebarHierarchy: HierarchyItem[] = categories
-    ? categories
-        .filter(
-          (category) => category.DesignType === designQueryParams.designType
-        )
-        .map((category) => ({
-          parentName: category.Name,
-          selected: designQueryParams.category === category.Name,
-          onClickParent: () => requestParentWindowAdaptToAppHeight(),
-          children: category.Subcategories.map((subcategory) => ({
-            childName: subcategory.Name,
-            selected: subcategory.Name === designQueryParams.subcategory,
-            onClickChild: () =>
-              handleClickSidebarSubcategory(subcategory.Hierarchy),
-          })),
-        }))
-    : [];
-
   return (
     <>
       <div className={styles["bg"]}>
         <div className="inner-body">
+          <TopSection />
           {keywordsAsString && (
             <div className={styles["searching-for-area"]}>
               <h2>
@@ -146,16 +153,11 @@ export function DesignLibrary() {
             </div>
           )}
           <div className={styles["main-flex"]}>
-            <HierarchyList
-              hierarchy={filterSidebarHierarchy}
-              defaultExpandedParent={designQueryParams.category}
-              mainClassName={styles["sidebar"]}
-              parentClassName={styles["sidebar-parent"]}
-              parentSelectedClassName={styles["sidebar-parent-selected"]}
-              childClassName={styles["sidebar-child"]}
-              childSelectedClassName={styles["sidebar-child-selected"]}
+            <Sidebar
+              onClickSidebarSubcategory={handleClickSidebarSubcategory}
             />
             <div>
+              <h2>{designQueryParams.designType} Designs</h2>
               <div className={styles["search-container"]}>
                 <DesignLibraryControls />
                 {isFetchingResults && <LoadingIndicator />}

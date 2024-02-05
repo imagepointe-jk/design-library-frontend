@@ -69,7 +69,10 @@ export function DesignLibraryControls() {
     <div className={styles["settings-container"]}>
       <div className={styles["settings-subcontainer"]}>
         {designTypes.map((type) => (
-          <label htmlFor={`${buttonIdPrefix}${type}`}>
+          <label
+            className={styles["library-switcher-container"]}
+            htmlFor={`${buttonIdPrefix}${type}`}
+          >
             <input
               type="radio"
               name="design-type"

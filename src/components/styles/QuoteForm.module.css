@@ -1,0 +1,26 @@
+.main {
+  flex: 3;
+}
+
+.back {
+  background: none;
+  color: black;
+}
+
+.back i {
+  margin-right: 5px;
+}
+
+.main label {
+  display: block;
+}
+
+.main input {
+  border-width: 1px;
+}
+
+.main form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

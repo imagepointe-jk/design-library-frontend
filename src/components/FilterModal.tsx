@@ -4,14 +4,16 @@ import { TempDesignWithImages } from "../sharedTypes";
 import { CategoryData, DesignQueryParams, SubcategoryData } from "../types";
 import {
   buildDesignQueryParams,
+  getDesignDefaultBackgroundColor,
   requestParentWindowQueryChange,
 } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
-import { ImageScrollView } from "./ImageScrollView";
+import { NodeScrollView } from "./NodeScrollView";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/FilterModal.module.css";
+import { ImageWithFallback } from "./ImageWithFallback";
 
 const maxSubcategoriesBeforeScrollable = 15;
 const buttonIdPrefix = "filter-modal-filter-button-";
@@ -50,9 +52,22 @@ export function FilterModal() {
     : [];
 
   const previewDesignImages = previewDesigns
+    ? previewDesigns.map((design) => (
+        <div
+          className={styles["design-container"]}
+          style={{
+            backgroundColor:
+              getDesignDefaultBackgroundColor(design) || "#000000",
+          }}
+        >
+          <ImageWithFallback src={design.ImageData[0].url} />
+        </div>
+      ))
+    : undefined;
+  const previewDesignUrls = previewDesigns
     ? previewDesigns.map((design) => design.ImageData[0].url)
     : undefined;
-  const scrollViewKey = btoa(JSON.stringify(previewDesignImages));
+  const scrollViewKey = btoa(JSON.stringify(previewDesignUrls));
 
   function clickFilterButton(
     buttonType: "Category" | "Subcategory",
@@ -138,10 +153,10 @@ export function FilterModal() {
         />
         <div className={styles["preview-designs-area"]}>
           <h4>Preview</h4>
-          <ImageScrollView
+          <NodeScrollView
             key={scrollViewKey}
-            images={previewDesignImages}
-            noImagesText="No Designs"
+            nodes={previewDesignImages}
+            noNodesText="No Designs"
             isLoading={previewDesignsLoading}
           />
         </div>

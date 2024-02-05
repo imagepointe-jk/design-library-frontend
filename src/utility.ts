@@ -1,3 +1,4 @@
+import { defaultModalHeight } from "./constants";
 import { TempDesign } from "./sharedTypes";
 import { DesignQueryParams } from "./types";
 
@@ -35,6 +36,12 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
   const allowDuplicatesParam = params.allowDuplicateDesignNumbers
     ? "allowDuplicateDesignNumbers=true"
     : undefined;
+  const sortByParam = params.sortBy
+    ? `sortBy=${encodeURIComponent(params.sortBy)}`
+    : undefined;
+  const excludePrioritizedParam = params.shouldExcludePrioritized
+    ? "excludePrioritized=true"
+    : undefined;
 
   return [
     designTypeParam,
@@ -46,6 +53,8 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     keywordsParam,
     featuredParam,
     allowDuplicatesParam,
+    sortByParam,
+    excludePrioritizedParam,
   ]
     .filter((item) => item !== undefined)
     .join("&");
@@ -78,6 +87,16 @@ export function requestParentWindowModalOpen(
       windowMaxWidth,
     },
     "*"
+  );
+}
+
+export function requestParentWindowDesignModalOpen(designId: number) {
+  requestParentWindowModalOpen(
+    `${designId}`,
+    {
+      height: defaultModalHeight,
+    },
+    "default"
   );
 }
 

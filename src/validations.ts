@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { designTypeSchema, tempDesignWithImagesSchema } from "./sharedTypes";
+import {
+  designTypeSchema,
+  quoteRequestSchema,
+  tempDesignWithImagesSchema,
+} from "./sharedTypes";
 import {
   DesignQueryParams,
   categoryDataSchema,
@@ -50,6 +54,7 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
   const pageNumberFromParams = params.get("pageNumber");
   const featuredFromParams = params.get("featured");
   const allowDuplicateDesignNumbers = params.get("allowDuplicateDesignNumbers");
+  const shouldExcludePrioritized = params.get("excludePrioritized");
 
   const parsedDesignType =
     tryParseDesignType(makeStringTitleCase(`${designTypeFromParams}`)) ||
@@ -75,7 +80,20 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
     tags: tagsFromParams ? tagsFromParams.split(",") : undefined,
     featuredOnly: featuredFromParams === "true",
     allowDuplicateDesignNumbers: allowDuplicateDesignNumbers === "true",
+    shouldExcludePrioritized: shouldExcludePrioritized === "true",
   };
 
   return parsedSearchParams;
+}
+
+export function validateQuoteRequest(data: any) {
+  return quoteRequestSchema.parse(data);
+}
+
+export function validateEmail(str: string) {
+  return z.string().email().parse(str);
+}
+
+export function validatePhone(phone: number) {
+  if (`${phone}`.length !== 10) throw new Error();
 }

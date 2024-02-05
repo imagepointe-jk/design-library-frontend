@@ -1,0 +1,12 @@
+#design-library-sidebar-clear-button {
+  background-color: gray;
+  font-size: 0.875rem;
+  display: inline-block;
+  width: initial;
+  padding: 8px;
+  margin-left: 5px;
+}
+
+#design-library-sidebar-clear-button i {
+  margin-right: 4px;
+}

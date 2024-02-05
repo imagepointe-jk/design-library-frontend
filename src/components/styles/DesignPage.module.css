@@ -1,3 +1,8 @@
+.customize-notice {
+  margin-bottom: 0;
+  margin-top: 30px;
+}
+
 .main-flex {
   display: flex;
   gap: 40px;
@@ -5,6 +10,8 @@
   padding: 30px;
   justify-content: center;
   background-color: white;
+  max-width: 1024px;
+  margin: auto;
 }
 
 .bg-color-container {
@@ -17,7 +24,6 @@
 }
 
 .try-design-button {
-  width: 200px;
   margin: auto;
   padding: 15px;
 }
@@ -29,7 +35,7 @@
 .details-area {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   flex: 3;
 }
 
@@ -50,6 +56,38 @@
 
 .gallery-container {
   flex: 4;
+}
+
+.gizmos-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.share-button {
+  position: relative;
+  background: none;
+  color: black;
+  padding: 0;
+}
+
+.share-button-toast {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  background-color: gray;
+  color: white;
+  font-size: 0.825rem;
+  padding: 5px;
+  border-radius: 5px;
+  width: 100px;
+  pointer-events: none;
+  opacity: 100%;
+  translate: -50% 0;
+}
+
+.share-button-toast-up {
+  translate: -50% -45px;
+  opacity: 0;
 }
 
 .design-image {
@@ -88,6 +126,10 @@
   margin-bottom: 0;
 }
 
+.quote-info {
+  text-align: center;
+}
+
 .mobile-only {
   display: none;
 }
@@ -96,6 +138,8 @@
   .main-flex {
     flex-direction: column;
     margin: auto;
+    padding-top: 0;
+    gap: 10px;
   }
 
   .desktop-only {

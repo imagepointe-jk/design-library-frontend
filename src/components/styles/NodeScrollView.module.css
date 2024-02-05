@@ -12,28 +12,17 @@
   font-size: var(--size-20);
 }
 
-.images-overflow-container {
+.nodes-overflow-container {
   overflow: hidden;
   position: relative;
   height: 100%;
   width: 100%;
 }
 
-.images-row {
+.nodes-row {
   display: flex;
   position: absolute;
   transition: 0.2s;
-  height: 100%;
-}
-
-.single-image-container {
-  height: 100%;
-  aspect-ratio: 1;
-}
-
-.single-image {
-  display: block;
-  margin: auto;
   height: 100%;
 }
 
@@ -55,8 +44,4 @@
 .right-button {
   right: 0;
   translate: 70% -50%;
-}
-
-.inactive-img {
-  opacity: 50%;
 }

@@ -88,9 +88,9 @@ export function DesignPage({ designId }: DesignPageProps) {
     <>
       {viewedDesign && (
         <>
-          <h4 className={styles["customize-notice"]}>
+          <h3 className={styles["customize-notice"]}>
             This design is customizable to your union and local.
-          </h4>
+          </h3>
           <div className={styles["main-flex"]}>
             <h2
               className={`${styles["heading"]} ${styles["mobile-only"]}`}

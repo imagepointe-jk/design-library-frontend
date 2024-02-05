@@ -152,12 +152,24 @@ export function DesignLibrary() {
               </button>
             </div>
           )}
+          <div className={styles["library-info-container"]}>
+            <h2 className={styles["library-name"]}>
+              {designQueryParams.designType} Designs
+            </h2>
+            {designQueryParams.designType === "Embroidery" && (
+              <p className={styles["library-subtext"]}>
+                The inspiration library shows current embroidery designs we've
+                done for unions and organizations to help you envision and
+                choose your next design. Design work is done in-house by our
+                experienced Art Team.{" "}
+              </p>
+            )}
+          </div>
           <div className={styles["main-flex"]}>
             <Sidebar
               onClickSidebarSubcategory={handleClickSidebarSubcategory}
             />
             <div>
-              <h2>{designQueryParams.designType} Designs</h2>
               <div className={styles["search-container"]}>
                 <DesignLibraryControls />
                 {isFetchingResults && <LoadingIndicator />}

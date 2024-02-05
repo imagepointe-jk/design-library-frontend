@@ -34,6 +34,7 @@ export function ShareButton({ designId }: ShareButtonProps) {
       title="Copy Link"
       onClick={handleClick}
     >
+      <span>Share This Design</span>
       <i className="fa-solid fa-arrow-up-right-from-square"></i>
       <div
         className={`${styles["share-button-toast"]} ${styles[toastUpClassName]}`}

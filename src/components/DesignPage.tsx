@@ -75,7 +75,9 @@ export function DesignPage({ designId }: DesignPageProps) {
     ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
     : [];
   const images = relatedDesigns
-    ? relatedDesigns.map((design) => design.ImageData[0].url || "")
+    ? relatedDesigns.map((design) =>
+        design.ImageURL ? design.ImageURL : design.ImageData[0].url || ""
+      )
     : [];
   const viewedDesignHasTransparency =
     viewedDesign?.ImageData[0].hasTransparency || false;

@@ -71,7 +71,7 @@ export function TopSection() {
           >
             <ImageWithFallback
               className={styles["featured-image"]}
-              src={design.ImageData[0].url}
+              src={design.ImageURL ? design.ImageURL : design.ImageData[0].url}
               onClick={() => requestParentWindowDesignModalOpen(design.Id)}
             />
           </div>

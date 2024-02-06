@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .controls-subsection {
@@ -33,7 +34,13 @@
   text-align: center;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1024px) {
+  .page-buttons-label {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
   .main {
     flex-direction: column;
     justify-content: initial;

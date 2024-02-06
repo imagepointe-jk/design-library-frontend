@@ -31,7 +31,7 @@ export function DesignCard({
   return (
     <a
       className={styles["design-card"]}
-      href={`${domain}/design-library-new-designs/?designId=${designId}`}
+      href={`${domain}/design-library/?designId=${designId}`}
       onClick={handleClickCard}
     >
       <div className={styles["img-container"]} style={{ backgroundColor }}>

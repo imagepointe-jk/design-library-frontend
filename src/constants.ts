@@ -5,5 +5,5 @@ export const defaultModalHeight = 725,
   //there are lots of factors that determine when (if ever) the iframe's parent window will respond.
   //wait for this long before assuming something went wrong and showing the user an error message.
   waitForParentMs = 4000,
-  productionPathName = "design-library-new-designs",
+  productionPathName = "design-library",
   developmentPathName = "design-library-development";

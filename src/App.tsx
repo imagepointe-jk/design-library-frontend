@@ -24,9 +24,9 @@ function App() {
       ? +parentDesignIdStr
       : undefined;
 
-  const showHome = parentWindowLocation?.pathname === "/design-library-new/";
+  const showHome = parentWindowLocation?.pathname === "/design-library/";
   const showLibrary =
-    parentWindowLocation?.pathname === "/design-library-new-designs/" ||
+    parentWindowLocation?.pathname === "/design-library/" ||
     parentWindowLocation?.pathname === "/design-library-development/";
   const designIdToUse =
     ownDesignId !== undefined ? ownDesignId : parentDesignId;

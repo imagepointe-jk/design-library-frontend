@@ -24,7 +24,7 @@ function App() {
       ? +parentDesignIdStr
       : undefined;
 
-  const showHome = parentWindowLocation?.pathname === "/design-library/";
+  const showHome = parentWindowLocation?.pathname === "/design-library-new/";
   const showLibrary =
     parentWindowLocation?.pathname === "/design-library/" ||
     parentWindowLocation?.pathname === "/design-library-development/";
@@ -32,7 +32,6 @@ function App() {
     ownDesignId !== undefined ? ownDesignId : parentDesignId;
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
-  console.log(`routing data`, parentWindowLocation);
 
   if (showHome) return <TopSection />;
   else if (showSearch) return <SearchArea />;

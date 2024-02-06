@@ -28,6 +28,10 @@ export function DesignCard({
     requestParentWindowDesignModalOpen(designId);
   }
 
+  console.log(
+    `Design card for design ${designNumber} received image url ${imgUrl}`
+  );
+
   return (
     <a
       className={styles["design-card"]}

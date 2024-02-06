@@ -32,6 +32,7 @@ function App() {
     ownDesignId !== undefined ? ownDesignId : parentDesignId;
   const showSearch = ownPathname === "search";
   const showFilters = ownPathname === "filters";
+  console.log(`routing data`, parentWindowLocation);
 
   if (showHome) return <TopSection />;
   else if (showSearch) return <SearchArea />;

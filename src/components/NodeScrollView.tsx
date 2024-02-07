@@ -34,21 +34,29 @@ export function NodeScrollView({
   const scrollIndexToUse =
     overrideScrollIndex !== undefined ? overrideScrollIndex : scrollIndex;
   const totalNodes = nodes ? nodes.length : 0;
-  const scrollDistance = nodeRowRef.current
-    ? nodeRowRef.current.getBoundingClientRect().width / totalNodes
+  const firstNodeElement = nodeRowRef.current?.firstElementChild;
+  const nodeWidth = firstNodeElement
+    ? firstNodeElement.getBoundingClientRect().width
     : 0;
+  const nodesCombinedWidth = totalNodes * nodeWidth;
+  const scrollDistance = nodesCombinedWidth / totalNodes;
   const nodesReady = nodes && totalNodes > 0;
 
   function calculateMaxScrollIndex() {
     if (!overflowContainerRef.current || !nodeRowRef.current) return 0;
 
     const totalNodes = nodes ? nodes.length : 0;
-    const nodeStripWidth = nodeRowRef.current.getBoundingClientRect().width;
+    const firstNodeElement = nodeRowRef.current.firstElementChild;
+    if (!firstNodeElement) return 0;
+
+    const nodeWidth = firstNodeElement.getBoundingClientRect().width;
+    const nodesCombinedWidth = nodeWidth * totalNodes;
     const viewWidth =
       overflowContainerRef.current.getBoundingClientRect().width;
-    const nodeWidth = totalNodes > 0 ? nodeStripWidth / totalNodes : 0;
     const calculated =
-      nodeWidth > 0 ? Math.ceil((nodeStripWidth - viewWidth) / nodeWidth) : 0;
+      nodeWidth > 0
+        ? Math.ceil((nodesCombinedWidth - viewWidth) / nodeWidth)
+        : 0;
     const clampedToNodeCount = clamp(calculated, 0, totalNodes - 1);
     return clampedToNodeCount;
   }

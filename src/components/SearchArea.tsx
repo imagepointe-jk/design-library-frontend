@@ -1,8 +1,8 @@
 import { designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { requestParentWindowQueryChange } from "../utility";
-import { tryParseDesignType } from "../validations";
-import { useApp } from "./AppProvider";
+import { parseSearchParams, tryParseDesignType } from "../validations";
+import { ParentWindowLocation, useApp } from "./AppProvider";
 import styles from "./styles/SearchArea.module.css";
 
 type SearchAreaProps = {
@@ -16,7 +16,9 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
 
   return (
     <form
-      onSubmit={(e) => submitSearch(e, parentWindowLocation?.url || "")}
+      onSubmit={(e) => {
+        if (parentWindowLocation) submitSearch(e, parentWindowLocation);
+      }}
       className={isInModal ? styles["form-in-modal"] : undefined}
     >
       <div className={styles["search-row"]}>
@@ -53,21 +55,27 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
 
 export function submitSearch(
   e: React.FormEvent<HTMLFormElement>,
-  parentWindowUrl: string
+  parentWindowLocation: ParentWindowLocation
 ) {
   e.preventDefault();
 
   const form = e.target as HTMLFormElement;
   const formData = new FormData(form);
   const keywords = formData.get("search");
-  const designType = tryParseDesignType(`${formData.get("design-type")}`);
+  const designQueryParams = parseSearchParams(
+    new URLSearchParams(parentWindowLocation?.search)
+  );
+  const designTypeFromParams = designQueryParams.designType;
+  const designTypeFromForm = tryParseDesignType(
+    `${formData.get("design-type")}`
+  );
   const newParams: DesignQueryParams = {
-    designType: designType ? designType : "Screen Print",
+    designType: designTypeFromForm ? designTypeFromForm : designTypeFromParams,
     pageNumber: 1,
     keywords: keywords?.toString().split(" "),
     featuredOnly: false,
     allowDuplicateDesignNumbers: true,
   };
 
-  requestParentWindowQueryChange(parentWindowUrl, newParams);
+  requestParentWindowQueryChange(parentWindowLocation.url, newParams);
 }

@@ -10,17 +10,19 @@ import { CategoryHierarchy } from "../types";
 import { requestParentWindowURL } from "../utility";
 import { waitForParentMs } from "../constants";
 
+export type ParentWindowLocation = {
+  origin: string;
+  url: string;
+  pathname: string;
+  search: string;
+};
+
 type AppContextType = {
   colors: string[] | null;
   categories: CategoryHierarchy[] | null;
   categoriesLoading: boolean;
   waitingForParent: boolean;
-  parentWindowLocation: {
-    origin: string;
-    url: string;
-    pathname: string;
-    search: string;
-  };
+  parentWindowLocation: ParentWindowLocation;
 };
 
 const AppContext = createContext(null as AppContextType | null);

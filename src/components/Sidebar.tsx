@@ -59,7 +59,11 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
 
   return (
     <div className={styles["main"]}>
-      <form onSubmit={(e) => submitSearch(e, parentWindowLocation?.url || "")}>
+      <form
+        onSubmit={(e) => {
+          if (parentWindowLocation) submitSearch(e, parentWindowLocation);
+        }}
+      >
         <input
           type="search"
           name="search"

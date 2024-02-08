@@ -48,10 +48,12 @@ export function DesignLibrary() {
       !tags &&
       !keywords &&
       !featuredOnly;
+    console.log("Should exclude? ", shouldExcludePrioritized);
     const designQueryParamsToUse = {
       ...designQueryParams,
       shouldExcludePrioritized,
     };
+    console.log(designQueryParamsToUse);
     try {
       setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(

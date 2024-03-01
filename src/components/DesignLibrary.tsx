@@ -48,9 +48,10 @@ export function DesignLibrary() {
       !tags &&
       !keywords &&
       !featuredOnly;
-    const designQueryParamsToUse = {
+    const designQueryParamsToUse: DesignQueryParams = {
       ...designQueryParams,
       shouldExcludePrioritized,
+      sortBy: "priority",
     };
     try {
       setIsFetchingResults(true);

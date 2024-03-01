@@ -26,7 +26,7 @@ export function TopSection() {
       designType,
       featuredOnly: designType === "Screen Print",
       pageNumber: 1,
-      countPerPage: 9,
+      countPerPage: 7,
       sortBy: "priority",
     };
     const queryString = buildDesignQueryParams(featuredQueryParams);
@@ -48,8 +48,8 @@ export function TopSection() {
     const newParams: DesignQueryParams = {
       featuredOnly: false,
       pageNumber: 1,
-      category: "Holiday",
-      subcategory: "St. Patrick's Day",
+      category: "Quick Search",
+      subcategory: "Ladies",
       designType: "Screen Print",
     };
     requestParentWindowQueryChange(parentWindowLocation.url, newParams);
@@ -78,7 +78,7 @@ export function TopSection() {
         ))
         .concat([
           <div className={styles["view-more-card"]}>
-            <h3>St. Patrick's Day Designs</h3>
+            <h3>Women's Designs</h3>
             <button onClick={handleClickViewMore}>View More</button>
           </div>,
         ])

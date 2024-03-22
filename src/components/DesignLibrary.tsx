@@ -1,30 +1,27 @@
 import { useEffect, useState } from "react";
+import { pageSizeChoices } from "../constants";
 import { getDesigns } from "../fetch";
 import { DesignQueryParams, TempDesignResults } from "../types";
 import {
   buildDesignQueryParams,
-  requestParentWindowAdaptToAppHeight,
-  requestParentWindowQueryChange,
+  changeNavigationDesignQuery,
   splitDesignCategoryHierarchy,
 } from "../utility";
 import { parseSearchParams } from "../validations";
-import { useApp } from "./AppProvider";
 import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { PageControls } from "./PageControls";
-import styles from "./styles/DesignLibrary.module.css";
-import { pageSizeChoices } from "../constants";
-import { TopSection } from "./TopSection";
 import { Sidebar } from "./Sidebar";
+import { TopSection } from "./TopSection";
+import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibrary() {
   const [designResults, setDesignResults] = useState<TempDesignResults | null>(
     null
   );
-  const { parentWindowLocation } = useApp();
   const designQueryParams = parseSearchParams(
-    new URLSearchParams(parentWindowLocation?.search)
+    new URLSearchParams(window.location.search)
   );
   const [isFetchingResults, setIsFetchingResults] = useState(true);
 
@@ -48,9 +45,10 @@ export function DesignLibrary() {
       !tags &&
       !keywords &&
       !featuredOnly;
-    const designQueryParamsToUse = {
+    const designQueryParamsToUse: DesignQueryParams = {
       ...designQueryParams,
       shouldExcludePrioritized,
+      sortBy: "priority",
     };
     try {
       setIsFetchingResults(true);
@@ -59,7 +57,6 @@ export function DesignLibrary() {
       );
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
-      requestParentWindowAdaptToAppHeight();
     } catch (error) {
       setIsFetchingResults(false);
       console.error(error);
@@ -67,18 +64,15 @@ export function DesignLibrary() {
   }
 
   function clearSearch() {
-    if (!parentWindowLocation) return;
-
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       keywords: undefined,
       allowDuplicateDesignNumbers: false,
     };
-    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+    changeNavigationDesignQuery(newParams);
   }
 
   function handleClickSidebarSubcategory(hierarchy: string) {
-    if (!parentWindowLocation) return;
     const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);
 
     const newParams: DesignQueryParams = {
@@ -89,37 +83,35 @@ export function DesignLibrary() {
       pageNumber: 1,
     };
 
-    requestParentWindowQueryChange(parentWindowLocation?.url, newParams);
+    changeNavigationDesignQuery(newParams);
   }
 
   function clickPageButton(pageNumber: number) {
-    if (!parentWindowLocation) return;
+    // if (!parentWindowLocation) return;
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       pageNumber: pageNumber,
     };
-    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+    changeNavigationDesignQuery(newParams);
   }
 
   function jumpToPage(jumpToPage: number) {
-    if (!parentWindowLocation) return;
+    // if (!parentWindowLocation) return;
 
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       pageNumber: +jumpToPage,
     };
-    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+    changeNavigationDesignQuery(newParams);
   }
 
   function changeResultsPerPage(count: number) {
-    if (!parentWindowLocation) return;
-
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       pageNumber: 1,
       countPerPage: count,
     };
-    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+    changeNavigationDesignQuery(newParams);
   }
 
   useEffect(() => {

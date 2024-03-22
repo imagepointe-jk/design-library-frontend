@@ -1,4 +1,3 @@
-import { defaultModalHeight } from "./constants";
 import { TempDesign } from "./sharedTypes";
 import { DesignQueryParams } from "./types";
 
@@ -60,88 +59,8 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     .join("&");
 }
 
-export function requestParentWindowUrlChange(url: string) {
-  window.parent.postMessage(
-    {
-      type: "design-library-url-change-request",
-      url,
-    },
-    "*"
-  );
-}
-
-export function requestParentWindowModalOpen(
-  iframePathname: string,
-  iframeSize: {
-    width?: number;
-    height?: number;
-  },
-  windowMaxWidth: number | "default"
-) {
-  window.parent.postMessage(
-    {
-      type: "design-library-open-modal",
-      iframePathname,
-      width: iframeSize.width,
-      height: iframeSize.height,
-      windowMaxWidth,
-    },
-    "*"
-  );
-}
-
-export function requestParentWindowDesignModalOpen(designId: number) {
-  requestParentWindowModalOpen(
-    `${designId}`,
-    {
-      height: defaultModalHeight,
-    },
-    "default"
-  );
-}
-
-export function requestParentWindowResizeApp(newSize: {
-  width?: number;
-  height?: number;
-}) {
-  window.parent.postMessage(
-    {
-      type: "design-library-resize-app",
-      width: newSize.width,
-      height: newSize.height,
-    },
-    "*"
-  );
-}
-
-export function requestParentWindowAdaptToAppHeight() {
-  //wait briefly for DOM to update, then request iframe resize based on content length
-  setTimeout(() => {
-    requestParentWindowResizeApp({
-      height: document.querySelector(".inner-body")?.scrollHeight,
-    });
-  }, 100);
-}
-
-export function requestParentWindowQueryChange(
-  currentUrl: string,
-  newParams: DesignQueryParams
-) {
-  const currentUrlWithoutQuery = currentUrl?.split("?")[0];
-  const newUrl = `${currentUrlWithoutQuery}?${buildDesignQueryParams(
-    newParams
-  )}`;
-  requestParentWindowUrlChange(newUrl);
-}
-
-export function requestParentWindowURL() {
-  window.parent.postMessage(
-    {
-      type: "design-library-url-retrieve-request",
-      originPathname: window.location.pathname,
-    },
-    "*"
-  );
+export function designSpecificLink(designId: number) {
+  return `${window.location.origin}${window.location.pathname}?viewDesign=${designId}`;
 }
 
 export function clamp(value: number, min: number, max: number) {
@@ -212,4 +131,10 @@ export function splitDesignCategoryHierarchy(hierarchy: string) {
     category: split[0],
     subcategory: split[1],
   };
+}
+
+export function changeNavigationDesignQuery(newParams: DesignQueryParams) {
+  window.location.search = new URLSearchParams(
+    buildDesignQueryParams(newParams)
+  ).toString();
 }

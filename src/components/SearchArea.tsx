@@ -1,8 +1,7 @@
 import { designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
-import { requestParentWindowQueryChange } from "../utility";
+import { changeNavigationDesignQuery } from "../utility";
 import { tryParseDesignType } from "../validations";
-import { useApp } from "./AppProvider";
 import styles from "./styles/SearchArea.module.css";
 
 type SearchAreaProps = {
@@ -10,13 +9,12 @@ type SearchAreaProps = {
 };
 
 export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
-  const { parentWindowLocation } = useApp();
   const ownPathName = window.location.pathname;
   const isInModal = ownPathName === "/search"; //should display slightly differently when in modal
 
   return (
     <form
-      onSubmit={(e) => submitSearch(e, parentWindowLocation?.url || "")}
+      onSubmit={submitSearch}
       className={isInModal ? styles["form-in-modal"] : undefined}
     >
       <div className={styles["search-row"]}>
@@ -51,10 +49,7 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
   );
 }
 
-export function submitSearch(
-  e: React.FormEvent<HTMLFormElement>,
-  parentWindowUrl: string
-) {
+export function submitSearch(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault();
 
   const form = e.target as HTMLFormElement;
@@ -69,5 +64,5 @@ export function submitSearch(
     allowDuplicateDesignNumbers: true,
   };
 
-  requestParentWindowQueryChange(parentWindowUrl, newParams);
+  changeNavigationDesignQuery(newParams);
 }

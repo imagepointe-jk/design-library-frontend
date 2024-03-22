@@ -4,24 +4,25 @@ import { TempDesignWithImages } from "../sharedTypes";
 import { CategoryData, DesignQueryParams, SubcategoryData } from "../types";
 import {
   buildDesignQueryParams,
+  changeNavigationDesignQuery,
   getDesignDefaultBackgroundColor,
-  requestParentWindowQueryChange,
 } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
-import { NodeScrollView } from "./NodeScrollView";
-import { LoadingIndicator } from "./LoadingIndicator";
-import styles from "./styles/FilterModal.module.css";
 import { ImageWithFallback } from "./ImageWithFallback";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { Modal } from "./Modal";
+import { NodeScrollView } from "./NodeScrollView";
+import styles from "./styles/FilterModal.module.css";
 
 const maxSubcategoriesBeforeScrollable = 15;
 const buttonIdPrefix = "filter-modal-filter-button-";
 
 export function FilterModal() {
-  const { categories, categoriesLoading, parentWindowLocation } = useApp();
+  const { categories, categoriesLoading } = useApp();
   const designQueryParams = parseSearchParams(
-    new URLSearchParams(parentWindowLocation?.search)
+    new URLSearchParams(window.location.search)
   );
   //the pending query params are the query the user has started building
   //after they started clicking filter buttons.
@@ -88,11 +89,8 @@ export function FilterModal() {
   }
 
   function applyFilters() {
-    if (!parentWindowLocation || !pendingQueryParams) return;
-    requestParentWindowQueryChange(
-      parentWindowLocation.url,
-      pendingQueryParams
-    );
+    if (!pendingQueryParams) return;
+    changeNavigationDesignQuery(pendingQueryParams);
   }
 
   async function getPreviewDesigns() {
@@ -129,13 +127,13 @@ export function FilterModal() {
 
   useEffect(() => {
     getPreviewDesigns();
-  }, [parentWindowLocation, pendingQueryParams]);
+  }, [pendingQueryParams]);
 
   if (categoriesLoading) return <LoadingIndicator />;
   if (!categories) return <ErrorPage />;
 
   return (
-    <>
+    <Modal windowClassName={styles["window"]}>
       <h2>{designQueryParams.designType} Design Library Filters</h2>
       <p className={styles["instructions"]}>
         Select a main category on the left and a subcategory below
@@ -177,7 +175,7 @@ export function FilterModal() {
           Clear Selection
         </button>
       </div>
-    </>
+    </Modal>
   );
 }
 

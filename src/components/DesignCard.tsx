@@ -1,10 +1,7 @@
-import { defaultModalHeight } from "../constants";
-import {
-  requestParentWindowDesignModalOpen,
-  requestParentWindowModalOpen,
-} from "../utility";
+import { designSpecificLink } from "../utility";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
+import { DesignModalDisplay } from "./Modal";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignCardProps = {
@@ -20,18 +17,19 @@ export function DesignCard({
   designId,
   backgroundColor,
 }: DesignCardProps) {
-  const { parentWindowLocation } = useApp();
-  const domain = parentWindowLocation?.origin;
+  const { setModalDisplay } = useApp();
 
   function handleClickCard(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    if (!setModalDisplay) return;
+
     e.preventDefault();
-    requestParentWindowDesignModalOpen(designId);
+    setModalDisplay(new DesignModalDisplay(designId));
   }
 
   return (
     <a
       className={styles["design-card"]}
-      href={`${domain}/design-library-new-designs/?designId=${designId}`}
+      href={designSpecificLink(designId)}
       onClick={handleClickCard}
     >
       <div className={styles["img-container"]} style={{ backgroundColor }}>

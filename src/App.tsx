@@ -2,45 +2,35 @@ import "./App.css";
 import { useApp } from "./components/AppProvider";
 import { DesignLibrary } from "./components/DesignLibrary";
 import { DesignPage } from "./components/DesignPage";
-import { ErrorPage } from "./components/ErrorScreen";
+import { DesignView } from "./components/DesignView";
 import { FilterModal } from "./components/FilterModal";
-import { TopSection } from "./components/TopSection";
-import { LoadingIndicator } from "./components/LoadingIndicator";
+import { DesignModalDisplay, Modal } from "./components/Modal";
 import { SearchArea } from "./components/SearchArea";
 
 function App() {
-  const { parentWindowLocation, waitingForParent } = useApp();
+  const { modalDisplay } = useApp();
+  const searchParams = new URLSearchParams(window.location.search);
+  const viewDesign = searchParams.get("viewDesign");
 
-  const ownPathname = window.location.pathname.replace("/", "");
-  const pathNameSplit = ownPathname.split("/");
-  const ownDesignId =
-    pathNameSplit[0] && !isNaN(+pathNameSplit[0])
-      ? +pathNameSplit[0]
-      : undefined;
-  const searchParams = new URLSearchParams(parentWindowLocation?.search);
-  const parentDesignIdStr = searchParams.get("designId");
-  const parentDesignId =
-    parentDesignIdStr && !isNaN(+parentDesignIdStr)
-      ? +parentDesignIdStr
-      : undefined;
+  if (viewDesign && !isNaN(+viewDesign))
+    return <DesignPage designId={+viewDesign} />;
 
-  const showHome = parentWindowLocation?.pathname === "/design-library-new/";
-  const showLibrary =
-    parentWindowLocation?.pathname === "/design-library-new-designs/" ||
-    parentWindowLocation?.pathname === "/design-library-development/";
-  const designIdToUse =
-    ownDesignId !== undefined ? ownDesignId : parentDesignId;
-  const showSearch = ownPathname === "search";
-  const showFilters = ownPathname === "filters";
-
-  if (showHome) return <TopSection />;
-  else if (showSearch) return <SearchArea />;
-  else if (showFilters) return <FilterModal />;
-  else if (designIdToUse !== undefined)
-    return <DesignPage designId={designIdToUse} />;
-  else if (showLibrary) return <DesignLibrary />;
-  else if (waitingForParent) return <LoadingIndicator />;
-  else return <ErrorPage />;
+  return (
+    <div>
+      <DesignLibrary />
+      {modalDisplay instanceof DesignModalDisplay && (
+        <Modal>
+          <DesignView designId={modalDisplay.designId} />
+        </Modal>
+      )}
+      {modalDisplay === "search" && (
+        <Modal>
+          <SearchArea />
+        </Modal>
+      )}
+      {modalDisplay === "filters" && <FilterModal />}
+    </div>
+  );
 }
 
 export default App;

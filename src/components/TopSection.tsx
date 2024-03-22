@@ -4,29 +4,29 @@ import { DesignType, TempDesignWithImages } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import {
   buildDesignQueryParams,
+  changeNavigationDesignQuery,
   getDesignDefaultBackgroundColor,
-  requestParentWindowDesignModalOpen,
-  requestParentWindowQueryChange,
 } from "../utility";
+import { useApp } from "./AppProvider";
+import { ImageWithFallback } from "./ImageWithFallback";
+import { DesignModalDisplay } from "./Modal";
 import { NodeScrollView } from "./NodeScrollView";
 import { SearchArea } from "./SearchArea";
 import styles from "./styles/TopSection.module.css";
-import { ImageWithFallback } from "./ImageWithFallback";
-import { useApp } from "./AppProvider";
 
 export function TopSection() {
   const [featuredDesigns, setFeaturedDesigns] = useState(
     null as TempDesignWithImages[] | null
   );
   const [featuredDesignsLoading, setFeaturedDesignsLoading] = useState(true);
-  const { parentWindowLocation } = useApp();
+  const { setModalDisplay } = useApp();
 
   async function getFeaturedDesigns(designType: DesignType) {
     const featuredQueryParams: DesignQueryParams = {
       designType,
       featuredOnly: designType === "Screen Print",
       pageNumber: 1,
-      countPerPage: 9,
+      countPerPage: 7,
       sortBy: "priority",
     };
     const queryString = buildDesignQueryParams(featuredQueryParams);
@@ -43,16 +43,14 @@ export function TopSection() {
   }
 
   function handleClickViewMore() {
-    if (!parentWindowLocation) return;
-
     const newParams: DesignQueryParams = {
       featuredOnly: false,
       pageNumber: 1,
-      category: "Holiday",
-      subcategory: "St. Patrick's Day",
+      category: "Quick Search",
+      subcategory: "Ladies",
       designType: "Screen Print",
     };
-    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+    changeNavigationDesignQuery(newParams);
   }
 
   useEffect(() => {
@@ -72,13 +70,16 @@ export function TopSection() {
             <ImageWithFallback
               className={styles["featured-image"]}
               src={design.ImageData[0].url}
-              onClick={() => requestParentWindowDesignModalOpen(design.Id)}
+              onClick={() => {
+                if (setModalDisplay)
+                  setModalDisplay(new DesignModalDisplay(design.Id));
+              }}
             />
           </div>
         ))
         .concat([
           <div className={styles["view-more-card"]}>
-            <h3>St. Patrick's Day Designs</h3>
+            <h3>Women's Designs</h3>
             <button onClick={handleClickViewMore}>View More</button>
           </div>,
         ])

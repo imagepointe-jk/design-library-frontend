@@ -1,0 +1,161 @@
+.customize-notice {
+  margin-bottom: 0;
+  margin-top: 30px;
+}
+
+.main-flex {
+  display: flex;
+  gap: 40px;
+  position: relative;
+  padding: 30px;
+  justify-content: center;
+  background-color: white;
+  max-width: 1024px;
+  margin: auto;
+}
+
+.bg-color-container {
+  background-color: lightgray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+.try-design-button {
+  margin: auto;
+  padding: 15px;
+}
+
+.bg-color-button img {
+  display: block;
+}
+
+.details-area {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  flex: 3;
+}
+
+.heading {
+  color: var(--color-alpha);
+  margin-bottom: 5px;
+}
+
+.heading,
+.subheading {
+  text-align: center;
+}
+
+.subheading {
+  margin-top: 0;
+  font-weight: 700;
+}
+
+.gallery-container {
+  flex: 4;
+}
+
+.gizmos-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.share-button {
+  position: relative;
+  background: none;
+  color: black;
+  padding: 0;
+}
+
+.share-button-toast {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  background-color: gray;
+  color: white;
+  font-size: 0.825rem;
+  padding: 5px;
+  border-radius: 5px;
+  width: 100px;
+  pointer-events: none;
+  opacity: 100%;
+  translate: -50% 0;
+}
+
+.share-button-toast-up {
+  translate: -50% -45px;
+  opacity: 0;
+}
+
+.design-image {
+  width: 520px;
+}
+
+.color-picker-swatches-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.color-picker-swatch {
+  width: 24px;
+  height: 24px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.selected-swatch {
+  scale: 125%;
+  border-width: 2px;
+}
+
+.selected-color-name {
+  font-weight: 700;
+}
+
+.filters-tags-container div {
+  margin: 10px 0;
+}
+
+.filters-tags-container p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.quote-info {
+  text-align: center;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 1000px) {
+  .main-flex {
+    flex-direction: column;
+    margin: auto;
+    padding-top: 0;
+    gap: 10px;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: initial;
+  }
+
+  .details-area {
+    justify-content: initial;
+    gap: 20px;
+  }
+
+  .description {
+    text-align: center;
+  }
+}

@@ -1,22 +1,14 @@
-import {
-  defaultModalHeight,
-  searchModalHeight,
-  searchModalMaxWidth,
-} from "../constants";
 import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
-import {
-  requestParentWindowModalOpen,
-  requestParentWindowQueryChange,
-} from "../utility";
+import { changeNavigationDesignQuery } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibraryControls() {
-  const { parentWindowLocation } = useApp();
+  const { setModalDisplay } = useApp();
   const designQueryParams = parseSearchParams(
-    new URLSearchParams(parentWindowLocation?.search)
+    new URLSearchParams(window.location.search)
   );
   const buttonIdPrefix = "library-page-filter-button-";
   const checkboxButtons = ["New Designs", "Best Sellers", "All Designs"];
@@ -24,7 +16,6 @@ export function DesignLibraryControls() {
   const selectedDesignType = designQueryParams.designType;
 
   function changeDesignType(newType: DesignType) {
-    if (!parentWindowLocation) return;
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       designType: newType,
@@ -33,14 +24,13 @@ export function DesignLibraryControls() {
       featuredOnly: newType === "Screen Print",
       pageNumber: 1,
     };
-    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+    changeNavigationDesignQuery(newParams);
   }
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,
     filterName: string
   ) {
-    if (!parentWindowLocation) return;
     const isChecked = e.target.checked;
     const newParams: DesignQueryParams = {
       ...designQueryParams,
@@ -56,7 +46,7 @@ export function DesignLibraryControls() {
       newParams.subcategory = isChecked ? filterName : undefined;
       newParams.featuredOnly = !isChecked;
     }
-    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+    changeNavigationDesignQuery(newParams);
   }
 
   const allDesignsButtonChecked =
@@ -104,13 +94,7 @@ export function DesignLibraryControls() {
         <button
           className={styles["settings-button"]}
           onClick={() => {
-            requestParentWindowModalOpen(
-              "filters",
-              {
-                height: defaultModalHeight,
-              },
-              "default"
-            );
+            if (setModalDisplay) setModalDisplay("filters");
           }}
         >
           <i className="fa-solid fa-sliders"></i>
@@ -118,15 +102,9 @@ export function DesignLibraryControls() {
         </button>
         <button
           className={styles["settings-button"]}
-          onClick={() =>
-            requestParentWindowModalOpen(
-              "search",
-              {
-                height: searchModalHeight,
-              },
-              searchModalMaxWidth
-            )
-          }
+          onClick={() => {
+            if (setModalDisplay) setModalDisplay("search");
+          }}
         >
           <i className="fa-solid fa-magnifying-glass"></i>
           Search

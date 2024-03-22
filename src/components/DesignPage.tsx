@@ -7,7 +7,7 @@ type DesignPageProps = {
 
 export function DesignPage({ designId }: DesignPageProps) {
   return (
-    <div>
+    <div className={styles["main"]}>
       <a href={window.location.origin} className={styles["to-library"]}>
         <i className={"fa-solid fa-arrow-left"}></i>To Design Library
       </a>

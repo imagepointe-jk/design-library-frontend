@@ -16,7 +16,7 @@ function App() {
     return <DesignPage designId={+viewDesign} />;
 
   return (
-    <div>
+    <div className="root">
       <DesignLibrary />
       {modalDisplay instanceof DesignModalDisplay && (
         <Modal>

@@ -1,4 +1,4 @@
-import { designSpecificLink } from "../utility";
+import { createNavigationUrl } from "../utility";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { DesignModalDisplay } from "./Modal";
@@ -29,7 +29,7 @@ export function DesignCard({
   return (
     <a
       className={styles["design-card"]}
-      href={designSpecificLink(designId)}
+      href={createNavigationUrl({ designId })}
       onClick={handleClickCard}
     >
       <div className={styles["img-container"]} style={{ backgroundColor }}>

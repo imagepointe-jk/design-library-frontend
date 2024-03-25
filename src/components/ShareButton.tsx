@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { designSpecificLink } from "../utility";
 import styles from "./styles/DesignView.module.css";
+import { createNavigationUrl } from "../utility";
 
 type ShareButtonProps = {
   designId: number;
@@ -16,7 +16,7 @@ export function ShareButton({ designId }: ShareButtonProps) {
     const toast = toastRef.current;
     if (!toast) return;
 
-    const link = designSpecificLink(designId);
+    const link = createNavigationUrl({ designId });
     navigator.clipboard.writeText(link);
     toast.classList.remove(styles[toastUpClassName]);
     toast.style.transition = "0s";

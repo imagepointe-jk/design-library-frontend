@@ -3,8 +3,8 @@ import { getDesigns } from "../fetch";
 import { TempDesignWithImages } from "../sharedTypes";
 import { CategoryData, DesignQueryParams, SubcategoryData } from "../types";
 import {
+  createNavigationUrl,
   buildDesignQueryParams,
-  changeNavigationDesignQuery,
   getDesignDefaultBackgroundColor,
 } from "../utility";
 import { parseSearchParams } from "../validations";
@@ -90,7 +90,7 @@ export function FilterModal() {
 
   function applyFilters() {
     if (!pendingQueryParams) return;
-    changeNavigationDesignQuery(pendingQueryParams);
+    window.location.href = createNavigationUrl(pendingQueryParams);
   }
 
   async function getPreviewDesigns() {

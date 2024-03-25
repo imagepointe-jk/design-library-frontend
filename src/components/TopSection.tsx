@@ -3,8 +3,8 @@ import { getDesigns } from "../fetch";
 import { DesignType, TempDesignWithImages } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import {
+  createNavigationUrl,
   buildDesignQueryParams,
-  changeNavigationDesignQuery,
   getDesignDefaultBackgroundColor,
 } from "../utility";
 import { useApp } from "./AppProvider";
@@ -50,7 +50,8 @@ export function TopSection() {
       subcategory: "Ladies",
       designType: "Screen Print",
     };
-    changeNavigationDesignQuery(newParams);
+
+    window.location.href = createNavigationUrl(newParams);
   }
 
   useEffect(() => {

@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .main {
@@ -16,7 +17,7 @@
   padding: 20px;
 }
 
-.close-x {
+.main .close-x {
   position: absolute;
   right: 0;
   top: 0;

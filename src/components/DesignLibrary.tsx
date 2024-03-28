@@ -4,7 +4,7 @@ import { getDesigns } from "../fetch";
 import { DesignQueryParams, TempDesignResults } from "../types";
 import {
   buildDesignQueryParams,
-  changeNavigationDesignQuery,
+  createNavigationUrl,
   splitDesignCategoryHierarchy,
 } from "../utility";
 import { parseSearchParams } from "../validations";
@@ -69,7 +69,7 @@ export function DesignLibrary() {
       keywords: undefined,
       allowDuplicateDesignNumbers: false,
     };
-    changeNavigationDesignQuery(newParams);
+    window.location.href = createNavigationUrl(newParams);
   }
 
   function handleClickSidebarSubcategory(hierarchy: string) {
@@ -83,26 +83,25 @@ export function DesignLibrary() {
       pageNumber: 1,
     };
 
-    changeNavigationDesignQuery(newParams);
+    window.location.href = createNavigationUrl(newParams);
   }
 
   function clickPageButton(pageNumber: number) {
-    // if (!parentWindowLocation) return;
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       pageNumber: pageNumber,
     };
-    changeNavigationDesignQuery(newParams);
+
+    window.location.href = createNavigationUrl(newParams);
   }
 
   function jumpToPage(jumpToPage: number) {
-    // if (!parentWindowLocation) return;
-
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       pageNumber: +jumpToPage,
     };
-    changeNavigationDesignQuery(newParams);
+
+    window.location.href = createNavigationUrl(newParams);
   }
 
   function changeResultsPerPage(count: number) {
@@ -111,7 +110,8 @@ export function DesignLibrary() {
       pageNumber: 1,
       countPerPage: count,
     };
-    changeNavigationDesignQuery(newParams);
+
+    window.location.href = createNavigationUrl(newParams);
   }
 
   useEffect(() => {

@@ -13,10 +13,14 @@ function App() {
   const viewDesign = searchParams.get("viewDesign");
 
   if (viewDesign && !isNaN(+viewDesign))
-    return <DesignPage designId={+viewDesign} />;
+    return (
+      <div className="root">
+        <DesignPage designId={+viewDesign} />
+      </div>
+    );
 
   return (
-    <div>
+    <div className="root">
       <DesignLibrary />
       {modalDisplay instanceof DesignModalDisplay && (
         <Modal>

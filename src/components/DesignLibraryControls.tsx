@@ -1,6 +1,6 @@
 import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
-import { changeNavigationDesignQuery } from "../utility";
+import { createNavigationUrl } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import styles from "./styles/DesignLibrary.module.css";
@@ -24,7 +24,8 @@ export function DesignLibraryControls() {
       featuredOnly: newType === "Screen Print",
       pageNumber: 1,
     };
-    changeNavigationDesignQuery(newParams);
+
+    window.location.href = createNavigationUrl(newParams);
   }
 
   function clickQuickFilterButton(
@@ -46,7 +47,8 @@ export function DesignLibraryControls() {
       newParams.subcategory = isChecked ? filterName : undefined;
       newParams.featuredOnly = !isChecked;
     }
-    changeNavigationDesignQuery(newParams);
+
+    window.location.href = createNavigationUrl(newParams);
   }
 
   const allDesignsButtonChecked =

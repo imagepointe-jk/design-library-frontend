@@ -1,5 +1,5 @@
 import { DesignQueryParams } from "../types";
-import { changeNavigationDesignQuery } from "../utility";
+import { createNavigationUrl } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { HierarchyItem, HierarchyList } from "./HierarchyList";
@@ -48,7 +48,7 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
       pageNumber: 1,
     };
 
-    changeNavigationDesignQuery(newParams);
+    window.location.href = createNavigationUrl(newParams);
   }
 
   return (

@@ -59,10 +59,6 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     .join("&");
 }
 
-export function designSpecificLink(designId: number) {
-  return `${window.location.origin}${window.location.pathname}?viewDesign=${designId}`;
-}
-
 export function clamp(value: number, min: number, max: number) {
   if (value < min) return min;
   if (value > max) return max;
@@ -133,8 +129,33 @@ export function splitDesignCategoryHierarchy(hierarchy: string) {
   };
 }
 
-export function changeNavigationDesignQuery(newParams: DesignQueryParams) {
-  window.location.search = new URLSearchParams(
-    buildDesignQueryParams(newParams)
-  ).toString();
+type DesignId = {
+  designId: number;
+};
+
+function isDesignId(param: any): param is DesignId {
+  return param && typeof param.designId === "number";
+}
+
+//TODO: create reusable navigation url function so that we can easily preserve wordpress draft page query params
+export function createNavigationUrl(params: DesignId | DesignQueryParams) {
+  //preserve previous search params; this allows the app to work on WordPress draft pages
+  const existingSearchParams = new URLSearchParams(window.location.search);
+  let newSearchParams = new URLSearchParams();
+  const pageId = existingSearchParams.get("page_id");
+  const preview = existingSearchParams.get("preview");
+  if (pageId) newSearchParams.set("page_id", pageId);
+  if (preview) newSearchParams.set("preview", preview);
+
+  if (isDesignId(params)) {
+    newSearchParams.set("viewDesign", `${params.designId}`);
+  } else {
+    newSearchParams = new URLSearchParams(
+      `${newSearchParams.toString()}&${buildDesignQueryParams(params)}`
+    );
+  }
+
+  return `${window.location.origin}${
+    window.location.pathname
+  }?${newSearchParams.toString()}`;
 }

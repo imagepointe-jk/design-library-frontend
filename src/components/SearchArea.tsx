@@ -1,6 +1,6 @@
 import { designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
-import { changeNavigationDesignQuery } from "../utility";
+import { createNavigationUrl } from "../utility";
 import { tryParseDesignType } from "../validations";
 import styles from "./styles/SearchArea.module.css";
 
@@ -64,5 +64,5 @@ export function submitSearch(e: React.FormEvent<HTMLFormElement>) {
     allowDuplicateDesignNumbers: true,
   };
 
-  changeNavigationDesignQuery(newParams);
+  window.location.href = createNavigationUrl(newParams);
 }

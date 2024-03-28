@@ -1,10 +1,10 @@
-import { TempDesignWithImages } from "../sharedTypes";
+import { TempDesign } from "../sharedTypes";
 import { getDesignDefaultBackgroundColor } from "../utility";
 import { DesignCard } from "./DesignCard";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignGridProps = {
-  designs: TempDesignWithImages[];
+  designs: TempDesign[];
 };
 
 export function DesignGrid({ designs }: DesignGridProps) {
@@ -15,7 +15,7 @@ export function DesignGrid({ designs }: DesignGridProps) {
           key={design.Id}
           designNumber={design.DesignNumber}
           designId={design.Id}
-          imgUrl={design.ImageData[0].url}
+          imgUrl={design.ImageURL || ""}
           backgroundColor={getDesignDefaultBackgroundColor(design) || "#000000"}
         />
       ))}

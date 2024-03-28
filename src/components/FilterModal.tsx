@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getDesigns } from "../fetch";
-import { TempDesignWithImages } from "../sharedTypes";
 import { CategoryData, DesignQueryParams, SubcategoryData } from "../types";
 import {
   createNavigationUrl,
@@ -15,6 +14,7 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { Modal } from "./Modal";
 import { NodeScrollView } from "./NodeScrollView";
 import styles from "./styles/FilterModal.module.css";
+import { TempDesign } from "../sharedTypes";
 
 const maxSubcategoriesBeforeScrollable = 15;
 const buttonIdPrefix = "filter-modal-filter-button-";
@@ -31,7 +31,7 @@ export function FilterModal() {
     null as DesignQueryParams | null
   );
   const [previewDesigns, setPreviewDesigns] = useState(
-    null as TempDesignWithImages[] | null
+    null as TempDesign[] | null
   );
   const [previewDesignsLoading, setPreviewDesignsLoading] = useState(true);
   const queryParamsToUse = pendingQueryParams
@@ -61,12 +61,12 @@ export function FilterModal() {
               getDesignDefaultBackgroundColor(design) || "#000000",
           }}
         >
-          <ImageWithFallback src={design.ImageData[0].url} />
+          <ImageWithFallback src={design.ImageURL} />
         </div>
       ))
     : undefined;
   const previewDesignUrls = previewDesigns
-    ? previewDesigns.map((design) => design.ImageData[0].url)
+    ? previewDesigns.map((design) => design.ImageURL)
     : undefined;
   const scrollViewKey = btoa(JSON.stringify(previewDesignUrls));
 

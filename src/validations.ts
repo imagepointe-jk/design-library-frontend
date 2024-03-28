@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   designTypeSchema,
   quoteRequestSchema,
-  tempDesignWithImagesSchema,
+  tempDesignSchema,
 } from "./sharedTypes";
 import {
   DesignQueryParams,
@@ -17,11 +17,11 @@ export function validateDesignResultsJson(json: any) {
 }
 
 export function validateSingleDesignJson(json: any) {
-  return tempDesignWithImagesSchema.parse(json);
+  return tempDesignSchema.parse(json);
 }
 
 export function validateDesignArrayJson(json: any) {
-  return z.array(tempDesignWithImagesSchema).parse(json);
+  return z.array(tempDesignSchema).parse(json);
 }
 
 export function validateCategories(json: any) {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getDesignsRelatedToId } from "../fetch";
-import { TempDesignWithImages } from "../sharedTypes";
 import {
   clamp,
   getDesignCategoryHierarchies,
@@ -13,15 +12,16 @@ import { DesignScrollView } from "./DesignScrollView";
 import { QuoteForm } from "./QuoteForm";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
+import { TempDesign } from "../sharedTypes";
 
 type DesignViewProps = {
   designId: number;
 };
 
 export function DesignView({ designId }: DesignViewProps) {
-  const [relatedDesigns, setRelatedDesigns] = useState<
-    TempDesignWithImages[] | null
-  >(null);
+  const [relatedDesigns, setRelatedDesigns] = useState<TempDesign[] | null>(
+    null
+  );
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
   const [showQuoteForm, setShowQuoteForm] = useState(false);
@@ -75,10 +75,11 @@ export function DesignView({ designId }: DesignViewProps) {
     ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
     : [];
   const images = relatedDesigns
-    ? relatedDesigns.map((design) => design.ImageData[0].url || "")
+    ? relatedDesigns.map((design) => design.ImageURL || "")
     : [];
+  //assume for now that all .pngs are transparent
   const viewedDesignHasTransparency =
-    viewedDesign?.ImageData[0].hasTransparency || false;
+    viewedDesign?.ImageURL?.endsWith(".png") || false;
   const showColorChangeSection =
     relatedDesigns &&
     relatedDesigns[0].DesignType === "Screen Print" &&

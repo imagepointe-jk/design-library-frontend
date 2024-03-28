@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDesigns } from "../fetch";
-import { DesignType, TempDesignWithImages } from "../sharedTypes";
+import { DesignType, TempDesign } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import {
   createNavigationUrl,
@@ -16,7 +16,7 @@ import styles from "./styles/TopSection.module.css";
 
 export function TopSection() {
   const [featuredDesigns, setFeaturedDesigns] = useState(
-    null as TempDesignWithImages[] | null
+    null as TempDesign[] | null
   );
   const [featuredDesignsLoading, setFeaturedDesignsLoading] = useState(true);
   const { setModalDisplay } = useApp();
@@ -70,7 +70,7 @@ export function TopSection() {
           >
             <ImageWithFallback
               className={styles["featured-image"]}
-              src={design.ImageData[0].url}
+              src={design.ImageURL}
               onClick={() => {
                 if (setModalDisplay)
                   setModalDisplay(new DesignModalDisplay(design.Id));

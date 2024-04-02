@@ -26,6 +26,7 @@
   all: revert;
   text-align: center;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  line-height: 1;
 }
 
 /* Fighting against WordPress plugins */

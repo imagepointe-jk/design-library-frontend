@@ -52,7 +52,7 @@
   cursor: pointer;
 }
 
-.normal-link {
+.root .normal-link {
   background-color: revert;
   font-size: revert;
   color: revert;

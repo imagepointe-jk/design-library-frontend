@@ -57,6 +57,7 @@ function PageNumberControl({
 
   return (
     <div className={styles["controls-subsection"]}>
+      <span className={styles["page-buttons-label"]}>Page</span>
       {pageControlNumbers.map((numberOrEllipsis) => {
         if (numberOrEllipsis === "...") return <div>...</div>;
         else

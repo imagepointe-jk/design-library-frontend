@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DesignType, tempDesignWithImagesSchema } from "./sharedTypes";
+import { DesignType, tempDesignSchema } from "./sharedTypes";
 
 export const categoryDataSchema = z.object({
   Name: z.string(),
@@ -21,7 +21,7 @@ export const tempDesignResultsSchema = z.object({
   pageNumber: z.number(),
   perPage: z.number(),
   total: z.number(),
-  designs: z.array(tempDesignWithImagesSchema),
+  designs: z.array(tempDesignSchema),
 });
 
 export type DesignQueryParams = {

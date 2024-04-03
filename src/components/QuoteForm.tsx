@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { sendQuoteRequest } from "../fetch";
-import { requestParentWindowUrlChange } from "../utility";
 import {
   validateEmail,
   validatePhone,
@@ -183,12 +182,6 @@ export function QuoteForm({
             <a
               className="normal-link"
               href="https://www.imagepointe.com/contact-us/"
-              onClick={(e) => {
-                e.preventDefault();
-                requestParentWindowUrlChange(
-                  "https://www.imagepointe.com/contact-us/"
-                );
-              }}
             >
               contact us
             </a>{" "}

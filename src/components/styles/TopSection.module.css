@@ -7,6 +7,20 @@
   background-color: white;
 }
 
+.hero-text h1 {
+  font-size: 2.75rem;
+  margin-bottom: 0;
+}
+
+.hero-text {
+  text-align: center;
+  max-width: 1200px;
+}
+
+.hero-text .blue {
+  color: var(--color-alpha);
+}
+
 .featured-image-container {
   margin: auto;
   width: 80%;

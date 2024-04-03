@@ -1,10 +1,5 @@
 .bg {
   background-color: rgb(194, 194, 194);
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
 }
 
 .main-flex {
@@ -19,7 +14,6 @@
 }
 
 .library-info-container {
-  margin: 40px 0;
   margin-left: 150px;
 }
 
@@ -63,9 +57,10 @@
 
 .library-switcher-container input[type="radio"] {
   scale: 125%;
+  margin: 5px;
 }
 
-.settings-button {
+.settings-subcontainer .settings-button {
   padding: 10px;
   font-size: var(--size-16);
   display: none;
@@ -97,7 +92,7 @@
 }
 
 @media screen and (max-width: 1200px) {
-  .settings-button {
+  .settings-subcontainer .settings-button {
     display: flex;
   }
 

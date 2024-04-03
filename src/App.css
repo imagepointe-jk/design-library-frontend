@@ -5,8 +5,11 @@
   --size-20: 1.25rem;
 }
 
-html {
+#root {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#root * {
   box-sizing: border-box;
 }
 
@@ -15,22 +18,29 @@ html {
   margin: auto;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
+.root h1,
+.root h2,
+.root h3,
+.root h4,
+.root h5 {
+  all: revert;
   text-align: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-a,
-button,
+/* Fighting against WordPress plugins */
+.root h2 {
+  margin-bottom: revert !important;
+}
+
+.root a,
+.root button,
 .button-styled-checkbox + label {
   border-radius: 10px;
 }
 
-a,
-button {
+.root a,
+.root button {
   background-color: var(--color-alpha);
   font-size: var(--size-20);
   color: white;
@@ -42,7 +52,7 @@ button {
   cursor: pointer;
 }
 
-.normal-link {
+.root .normal-link {
   background-color: revert;
   font-size: revert;
   color: revert;
@@ -53,31 +63,31 @@ button {
   text-align: revert;
 }
 
-button:disabled {
+.root button:disabled {
   cursor: initial;
 }
 
-.button-minor {
+.root .button-minor {
   background-color: gray;
 }
 
-button:disabled {
+.root button:disabled {
   background-color: lightgray;
 }
 
-input[type="text"],
-input[type="search"],
-input[type="email"],
-input[type="tel"],
-textarea {
+.root input[type="text"],
+.root input[type="search"],
+.root input[type="email"],
+.root input[type="tel"],
+.root textarea {
   padding: 10px;
   border-radius: 10px;
 }
 
-input[type="text"],
-input[type="search"],
-input[type="email"],
-input[type="tel"] {
+.root input[type="text"],
+.root input[type="search"],
+.root input[type="email"],
+.root input[type="tel"] {
   font-size: var(--size-20);
 }
 

@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  margin-bottom: 20px;
 }
 
 .controls-subsection {
@@ -11,36 +10,30 @@
   align-items: center;
 }
 
-.page-inactive,
-.page-active {
+.controls-subsection .page-inactive,
+.controls-subsection .page-active {
   padding: 10px 15px;
   border-radius: 0;
 }
 
-.page-inactive {
+.controls-subsection .page-inactive {
   color: gray;
   background-color: white;
 }
 
-.page-active {
+.controls-subsection .page-active {
   color: white;
   background-color: var(--color-alpha);
 }
 
 .jump-to-page-input {
   font-size: var(--size-20);
-  width: 40px;
+  width: 64px;
   padding: 10px;
   text-align: center;
 }
 
-@media screen and (max-width: 1024px) {
-  .page-buttons-label {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
   .main {
     flex-direction: column;
     justify-content: initial;

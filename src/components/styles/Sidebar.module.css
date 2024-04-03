@@ -1,7 +1,6 @@
 .main {
   width: 200px;
   font-size: 0.85rem;
-  /* margin-top: 70px; */
 }
 
 .main input[type="search"],
@@ -20,6 +19,8 @@
   margin-left: 5px;
   margin-top: 20px;
   margin-bottom: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 
 .main ul {

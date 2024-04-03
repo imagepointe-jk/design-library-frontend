@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
 import { getDesigns } from "../fetch";
-import { DesignType, TempDesignWithImages } from "../sharedTypes";
+import { DesignType, TempDesign } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import {
+  createNavigationUrl,
   buildDesignQueryParams,
   getDesignDefaultBackgroundColor,
-  requestParentWindowDesignModalOpen,
-  requestParentWindowQueryChange,
 } from "../utility";
+import { useApp } from "./AppProvider";
+import { ImageWithFallback } from "./ImageWithFallback";
+import { DesignModalDisplay } from "./Modal";
 import { NodeScrollView } from "./NodeScrollView";
 import { SearchArea } from "./SearchArea";
 import styles from "./styles/TopSection.module.css";
-import { ImageWithFallback } from "./ImageWithFallback";
-import { useApp } from "./AppProvider";
 
 export function TopSection() {
   const [featuredDesigns, setFeaturedDesigns] = useState(
-    null as TempDesignWithImages[] | null
+    null as TempDesign[] | null
   );
   const [featuredDesignsLoading, setFeaturedDesignsLoading] = useState(true);
-  const { parentWindowLocation } = useApp();
+  const { setModalDisplay } = useApp();
 
   async function getFeaturedDesigns(designType: DesignType) {
     const featuredQueryParams: DesignQueryParams = {
@@ -43,8 +43,6 @@ export function TopSection() {
   }
 
   function handleClickViewMore() {
-    if (!parentWindowLocation) return;
-
     const newParams: DesignQueryParams = {
       featuredOnly: false,
       pageNumber: 1,
@@ -52,7 +50,8 @@ export function TopSection() {
       subcategory: "Ladies",
       designType: "Screen Print",
     };
-    requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+
+    window.location.href = createNavigationUrl(newParams);
   }
 
   useEffect(() => {
@@ -71,8 +70,11 @@ export function TopSection() {
           >
             <ImageWithFallback
               className={styles["featured-image"]}
-              src={design.ImageURL ? design.ImageURL : design.ImageData[0].url}
-              onClick={() => requestParentWindowDesignModalOpen(design.Id)}
+              src={design.ImageURL}
+              onClick={() => {
+                if (setModalDisplay)
+                  setModalDisplay(new DesignModalDisplay(design.Id));
+              }}
             />
           </div>
         ))
@@ -86,6 +88,18 @@ export function TopSection() {
 
   return (
     <div className={styles["main"]}>
+      <div className={styles["hero-text"]}>
+        <h1>
+          <span className={styles["blue"]}>Union Designs</span> for Every
+          Occasion
+        </h1>
+        <p>
+          Unite your union in style by finding the perfect design from our
+          collection created in-house by our Art team. Choose from the screen
+          print and embroidery libraries with options to customize with your
+          colors, union and local.
+        </p>
+      </div>
       <SearchArea />
       <div className={styles["featured-image-container"]}>
         <NodeScrollView nodes={cards} isLoading={featuredDesignsLoading} />

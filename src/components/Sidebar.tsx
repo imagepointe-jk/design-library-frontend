@@ -1,8 +1,5 @@
 import { DesignQueryParams } from "../types";
-import {
-  requestParentWindowAdaptToAppHeight,
-  requestParentWindowQueryChange,
-} from "../utility";
+import { createNavigationUrl } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { HierarchyItem, HierarchyList } from "./HierarchyList";
@@ -15,9 +12,9 @@ type SidebarProps = {
 };
 
 export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
-  const { parentWindowLocation, categories } = useApp();
+  const { categories } = useApp();
   const designQueryParams = parseSearchParams(
-    new URLSearchParams(parentWindowLocation?.search)
+    new URLSearchParams(window.location.search)
   );
   const filterSidebarHierarchy: HierarchyItem[] = categories
     ? categories
@@ -30,7 +27,6 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
               ? "Event / Awareness"
               : category.Name,
           selected: designQueryParams.category === category.Name,
-          onClickParent: () => requestParentWindowAdaptToAppHeight(),
           children: category.Subcategories.map((subcategory) => ({
             childName: subcategory.Name,
             selected: subcategory.Name === designQueryParams.subcategory,
@@ -45,8 +41,6 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
     designQueryParams.subcategory !== undefined;
 
   function handleClearFilters() {
-    if (!parentWindowLocation) return;
-
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       category: undefined,
@@ -54,16 +48,12 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
       pageNumber: 1,
     };
 
-    requestParentWindowQueryChange(parentWindowLocation?.url, newParams);
+    window.location.href = createNavigationUrl(newParams);
   }
 
   return (
     <div className={styles["main"]}>
-      <form
-        onSubmit={(e) => {
-          if (parentWindowLocation) submitSearch(e, parentWindowLocation);
-        }}
-      >
+      <form onSubmit={submitSearch}>
         <input
           type="search"
           name="search"

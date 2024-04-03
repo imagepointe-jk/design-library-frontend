@@ -1,3 +1,7 @@
+.window {
+  padding: 40px;
+}
+
 .instructions {
   text-align: center;
 }
@@ -25,11 +29,11 @@
   margin-top: 20px;
 }
 
-.filter-action-button {
+.window .filter-action-button {
   padding: 10px;
 }
 
-.clear-selection-button {
+.window .clear-selection-button {
   background-color: gray;
 }
 

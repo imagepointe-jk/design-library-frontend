@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { useApp } from "./AppProvider";
-import styles from "./styles/DesignPage.module.css";
+import styles from "./styles/DesignView.module.css";
+import { createNavigationUrl } from "../utility";
 
 type ShareButtonProps = {
   designId: number;
@@ -10,16 +10,14 @@ const toastUpClassName = "share-button-toast-up";
 const toastDisplaySeconds = 1.25;
 
 export function ShareButton({ designId }: ShareButtonProps) {
-  const { parentWindowLocation } = useApp();
   const toastRef = useRef(null as HTMLDivElement | null);
 
   function handleClick() {
     const toast = toastRef.current;
-    if (!parentWindowLocation || !toast) return;
+    if (!toast) return;
 
-    const link = `${parentWindowLocation.origin}${parentWindowLocation.pathname}?designId=${designId}`;
+    const link = createNavigationUrl({ designId });
     navigator.clipboard.writeText(link);
-
     toast.classList.remove(styles[toastUpClassName]);
     toast.style.transition = "0s";
     setTimeout(() => {
@@ -34,7 +32,7 @@ export function ShareButton({ designId }: ShareButtonProps) {
       title="Copy Link"
       onClick={handleClick}
     >
-      <span>Share This Design</span>
+      <span>Share this design</span>
       <i className="fa-solid fa-arrow-up-right-from-square"></i>
       <div
         className={`${styles["share-button-toast"]} ${styles[toastUpClassName]}`}

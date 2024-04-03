@@ -1,8 +1,7 @@
 import { designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
-import { requestParentWindowQueryChange } from "../utility";
-import { parseSearchParams, tryParseDesignType } from "../validations";
-import { ParentWindowLocation, useApp } from "./AppProvider";
+import { createNavigationUrl } from "../utility";
+import { tryParseDesignType } from "../validations";
 import styles from "./styles/SearchArea.module.css";
 
 type SearchAreaProps = {
@@ -10,15 +9,12 @@ type SearchAreaProps = {
 };
 
 export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
-  const { parentWindowLocation } = useApp();
   const ownPathName = window.location.pathname;
   const isInModal = ownPathName === "/search"; //should display slightly differently when in modal
 
   return (
     <form
-      onSubmit={(e) => {
-        if (parentWindowLocation) submitSearch(e, parentWindowLocation);
-      }}
+      onSubmit={submitSearch}
       className={isInModal ? styles["form-in-modal"] : undefined}
     >
       <div className={styles["search-row"]}>
@@ -53,29 +49,20 @@ export function SearchArea({ onChangeDesignType }: SearchAreaProps) {
   );
 }
 
-export function submitSearch(
-  e: React.FormEvent<HTMLFormElement>,
-  parentWindowLocation: ParentWindowLocation
-) {
+export function submitSearch(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault();
 
   const form = e.target as HTMLFormElement;
   const formData = new FormData(form);
   const keywords = formData.get("search");
-  const designQueryParams = parseSearchParams(
-    new URLSearchParams(parentWindowLocation?.search)
-  );
-  const designTypeFromParams = designQueryParams.designType;
-  const designTypeFromForm = tryParseDesignType(
-    `${formData.get("design-type")}`
-  );
+  const designType = tryParseDesignType(`${formData.get("design-type")}`);
   const newParams: DesignQueryParams = {
-    designType: designTypeFromForm ? designTypeFromForm : designTypeFromParams,
+    designType: designType ? designType : "Screen Print",
     pageNumber: 1,
     keywords: keywords?.toString().split(" "),
     featuredOnly: false,
     allowDuplicateDesignNumbers: true,
   };
 
-  requestParentWindowQueryChange(parentWindowLocation.url, newParams);
+  window.location.href = createNavigationUrl(newParams);
 }

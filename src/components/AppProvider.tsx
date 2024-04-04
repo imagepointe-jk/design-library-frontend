@@ -8,6 +8,7 @@ import {
 import { getCategories, getColors, getSubcategories } from "../fetch";
 import { CategoryHierarchy } from "../types";
 import { DesignModalDisplay } from "./Modal";
+import { LightboxData } from "./Lightbox";
 
 type ModalDisplay = "search" | "filters" | DesignModalDisplay | null;
 
@@ -17,6 +18,8 @@ type AppContextType = {
   categoriesLoading: boolean;
   modalDisplay: ModalDisplay;
   setModalDisplay: (newDisplay: ModalDisplay) => void;
+  lightboxData: LightboxData | null;
+  setLightboxData: (data: LightboxData | null) => void;
 };
 
 const AppContext = createContext(null as AppContextType | null);
@@ -29,6 +32,8 @@ export function useApp() {
     categoriesLoading: context?.categoriesLoading,
     modalDisplay: context?.modalDisplay,
     setModalDisplay: context?.setModalDisplay,
+    lightboxData: context?.lightboxData,
+    setLightboxData: context?.setLightboxData,
   };
 }
 
@@ -39,6 +44,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [colors, setColors] = useState(null as string[] | null);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [modalDisplay, setModalDisplay] = useState(null as ModalDisplay);
+  const [lightboxData, setLightboxData] = useState(null as LightboxData | null);
 
   async function fetchColors() {
     try {
@@ -86,6 +92,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         categoriesLoading,
         modalDisplay,
         setModalDisplay,
+        lightboxData: lightboxData,
+        setLightboxData: setLightboxData,
       }}
     >
       {children}

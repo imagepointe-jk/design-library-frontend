@@ -61,16 +61,18 @@
 .gizmos-container {
   display: flex;
   justify-content: flex-end;
+  gap: 5px;
 }
 
-.main-flex .share-button {
+.main-flex .share-button,
+.main-flex .zoom-button {
   position: relative;
   background: none;
   color: black;
   padding: 0;
 }
 
-.share-button span {
+.main-flex span {
   font-size: 1.125rem;
   margin-right: 5px;
 }
@@ -162,5 +164,9 @@
 
   .description {
     text-align: center;
+  }
+
+  .main-flex .gizmos-container {
+    justify-content: center;
   }
 }

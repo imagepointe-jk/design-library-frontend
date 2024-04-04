@@ -25,6 +25,7 @@ export function DesignView({ designId }: DesignViewProps) {
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
   const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const { setLightboxData } = useApp();
 
   async function getDesignsToDisplay() {
     try {
@@ -99,6 +100,23 @@ export function DesignView({ designId }: DesignViewProps) {
             <div className={styles["gallery-container"]}>
               <div className={styles["gizmos-container"]}>
                 <ShareButton designId={viewedDesign.Id} />
+                <button
+                  className={styles["zoom-button"]}
+                  onClick={() => {
+                    if (setLightboxData) {
+                      setLightboxData({
+                        images: relatedDesigns.map((design) => ({
+                          url: design.ImageURL || "",
+                          backgroundColor: design.DefaultBackgroundColor,
+                        })),
+                        initialIndex: viewedIndex,
+                      });
+                    }
+                  }}
+                >
+                  <span>Enlarge</span>
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </button>
               </div>
               <DesignScrollView
                 imageUrls={images}

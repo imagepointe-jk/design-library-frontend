@@ -1,0 +1,56 @@
+.main {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 200;
+}
+
+.main .close-x {
+  color: white;
+  background: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  scale: 150%;
+  padding: 0;
+}
+
+.image-panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.image-panel img {
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  transition: 0.2s;
+}
+
+.image-panel button.arrow-button {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  border-radius: 0;
+  background-color: black;
+}
+
+.arrow-button:disabled {
+  opacity: 0;
+}
+
+.arrow-button.left {
+  left: 0;
+}
+
+.arrow-button.right {
+  right: 0;
+}

@@ -100,3 +100,10 @@
     margin-left: initial;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .searching-for-area {
+    flex-direction: column;
+    gap: 0;
+  }
+}

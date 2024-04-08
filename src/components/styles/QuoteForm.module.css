@@ -24,3 +24,11 @@
   flex-direction: column;
   gap: 5px;
 }
+
+.main .horz-inputs {
+  display: flex;
+}
+
+.main .horz-inputs input {
+  width: 50%;
+}

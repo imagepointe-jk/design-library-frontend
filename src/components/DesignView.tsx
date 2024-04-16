@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getDesignsRelatedToId } from "../fetch";
 import {
   clamp,
+  createNavigationUrl,
   getDesignCategoryHierarchies,
   getDesignDefaultBackgroundColor,
   getDesignTags,
@@ -13,6 +14,7 @@ import { QuoteForm } from "./QuoteForm";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
 import { TempDesign } from "../sharedTypes";
+import { DesignQueryParams } from "../types";
 
 type DesignViewProps = {
   designId: number;
@@ -85,6 +87,17 @@ export function DesignView({ designId }: DesignViewProps) {
     relatedDesigns &&
     relatedDesigns[0].DesignType === "Screen Print" &&
     viewedDesignHasTransparency;
+  const similarDesignsParams: DesignQueryParams | undefined = relatedDesigns
+    ? {
+        designType: relatedDesigns[0].DesignType,
+        featuredOnly: false,
+        pageNumber: 1,
+        similarTo: designId,
+      }
+    : undefined;
+  const similarDesignsUrl = similarDesignsParams
+    ? createNavigationUrl(similarDesignsParams)
+    : undefined;
 
   return (
     <>
@@ -180,6 +193,12 @@ export function DesignView({ designId }: DesignViewProps) {
                   >
                     REQUEST QUOTE
                   </button>
+                  <a
+                    href={similarDesignsUrl}
+                    className={styles["similar-designs-button"]}
+                  >
+                    Similar Designs<i className={"fa-solid fa-arrow-right"}></i>
+                  </a>
                 </div>
               </div>
             )}

@@ -35,6 +35,7 @@ export function DesignLibrary() {
       tags,
       keywords,
       featuredOnly,
+      similarTo,
     } = designQueryParams;
     const shouldExcludePrioritized =
       designType === "Screen Print" &&
@@ -44,7 +45,8 @@ export function DesignLibrary() {
       pageNumber === 1 &&
       !tags &&
       !keywords &&
-      !featuredOnly;
+      !featuredOnly &&
+      !similarTo;
     const designQueryParamsToUse: DesignQueryParams = {
       ...designQueryParams,
       shouldExcludePrioritized,
@@ -67,6 +69,15 @@ export function DesignLibrary() {
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       keywords: undefined,
+      allowDuplicateDesignNumbers: false,
+    };
+    window.location.href = createNavigationUrl(newParams);
+  }
+
+  function clearSimilar() {
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      similarTo: undefined,
       allowDuplicateDesignNumbers: false,
     };
     window.location.href = createNavigationUrl(newParams);
@@ -141,6 +152,24 @@ export function DesignLibrary() {
               </h2>
               <button onClick={clearSearch}>
                 <i className="fa-solid fa-xmark"></i>Clear Search
+              </button>
+            </div>
+          )}
+          {designQueryParams.similarTo && (
+            <div className={styles["searching-for-area"]}>
+              <h2>
+                Similar to{" "}
+                <a
+                  href={createNavigationUrl({
+                    designId: designQueryParams.similarTo,
+                  })}
+                  className="normal-link"
+                >
+                  #{designQueryParams.similarTo}
+                </a>
+              </h2>
+              <button onClick={clearSimilar}>
+                <i className="fa-solid fa-xmark"></i>Clear
               </button>
             </div>
           )}

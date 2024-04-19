@@ -82,7 +82,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   function tryAddComparisonId(id: number) {
-    if (compareModeData.selectedIds.length === maxComparisonDesigns)
+    if (compareModeData.selectedIds.length >= maxComparisonDesigns)
       return false;
     const newCompareModeData: CompareModeData = {
       ...compareModeData,

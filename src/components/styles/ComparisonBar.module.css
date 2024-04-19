@@ -30,6 +30,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .comparison-image {
@@ -48,6 +49,21 @@
 
 .expand-retract-button i {
   scale: 70%;
+}
+
+.image-container .remove-button {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  font-size: 1rem;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  background-color: rgb(224, 0, 0);
+}
+
+.image-container .remove-button:hover {
+  scale: 110%;
 }
 
 @media screen and (max-width: 1000px) {

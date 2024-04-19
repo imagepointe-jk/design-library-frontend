@@ -39,6 +39,7 @@ export function ComparisonBar() {
 function ComparisonSquare({ designId }: { designId?: number }) {
   const [design, setDesign] = useState(null as TempDesign | null);
   const [loading, setLoading] = useState(false);
+  const { removeComparisonId } = useApp();
 
   async function getDesignToView() {
     setDesign(null);
@@ -59,11 +60,19 @@ function ComparisonSquare({ designId }: { designId?: number }) {
   return (
     <div className={styles["image-container"]}>
       {loading && <LoadingIndicator />}
-      {design && (
-        <ImageWithFallback
-          src={design.ImageURL}
-          className={styles["comparison-image"]}
-        />
+      {design && designId && removeComparisonId && (
+        <>
+          <ImageWithFallback
+            src={design.ImageURL}
+            className={styles["comparison-image"]}
+          />
+          <button
+            className={styles["remove-button"]}
+            onClick={() => removeComparisonId(designId)}
+          >
+            <i className="fa-solid fa-xmark"></i>
+          </button>
+        </>
       )}
     </div>
   );

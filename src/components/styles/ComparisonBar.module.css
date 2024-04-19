@@ -1,0 +1,64 @@
+.main {
+  background-color: white;
+  width: 1000px;
+  padding: 30px;
+  padding-top: 40px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  translate: -50% 85%;
+  transition: 0.3s;
+  border-radius: 20px 20px 0 0;
+}
+
+.expanded {
+  translate: -50% 0;
+}
+
+.images-parent-container {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.image-container {
+  width: 115px;
+  height: 115px;
+  border: 4px dashed var(--color-alpha);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comparison-image {
+  width: 100%;
+}
+
+.main .expand-retract-button {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 0;
+  background: none;
+  color: var(--color-alpha);
+}
+
+.expand-retract-button i {
+  scale: 70%;
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    left: 0;
+    right: 0;
+    translate: 0 90%;
+    width: initial;
+  }
+
+  .expanded {
+    translate: 0 0;
+  }
+}

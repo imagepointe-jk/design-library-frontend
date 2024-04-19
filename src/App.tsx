@@ -1,5 +1,6 @@
 import "./App.css";
 import { useApp } from "./components/AppProvider";
+import { ComparisonBar } from "./components/ComparisonBar";
 import { DesignLibrary } from "./components/DesignLibrary";
 import { DesignPage } from "./components/DesignPage";
 import { DesignView } from "./components/DesignView";
@@ -9,7 +10,8 @@ import { DesignModalDisplay, Modal } from "./components/Modal";
 import { SearchArea } from "./components/SearchArea";
 
 function App() {
-  const { modalDisplay, lightboxData, setLightboxData } = useApp();
+  const { modalDisplay, lightboxData, setLightboxData, compareModeData } =
+    useApp();
   const searchParams = new URLSearchParams(window.location.search);
   const viewDesign = searchParams.get("viewDesign");
 
@@ -40,6 +42,7 @@ function App() {
           onClickClose={() => setLightboxData(null)}
         />
       )}
+      {compareModeData?.active && <ComparisonBar />}
     </div>
   );
 }

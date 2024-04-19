@@ -4,3 +4,4 @@ export const assetPaths = {
 };
 
 export const pageSizeChoices = [18, 30, 50];
+export const maxComparisonDesigns = 4;

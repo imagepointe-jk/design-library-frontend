@@ -6,7 +6,7 @@ import { useApp } from "./AppProvider";
 import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibraryControls() {
-  const { setModalDisplay } = useApp();
+  const { setModalDisplay, compareModeData, setCompareModeActive } = useApp();
   const designQueryParams = parseSearchParams(
     new URLSearchParams(window.location.search)
   );
@@ -49,6 +49,11 @@ export function DesignLibraryControls() {
     }
 
     window.location.href = createNavigationUrl(newParams);
+  }
+
+  function clickCompareButton() {
+    if (!compareModeData || !setCompareModeActive) return;
+    setCompareModeActive(!compareModeData.active);
   }
 
   const allDesignsButtonChecked =
@@ -110,6 +115,15 @@ export function DesignLibraryControls() {
         >
           <i className="fa-solid fa-magnifying-glass"></i>
           Search
+        </button>
+        <button
+          className={`${styles["compare-button"]} ${
+            compareModeData?.active ? styles["stop"] : ""
+          }`}
+          onClick={clickCompareButton}
+        >
+          <i className="fa-solid fa-grip"></i>
+          {compareModeData?.active ? "Stop Comparing" : "Compare"}
         </button>
       </div>
     </div>

@@ -41,6 +41,7 @@
   margin-bottom: 10px;
   flex-wrap: wrap;
   row-gap: 5px;
+  position: relative;
 }
 
 .settings-subcontainer {
@@ -60,12 +61,28 @@
   margin: 5px;
 }
 
-.settings-subcontainer .settings-button {
+.settings-subcontainer .settings-button,
+.settings-subcontainer .compare-button {
   padding: 10px;
   font-size: var(--size-16);
-  display: none;
   gap: 5px;
   cursor: pointer;
+}
+
+.settings-subcontainer .compare-button {
+  display: flex;
+}
+
+.settings-container .compare-button.stop {
+  background-color: white;
+  color: var(--color-alpha);
+  border: 2px solid var(--color-alpha);
+  font-weight: bold;
+  padding: 9px;
+}
+
+.settings-subcontainer .settings-button {
+  display: none;
 }
 
 .searching-for-keywords {

@@ -26,3 +26,42 @@
   width: 320px;
   height: 320px;
 }
+
+.design-card-parent {
+  position: relative;
+}
+
+.multiselect-container {
+  background-color: transparent;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+}
+
+.multiselect-container:hover {
+  border: 5px solid var(--color-alpha);
+}
+
+.multiselect-checkbox {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  border: 3px solid var(--color-alpha);
+  border-radius: 5px;
+  background-color: white;
+}
+
+.multiselect-checkbox i {
+  display: block;
+  color: var(--color-alpha);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  scale: 180%;
+}

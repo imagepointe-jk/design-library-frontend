@@ -12,7 +12,12 @@ import { LightboxData } from "./Lightbox";
 import { validateCompareModeData } from "../validations";
 import { maxComparisonDesigns } from "../constants";
 
-type ModalDisplay = "search" | "filters" | DesignModalDisplay | null;
+type ModalDisplay =
+  | "search"
+  | "filters"
+  | "comparison"
+  | DesignModalDisplay
+  | null;
 
 type AppContextType = {
   colors: string[] | null;

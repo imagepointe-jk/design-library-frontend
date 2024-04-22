@@ -1,5 +1,6 @@
 import "./App.css";
 import { useApp } from "./components/AppProvider";
+import { ComparisonArea } from "./components/ComparisonArea";
 import { ComparisonBar } from "./components/ComparisonBar";
 import { DesignLibrary } from "./components/DesignLibrary";
 import { DesignPage } from "./components/DesignPage";
@@ -36,6 +37,11 @@ function App() {
         </Modal>
       )}
       {modalDisplay === "filters" && <FilterModal />}
+      {modalDisplay === "comparison" && (
+        <Modal>
+          <ComparisonArea />
+        </Modal>
+      )}
       {lightboxData && setLightboxData && (
         <Lightbox
           data={lightboxData}

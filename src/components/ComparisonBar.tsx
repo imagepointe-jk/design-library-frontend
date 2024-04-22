@@ -6,10 +6,12 @@ import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonBar.module.css";
+import { DesignModalDisplay } from "./Modal";
 
 export function ComparisonBar() {
-  const { compareModeData, setCompareModeExpanded } = useApp();
-  if (!compareModeData) return <></>;
+  const { compareModeData, setCompareModeExpanded, setModalDisplay } = useApp();
+  if (!compareModeData || !setCompareModeExpanded || !setModalDisplay)
+    return <></>;
 
   const arr = Array.from({ length: maxComparisonDesigns }, () => 0);
   const { expanded, selectedIds: ids } = compareModeData;
@@ -25,6 +27,14 @@ export function ComparisonBar() {
           <ComparisonSquare designId={ids.length > i ? ids[i] : undefined} />
         ))}
       </div>
+      <div className={styles["buttons-container"]}>
+        <button
+          onClick={() => setModalDisplay("comparison")}
+          disabled={ids.length < 2}
+        >
+          <i className="fa-regular fa-eye"></i>Compare Now
+        </button>
+      </div>
       <button
         className={styles["expand-retract-button"]}
         onClick={clickExpandRetract}
@@ -39,7 +49,7 @@ export function ComparisonBar() {
 function ComparisonSquare({ designId }: { designId?: number }) {
   const [design, setDesign] = useState(null as TempDesign | null);
   const [loading, setLoading] = useState(false);
-  const { removeComparisonId } = useApp();
+  const { removeComparisonId, setModalDisplay } = useApp();
 
   async function getDesignToView() {
     setDesign(null);
@@ -57,14 +67,17 @@ function ComparisonSquare({ designId }: { designId?: number }) {
     getDesignToView();
   }, [designId]);
 
+  const defined = design && designId && removeComparisonId && setModalDisplay;
+
   return (
     <div className={styles["image-container"]}>
       {loading && <LoadingIndicator />}
-      {design && designId && removeComparisonId && (
+      {defined && (
         <>
           <ImageWithFallback
             src={design.ImageURL}
             className={styles["comparison-image"]}
+            onClick={() => setModalDisplay(new DesignModalDisplay(designId))}
           />
           <button
             className={styles["remove-button"]}

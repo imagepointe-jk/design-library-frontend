@@ -9,6 +9,10 @@
   translate: -50% 85%;
   transition: 0.3s;
   border-radius: 20px 20px 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .expanded {
@@ -35,6 +39,7 @@
 
 .comparison-image {
   width: 100%;
+  cursor: pointer;
 }
 
 .main .expand-retract-button {

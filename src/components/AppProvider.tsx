@@ -112,6 +112,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ...compareModeData,
       active: state,
     };
+    if (state) newCompareModeData.expanded = true;
     updateCompareModeData(newCompareModeData);
   }
 

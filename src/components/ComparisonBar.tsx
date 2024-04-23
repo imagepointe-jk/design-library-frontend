@@ -10,8 +10,18 @@ import { DesignModalDisplay } from "./Modal";
 import { getDesignDefaultBackgroundColor } from "../utility";
 
 export function ComparisonBar() {
-  const { compareModeData, setCompareModeExpanded, setModalDisplay } = useApp();
-  if (!compareModeData || !setCompareModeExpanded || !setModalDisplay)
+  const {
+    compareModeData,
+    setCompareModeExpanded,
+    setCompareModeActive,
+    setModalDisplay,
+  } = useApp();
+  if (
+    !compareModeData ||
+    !setCompareModeExpanded ||
+    !setCompareModeActive ||
+    !setModalDisplay
+  )
     return <></>;
 
   const arr = Array.from({ length: maxComparisonDesigns }, () => 0);
@@ -42,6 +52,12 @@ export function ComparisonBar() {
       >
         <i className={`fa-solid fa-chevron-${expanded ? "down" : "up"}`}></i>
         {expanded ? "shrink" : "compare tool"}
+      </button>
+      <button
+        className={styles["close-x"]}
+        onClick={() => setCompareModeActive(false)}
+      >
+        <i className="fa-solid fa-xmark"></i>
       </button>
     </div>
   );

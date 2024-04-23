@@ -1,8 +1,13 @@
+import { useRef } from "react";
 import { createNavigationUrl } from "../utility";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { DesignModalDisplay } from "./Modal";
 import styles from "./styles/DesignGrid.module.css";
+import {
+  maxComparisonDesigns,
+  maxComparisonDesignsErrorMessageDuration,
+} from "../constants";
 
 type DesignCardProps = {
   designId: number;
@@ -23,6 +28,7 @@ export function DesignCard({
     tryAddComparisonId,
     removeComparisonId,
   } = useApp();
+  const multiselectErrorRef = useRef(null as HTMLDivElement | null);
 
   function handleClickCard(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
     if (!setModalDisplay) return;
@@ -31,10 +37,23 @@ export function DesignCard({
     setModalDisplay(new DesignModalDisplay(designId));
   }
 
+  function showMultiselectError() {
+    if (!multiselectErrorRef.current) return;
+    multiselectErrorRef.current.style.opacity = "1";
+
+    setTimeout(() => {
+      if (!multiselectErrorRef.current) return;
+      multiselectErrorRef.current.style.opacity = "0";
+    }, maxComparisonDesignsErrorMessageDuration);
+  }
+
   function handleMultiselect() {
     if (!tryAddComparisonId || !removeComparisonId) return;
     if (isSelectedForCompare) removeComparisonId(designId);
-    else tryAddComparisonId(designId);
+    else {
+      const added = tryAddComparisonId(designId);
+      if (!added) showMultiselectError();
+    }
   }
 
   const isSelectedForCompare = compareModeData?.selectedIds.includes(designId);
@@ -59,6 +78,12 @@ export function DesignCard({
         <>
           <div className={styles["multiselect-checkbox"]}>
             {isSelectedForCompare && <i className="fa-solid fa-check"></i>}
+            <div
+              ref={multiselectErrorRef}
+              className={styles["max-select-message"]}
+            >
+              You can only select {maxComparisonDesigns} designs at once.
+            </div>
           </div>
           <div
             className={styles["multiselect-container"]}

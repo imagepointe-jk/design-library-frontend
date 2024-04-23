@@ -28,7 +28,7 @@ type AppContextType = {
   lightboxData: LightboxData | null;
   setLightboxData: (data: LightboxData | null) => void;
   compareModeData: CompareModeData;
-  tryAddComparisonId: (id: number) => void;
+  tryAddComparisonId: (id: number) => boolean;
   removeComparisonId: (id: number) => void;
   setCompareModeActive: (state: boolean) => void;
   setCompareModeExpanded: (state: boolean) => void;
@@ -94,6 +94,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       selectedIds: [...compareModeData.selectedIds, id],
     };
     updateCompareModeData(newCompareModeData);
+    return true;
   }
 
   function removeComparisonId(id: number) {

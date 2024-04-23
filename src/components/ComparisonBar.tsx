@@ -7,6 +7,7 @@ import { ImageWithFallback } from "./ImageWithFallback";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonBar.module.css";
 import { DesignModalDisplay } from "./Modal";
+import { getDesignDefaultBackgroundColor } from "../utility";
 
 export function ComparisonBar() {
   const { compareModeData, setCompareModeExpanded, setModalDisplay } = useApp();
@@ -78,6 +79,7 @@ function ComparisonSquare({ designId }: { designId?: number }) {
             src={design.ImageURL}
             className={styles["comparison-image"]}
             onClick={() => setModalDisplay(new DesignModalDisplay(designId))}
+            style={{ backgroundColor: getDesignDefaultBackgroundColor(design) }}
           />
           <button
             className={styles["remove-button"]}

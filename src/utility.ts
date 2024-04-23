@@ -118,10 +118,12 @@ export function getFirstHexCodeInString(str: string) {
 
 export function getDesignDefaultBackgroundColor(design: TempDesign) {
   const hexCode = getFirstHexCodeInString(design.DefaultBackgroundColor);
-  if (!hexCode)
+  if (!hexCode) {
     console.error(
       `Couldn't find hex code in ${design.DefaultBackgroundColor} for design ${design.DesignNumber}`
     );
+    return "";
+  }
   return hexCode;
 }
 

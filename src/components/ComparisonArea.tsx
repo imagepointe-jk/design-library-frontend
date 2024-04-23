@@ -5,7 +5,10 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { getDesignById } from "../fetch";
 import { TempDesign } from "../sharedTypes";
 import { ImageWithFallback } from "./ImageWithFallback";
-import { createNavigationUrl } from "../utility";
+import {
+  createNavigationUrl,
+  getDesignDefaultBackgroundColor,
+} from "../utility";
 
 export function ComparisonArea() {
   const { compareModeData } = useApp();
@@ -39,7 +42,12 @@ export function ComparisonArea() {
         {designs &&
           designs.map((design) => (
             <div className={styles["card"]}>
-              <ImageWithFallback src={design.ImageURL} />
+              <ImageWithFallback
+                src={design.ImageURL}
+                style={{
+                  backgroundColor: getDesignDefaultBackgroundColor(design),
+                }}
+              />
               <h3>#{design.DesignNumber}</h3>
               <a href={createNavigationUrl({ designId: design.Id })}>
                 View Design

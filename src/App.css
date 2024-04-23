@@ -1,5 +1,6 @@
 :root {
   --color-alpha: #0068cb;
+  --color-danger: rgb(218, 31, 31);
 
   --size-16: 1rem;
   --size-20: 1.25rem;

@@ -6,6 +6,7 @@ import {
 } from "./sharedTypes";
 import {
   DesignQueryParams,
+  cartDataSchema,
   categoryDataSchema,
   compareModeDataSchema,
   subcategoryDataSchema,
@@ -104,4 +105,9 @@ export function validatePhone(phone: number) {
 export function validateCompareModeData(jsonString: string) {
   const json = JSON.parse(jsonString);
   return compareModeDataSchema.parse(json);
+}
+
+export function validateCartData(jsonString: string) {
+  const json = JSON.parse(jsonString);
+  return cartDataSchema.parse(json);
 }

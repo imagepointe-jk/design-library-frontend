@@ -1,0 +1,8 @@
+.design-row {
+  display: flex;
+  align-items: center;
+}
+
+.design-image {
+  width: 100px;
+}

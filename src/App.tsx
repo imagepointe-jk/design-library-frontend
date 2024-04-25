@@ -1,5 +1,6 @@
 import "./App.css";
 import { useApp } from "./components/AppProvider";
+import { CartView } from "./components/CartView";
 import { ComparisonArea } from "./components/ComparisonArea";
 import { ComparisonBar } from "./components/ComparisonBar";
 import { DesignLibrary } from "./components/DesignLibrary";
@@ -15,6 +16,14 @@ function App() {
     useApp();
   const searchParams = new URLSearchParams(window.location.search);
   const viewDesign = searchParams.get("viewDesign");
+  const viewCart = searchParams.get("viewCart");
+
+  if (viewCart === "true")
+    return (
+      <div className="root">
+        <CartView />
+      </div>
+    );
 
   if (viewDesign && !isNaN(+viewDesign))
     return (

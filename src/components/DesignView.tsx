@@ -27,7 +27,7 @@ export function DesignView({ designId }: DesignViewProps) {
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
   const [showQuoteForm, setShowQuoteForm] = useState(false);
-  const { setLightboxData } = useApp();
+  const { setLightboxData, cartData, addDesignToCart } = useApp();
 
   async function getDesignsToDisplay() {
     try {
@@ -52,6 +52,13 @@ export function DesignView({ designId }: DesignViewProps) {
 
   function onClickColor(clickedColor: string) {
     setSelectedBgColor(clickedColor);
+  }
+
+  function clickQuoteButton() {
+    if (!addDesignToCart) return;
+
+    if (!isDesignInCart) addDesignToCart(designId);
+    else console.log("go to cart");
   }
 
   useEffect(() => {
@@ -98,6 +105,7 @@ export function DesignView({ designId }: DesignViewProps) {
   const similarDesignsUrl = similarDesignsParams
     ? createNavigationUrl(similarDesignsParams)
     : undefined;
+  const isDesignInCart = cartData?.designIds.find((id) => designId === id);
 
   return (
     <>
@@ -189,9 +197,9 @@ export function DesignView({ designId }: DesignViewProps) {
                   </p>
                   <button
                     className={styles["try-design-button"]}
-                    onClick={() => setShowQuoteForm(true)}
+                    onClick={clickQuoteButton}
                   >
-                    REQUEST QUOTE
+                    {isDesignInCart ? "REQUEST QUOTE" : "ADD TO QUOTE"}
                   </button>
                   <a
                     href={similarDesignsUrl}

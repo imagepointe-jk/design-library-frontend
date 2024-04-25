@@ -6,10 +6,10 @@ import {
   useState,
 } from "react";
 import { getCategories, getColors, getSubcategories } from "../fetch";
-import { CategoryHierarchy, CompareModeData } from "../types";
+import { CartData, CategoryHierarchy, CompareModeData } from "../types";
 import { DesignModalDisplay } from "./Modal";
 import { LightboxData } from "./Lightbox";
-import { validateCompareModeData } from "../validations";
+import { validateCartData, validateCompareModeData } from "../validations";
 import { maxComparisonDesigns } from "../constants";
 
 type ModalDisplay =
@@ -32,6 +32,9 @@ type AppContextType = {
   removeComparisonId: (id: number) => void;
   setCompareModeActive: (state: boolean) => void;
   setCompareModeExpanded: (state: boolean) => void;
+  cartData: CartData;
+  addDesignToCart: (designId: number) => void;
+  removeDesignFromCart: (designId: number) => void;
 };
 
 const AppContext = createContext(null as AppContextType | null);
@@ -51,6 +54,9 @@ export function useApp() {
     removeComparisonId: context?.removeComparisonId,
     setCompareModeActive: context?.setCompareModeActive,
     setCompareModeExpanded: context?.setCompareModeExpanded,
+    cartData: context?.cartData,
+    addDesignToCart: context?.addDesignToCart,
+    removeDesignFromCart: context?.removeDesignFromCart,
   };
 }
 
@@ -71,6 +77,19 @@ function getInitialCompareModeData() {
   }
 }
 
+function getInitialCartData() {
+  try {
+    const fromLocalStorage = localStorage.getItem("design-library-cart-data");
+    const parsed = validateCartData(`${fromLocalStorage}`);
+    return parsed;
+  } catch (_) {
+    const initialCartData: CartData = {
+      designIds: [],
+    };
+    return initialCartData;
+  }
+}
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState(
     null as CategoryHierarchy[] | null
@@ -80,6 +99,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [modalDisplay, setModalDisplay] = useState(null as ModalDisplay);
   const [lightboxData, setLightboxData] = useState(null as LightboxData | null);
   const [compareModeData, scmd] = useState(getInitialCompareModeData()); //scmd = setCompareModeData. it should ONLY be used in one place.
+  const [cartData, scd] = useState(getInitialCartData()); //scd = setCartData. it should ONLY be used in one place.
+
+  function updateCartData(data: CartData) {
+    localStorage.setItem("design-library-cart-data", JSON.stringify(data));
+    scd(data);
+  }
 
   function updateCompareModeData(data: CompareModeData) {
     localStorage.setItem("design-library-compare-data", JSON.stringify(data));
@@ -122,6 +147,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
       expanded: state,
     };
     updateCompareModeData(newCompareModeData);
+  }
+
+  function addDesignToCart(designId: number) {
+    const newArr = [...cartData.designIds, designId];
+    const newCartData = {
+      ...cartData,
+      designIds: newArr,
+    };
+    updateCartData(newCartData);
+  }
+
+  function removeDesignFromCart(designId: number) {
+    const newCartData = {
+      ...cartData,
+      designIds: cartData.designIds.filter((id) => id !== designId),
+    };
+    updateCartData(newCartData);
   }
 
   async function fetchColors() {
@@ -177,6 +219,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         removeComparisonId,
         setCompareModeActive,
         setCompareModeExpanded,
+        cartData,
+        addDesignToCart,
+        removeDesignFromCart,
       }}
     >
       {children}

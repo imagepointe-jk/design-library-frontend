@@ -27,7 +27,7 @@ function App() {
     <div className="root">
       <DesignLibrary />
       {modalDisplay instanceof DesignModalDisplay && (
-        <Modal>
+        <Modal heightType="tall">
           <DesignView designId={modalDisplay.designId} />
         </Modal>
       )}

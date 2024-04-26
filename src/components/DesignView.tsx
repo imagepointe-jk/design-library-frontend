@@ -55,10 +55,24 @@ export function DesignView({ designId }: DesignViewProps) {
   }
 
   function clickQuoteButton() {
-    if (!addDesignToCart) return;
+    if (!addDesignToCart || !relatedDesigns) return;
 
-    if (!isDesignInCart) addDesignToCart(designId);
-    else console.log("go to cart");
+    if (!isDesignInCart) {
+      const viewedDesign = relatedDesigns[viewedIndex];
+      //if they actually clicked a non-default color, use that.
+      //if not, check if the viewed design has transparency (and therefore had color picking options).
+      //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
+      //if it did, assume the user was fine with the default background color, and assign that.
+      const colorToAddToCart =
+        selectedBgColor ||
+        (viewedDesignHasTransparency
+          ? viewedDesign.DefaultBackgroundColor
+          : "Color picking unavailable for this design.");
+      addDesignToCart({
+        id: viewedDesign.Id,
+        requestedBackgroundColor: colorToAddToCart,
+      });
+    } else console.log("go to cart");
   }
 
   useEffect(() => {
@@ -105,7 +119,9 @@ export function DesignView({ designId }: DesignViewProps) {
   const similarDesignsUrl = similarDesignsParams
     ? createNavigationUrl(similarDesignsParams)
     : undefined;
-  const isDesignInCart = cartData?.designIds.find((id) => designId === id);
+  const isDesignInCart = cartData?.designs.find(
+    (design) => viewedDesign?.Id === design.id
+  );
 
   return (
     <>

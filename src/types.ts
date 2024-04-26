@@ -30,8 +30,13 @@ export const compareModeDataSchema = z.object({
   selectedIds: z.array(z.number()),
 });
 
+export const cartDesignSchema = z.object({
+  id: z.number(),
+  requestedBackgroundColor: z.string(),
+});
+
 export const cartDataSchema = z.object({
-  designIds: z.array(z.number()),
+  designs: z.array(cartDesignSchema),
 });
 
 export type DesignQueryParams = {
@@ -55,3 +60,4 @@ export type CategoryHierarchy = z.infer<typeof categoryHierarchySchema>;
 export type TempDesignResults = z.infer<typeof tempDesignResultsSchema>;
 export type CompareModeData = z.infer<typeof compareModeDataSchema>;
 export type CartData = z.infer<typeof cartDataSchema>;
+export type CartDesign = z.infer<typeof cartDesignSchema>;

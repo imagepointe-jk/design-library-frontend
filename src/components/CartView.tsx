@@ -5,6 +5,8 @@ import { TempDesign } from "../sharedTypes";
 import { getDesignById } from "../fetch";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { ImageWithFallback } from "./ImageWithFallback";
+import { CartDesign } from "../types";
+import { getFirstHexCodeInString } from "../utility";
 
 export function CartView() {
   const { cartData } = useApp();
@@ -15,8 +17,8 @@ export function CartView() {
     <>
       <h2>Cart</h2>
       <div className={styles["items-container"]}>
-        {cartData.designIds.map((id) => (
-          <CartRow designId={id} />
+        {cartData.designs.map((design) => (
+          <CartRow design={design} />
         ))}
       </div>
     </>
@@ -24,16 +26,16 @@ export function CartView() {
 }
 
 type CartRowProps = {
-  designId: number;
+  design: CartDesign;
 };
 
-function CartRow({ designId }: CartRowProps) {
+function CartRow({ design: { requestedBackgroundColor, id } }: CartRowProps) {
   const [loading, setLoading] = useState(true);
   const [design, setDesign] = useState(null as TempDesign | null);
 
   async function getDesignToView() {
     try {
-      const design = await getDesignById(designId);
+      const design = await getDesignById(id);
       setDesign(design);
     } catch (_) {}
     setLoading(false);
@@ -51,6 +53,10 @@ function CartRow({ designId }: CartRowProps) {
           <ImageWithFallback
             className={styles["design-image"]}
             src={design.ImageURL}
+            style={{
+              backgroundColor:
+                getFirstHexCodeInString(requestedBackgroundColor) || undefined,
+            }}
           />
           <div>Design #{design.DesignNumber}</div>
         </>

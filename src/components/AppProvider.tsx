@@ -6,7 +6,12 @@ import {
   useState,
 } from "react";
 import { getCategories, getColors, getSubcategories } from "../fetch";
-import { CartData, CategoryHierarchy, CompareModeData } from "../types";
+import {
+  CartData,
+  CartDesign,
+  CategoryHierarchy,
+  CompareModeData,
+} from "../types";
 import { DesignModalDisplay } from "./Modal";
 import { LightboxData } from "./Lightbox";
 import { validateCartData, validateCompareModeData } from "../validations";
@@ -33,7 +38,7 @@ type AppContextType = {
   setCompareModeActive: (state: boolean) => void;
   setCompareModeExpanded: (state: boolean) => void;
   cartData: CartData;
-  addDesignToCart: (designId: number) => void;
+  addDesignToCart: (design: CartDesign) => void;
   removeDesignFromCart: (designId: number) => void;
 };
 
@@ -84,7 +89,7 @@ function getInitialCartData() {
     return parsed;
   } catch (_) {
     const initialCartData: CartData = {
-      designIds: [],
+      designs: [],
     };
     return initialCartData;
   }
@@ -149,11 +154,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateCompareModeData(newCompareModeData);
   }
 
-  function addDesignToCart(designId: number) {
-    const newArr = [...cartData.designIds, designId];
+  function addDesignToCart(design: CartDesign) {
+    const newArr = [...cartData.designs, design];
     const newCartData = {
       ...cartData,
-      designIds: newArr,
+      designs: newArr,
     };
     updateCartData(newCartData);
   }
@@ -161,7 +166,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   function removeDesignFromCart(designId: number) {
     const newCartData = {
       ...cartData,
-      designIds: cartData.designIds.filter((id) => id !== designId),
+      designIds: cartData.designs.filter((design) => design.id !== designId),
     };
     updateCartData(newCartData);
   }

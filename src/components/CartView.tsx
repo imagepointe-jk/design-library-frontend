@@ -5,23 +5,35 @@ import { TempDesign } from "../sharedTypes";
 import { getDesignById } from "../fetch";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { ImageWithFallback } from "./ImageWithFallback";
-import { CartDesign } from "../types";
-import { getFirstHexCodeInString } from "../utility";
+import { CartDesign, DesignQueryParams } from "../types";
+import { createNavigationUrl, getFirstHexCodeInString } from "../utility";
 
 export function CartView() {
   const { cartData } = useApp();
 
   if (!cartData) return <></>;
 
+  const defaultParams: DesignQueryParams = {
+    designType: "Screen Print",
+    featuredOnly: false,
+    pageNumber: 1,
+  };
+
   return (
-    <>
+    <div className={styles["main"]}>
       <h2>Cart</h2>
+      <a
+        href={createNavigationUrl(defaultParams)}
+        className={styles["to-library"]}
+      >
+        <i className={"fa-solid fa-arrow-left"}></i>To Design Library
+      </a>
       <div className={styles["items-container"]}>
         {cartData.designs.map((design) => (
-          <CartRow design={design} />
+          <CartRow design={design} key={design.id} />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -32,6 +44,7 @@ type CartRowProps = {
 function CartRow({ design: { requestedBackgroundColor, id } }: CartRowProps) {
   const [loading, setLoading] = useState(true);
   const [design, setDesign] = useState(null as TempDesign | null);
+  const { removeDesignFromCart } = useApp();
 
   async function getDesignToView() {
     try {
@@ -39,6 +52,10 @@ function CartRow({ design: { requestedBackgroundColor, id } }: CartRowProps) {
       setDesign(design);
     } catch (_) {}
     setLoading(false);
+  }
+
+  function clickRemoveDesign() {
+    if (removeDesignFromCart) removeDesignFromCart(id);
   }
 
   useEffect(() => {
@@ -59,6 +76,12 @@ function CartRow({ design: { requestedBackgroundColor, id } }: CartRowProps) {
             }}
           />
           <div>Design #{design.DesignNumber}</div>
+          <button
+            className={styles["remove-button"]}
+            onClick={clickRemoveDesign}
+          >
+            <i className="fa-solid fa-xmark"></i>
+          </button>
         </>
       )}
     </div>

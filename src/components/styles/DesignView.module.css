@@ -23,10 +23,22 @@
   padding: 15px;
 }
 
-.main-flex .try-design-button {
+.main-flex .add-to-quote-button,
+.main-flex .request-quote-button,
+.main-flex .request-quote-button span {
   margin: auto;
   padding: 15px;
   margin-bottom: 12px;
+}
+
+.main-flex .request-quote-button {
+  background: none;
+}
+
+.main-flex .request-quote-button span {
+  background: var(--color-alpha);
+  font-size: var(--size-20);
+  border-radius: 10px;
 }
 
 .main-flex .similar-designs-button {

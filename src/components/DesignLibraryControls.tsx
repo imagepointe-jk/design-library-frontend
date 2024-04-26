@@ -117,7 +117,7 @@ export function DesignLibraryControls() {
           Search
         </button>
         <button
-          className={`${styles["compare-button"]} ${
+          className={`${styles["control-button"]} ${
             compareModeData?.active ? styles["stop"] : ""
           }`}
           onClick={clickCompareButton}
@@ -125,6 +125,15 @@ export function DesignLibraryControls() {
           <i className="fa-solid fa-grip"></i>
           {compareModeData?.active ? "Stop Comparing" : "Compare"}
         </button>
+        <a
+          href={createNavigationUrl("cart")}
+          className={styles["control-button"]}
+        >
+          <span>
+            <i className="fa-solid fa-cart-shopping"></i>
+            Quote Request
+          </span>
+        </a>
       </div>
     </div>
   );

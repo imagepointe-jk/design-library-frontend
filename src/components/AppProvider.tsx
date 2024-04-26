@@ -166,7 +166,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   function removeDesignFromCart(designId: number) {
     const newCartData = {
       ...cartData,
-      designIds: cartData.designs.filter((design) => design.id !== designId),
+      designs: cartData.designs.filter((design) => design.id !== designId),
     };
     updateCartData(newCartData);
   }

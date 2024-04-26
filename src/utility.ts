@@ -143,7 +143,9 @@ function isDesignId(param: any): param is DesignId {
   return param && typeof param.designId === "number";
 }
 
-export function createNavigationUrl(params: DesignId | DesignQueryParams) {
+export function createNavigationUrl(
+  params: DesignId | DesignQueryParams | "cart"
+) {
   //preserve previous search params; this allows the app to work on WordPress draft pages
   const existingSearchParams = new URLSearchParams(window.location.search);
   let newSearchParams = new URLSearchParams();
@@ -154,6 +156,8 @@ export function createNavigationUrl(params: DesignId | DesignQueryParams) {
 
   if (isDesignId(params)) {
     newSearchParams.set("viewDesign", `${params.designId}`);
+  } else if (params === "cart") {
+    newSearchParams.set("viewCart", "true");
   } else {
     newSearchParams = new URLSearchParams(
       `${newSearchParams.toString()}&${buildDesignQueryParams(params)}`

@@ -62,15 +62,20 @@
 }
 
 .settings-subcontainer .settings-button,
-.settings-subcontainer .compare-button {
+.settings-subcontainer .control-button {
   padding: 10px;
   font-size: var(--size-16);
   gap: 5px;
   cursor: pointer;
 }
 
-.settings-subcontainer .compare-button {
+.settings-subcontainer .control-button {
   display: flex;
+  align-items: center;
+}
+
+.settings-subcontainer .control-button span i {
+  margin-right: 5px;
 }
 
 .settings-container .compare-button.stop {

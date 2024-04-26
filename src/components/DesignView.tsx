@@ -211,12 +211,22 @@ export function DesignView({ designId }: DesignViewProps) {
                     Get a quote to view more garment color options and see this
                     design customized for your union!
                   </p>
-                  <button
-                    className={styles["try-design-button"]}
-                    onClick={clickQuoteButton}
-                  >
-                    {isDesignInCart ? "REQUEST QUOTE" : "ADD TO QUOTE"}
-                  </button>
+                  {!isDesignInCart && (
+                    <button
+                      className={styles["add-to-quote-button"]}
+                      onClick={clickQuoteButton}
+                    >
+                      ADD TO QUOTE
+                    </button>
+                  )}
+                  {isDesignInCart && (
+                    <a
+                      href={createNavigationUrl("cart")}
+                      className={styles["request-quote-button"]}
+                    >
+                      <span>REQUEST QUOTE</span>
+                    </a>
+                  )}
                   <a
                     href={similarDesignsUrl}
                     className={styles["similar-designs-button"]}

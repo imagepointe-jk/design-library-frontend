@@ -166,7 +166,9 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
           placeholder="Comments (Please specify garment type, sizes, quantities, etc.)"
         ></textarea>
         {!submittingRequest && submitStatus !== "success" && (
-          <button type="submit">Submit Request</button>
+          <button type="submit" disabled={cartData?.designs.length === 0}>
+            Submit Request
+          </button>
         )}
         {submittingRequest && <LoadingIndicator />}
         {!submittingRequest && submitStatus === "success" && (

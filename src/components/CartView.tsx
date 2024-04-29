@@ -57,9 +57,11 @@ export function CartView() {
             <i className={"fa-solid fa-arrow-left"}></i>To Design Library
           </a>
           <div className={styles["items-container"]}>
-            {cartData.designs.map((design) => (
-              <CartRow design={design} key={design.id} />
-            ))}
+            {cartData.designs.length > 0 &&
+              cartData.designs.map((design) => (
+                <CartRow design={design} key={design.id} />
+              ))}
+            {cartData.designs.length === 0 && <div>(No designs)</div>}
           </div>
         </div>
         <QuoteForm onSuccess={onSuccess} />

@@ -47,24 +47,26 @@ export function CartView() {
 
   return (
     <>
-      <h2>Cart</h2>
+      <h2>Quote Request</h2>
       <div className={styles["main"]}>
-        <div>
-          <a
-            href={createNavigationUrl(defaultParams)}
-            className={styles["to-library"]}
-          >
-            <i className={"fa-solid fa-arrow-left"}></i>To Design Library
-          </a>
+        <a
+          href={createNavigationUrl(defaultParams)}
+          className={styles["to-library"]}
+        >
+          <i className={"fa-solid fa-arrow-left"}></i>To Design Library
+        </a>
+        <div className={styles["main-flex"]}>
           <div className={styles["items-container"]}>
             {cartData.designs.length > 0 &&
               cartData.designs.map((design) => (
                 <CartRow design={design} key={design.id} />
               ))}
-            {cartData.designs.length === 0 && <div>(No designs)</div>}
+            {cartData.designs.length === 0 && (
+              <div className={styles["empty-cart-message"]}>(No designs)</div>
+            )}
           </div>
+          <QuoteForm onSuccess={onSuccess} />
         </div>
-        <QuoteForm onSuccess={onSuccess} />
       </div>
     </>
   );
@@ -100,15 +102,17 @@ function CartRow({ design: { garmentColor, id } }: CartRowProps) {
       {loading && <LoadingIndicator />}
       {!loading && design && (
         <>
-          <ImageWithFallback
-            className={styles["design-image"]}
-            src={design.ImageURL}
-            style={{
-              backgroundColor:
-                getFirstHexCodeInString(garmentColor) || undefined,
-            }}
-          />
-          <div>Design #{design.DesignNumber}</div>
+          <div className={styles["design-row-image-container"]}>
+            <ImageWithFallback
+              className={styles["design-image"]}
+              src={design.ImageURL}
+              style={{
+                backgroundColor:
+                  getFirstHexCodeInString(garmentColor) || undefined,
+              }}
+            />
+            <div>Design #{design.DesignNumber}</div>
+          </div>
           <button
             className={styles["remove-button"]}
             onClick={clickRemoveDesign}

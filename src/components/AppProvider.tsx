@@ -38,7 +38,7 @@ type AppContextType = {
   setCompareModeActive: (state: boolean) => void;
   setCompareModeExpanded: (state: boolean) => void;
   cartData: CartData;
-  addDesignToCart: (design: CartDesign) => void;
+  addDesignsToCart: (designs: CartDesign[]) => void;
   removeDesignFromCart: (designId: number) => void;
   emptyCart: () => void;
 };
@@ -61,7 +61,7 @@ export function useApp() {
     setCompareModeActive: context?.setCompareModeActive,
     setCompareModeExpanded: context?.setCompareModeExpanded,
     cartData: context?.cartData,
-    addDesignToCart: context?.addDesignToCart,
+    addDesignsToCart: context?.addDesignsToCart,
     removeDesignFromCart: context?.removeDesignFromCart,
     emptyCart: context?.emptyCart,
   };
@@ -156,8 +156,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateCompareModeData(newCompareModeData);
   }
 
-  function addDesignToCart(design: CartDesign) {
-    const newArr = [...cartData.designs, design];
+  function addDesignsToCart(designs: CartDesign[]) {
+    const newArr = [...cartData.designs, ...designs];
     const newCartData = {
       ...cartData,
       designs: newArr,
@@ -235,7 +235,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setCompareModeActive,
         setCompareModeExpanded,
         cartData,
-        addDesignToCart,
+        addDesignsToCart,
         removeDesignFromCart,
         emptyCart,
       }}

@@ -25,7 +25,7 @@ export function DesignView({ designId }: DesignViewProps) {
   );
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
-  const { setLightboxData, cartData, addDesignToCart } = useApp();
+  const { setLightboxData, cartData, addDesignsToCart } = useApp();
 
   async function getDesignsToDisplay() {
     try {
@@ -53,7 +53,7 @@ export function DesignView({ designId }: DesignViewProps) {
   }
 
   function clickQuoteButton() {
-    if (!addDesignToCart || !relatedDesigns) return;
+    if (!addDesignsToCart || !relatedDesigns) return;
 
     if (!isDesignInCart) {
       const viewedDesign = relatedDesigns[viewedIndex];
@@ -66,11 +66,13 @@ export function DesignView({ designId }: DesignViewProps) {
         (viewedDesignHasTransparency
           ? viewedDesign.DefaultBackgroundColor
           : "Color picking unavailable for this design.");
-      addDesignToCart({
-        id: viewedDesign.Id,
-        designNumber: viewedDesign.DesignNumber,
-        garmentColor: colorToAddToCart,
-      });
+      addDesignsToCart([
+        {
+          id: viewedDesign.Id,
+          designNumber: viewedDesign.DesignNumber,
+          garmentColor: colorToAddToCart,
+        },
+      ]);
     } else console.log("go to cart");
   }
 

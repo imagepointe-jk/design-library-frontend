@@ -157,7 +157,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   function addDesignsToCart(designs: CartDesign[]) {
-    const newArr = [...cartData.designs, ...designs];
+    const designsNotInCart = designs.filter(
+      (incomingDesign) =>
+        !cartData.designs.find(
+          (designInCart) => designInCart.id === incomingDesign.id
+        )
+    );
+    const newArr = [...cartData.designs, ...designsNotInCart];
     const newCartData = {
       ...cartData,
       designs: newArr,

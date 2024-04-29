@@ -7,26 +7,16 @@ import {
 } from "../validations";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/QuoteForm.module.css";
-
-type QuoteFormProps = {
-  designId: number;
-  designNumber: string;
-  garmentColor: string;
-  onClickBack: () => void;
-};
+import { useApp } from "./AppProvider";
 
 type Status = "success" | "failure";
 
-export function QuoteForm({
-  designId,
-  designNumber,
-  garmentColor,
-  onClickBack,
-}: QuoteFormProps) {
+export function QuoteForm() {
   const [submittingRequest, setSubmittingRequest] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [invalidPhone, setInvalidPhone] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null as Status | null);
+  const { cartData } = useApp();
   const phoneField = useRef(null as HTMLInputElement | null);
 
   function checkEmail(email: string) {
@@ -61,6 +51,7 @@ export function QuoteForm({
   //TODO: Require phone number to be 9 digits
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!cartData) return;
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -74,18 +65,17 @@ export function QuoteForm({
       const union = formData.get("union");
       const local = formData.get("local");
       const unionWithLocal = `${union} (Local ${local})`;
-      const comments = formData.get("comments") || "";
+      const comments = formData.get("comments") || "(no comments)";
 
+      //TODO: Empty cart on success
       const quoteRequest = validateQuoteRequest({
         firstName,
         lastName,
         email,
         phone,
         union: unionWithLocal,
-        designId,
+        designs: cartData.designs,
         comments,
-        designNumber,
-        garmentColor,
       });
       setSubmittingRequest(true);
       const response = await sendQuoteRequest(quoteRequest);
@@ -104,11 +94,7 @@ export function QuoteForm({
 
   return (
     <div className={styles["main"]}>
-      <h2>Request Quote</h2>
-      <button className={styles["back"]} onClick={onClickBack}>
-        <i className="fa-solid fa-arrow-left"></i>
-        Back
-      </button>
+      <h2>Contact Info</h2>
       <form onSubmit={submit}>
         <div className={styles["horz-inputs"]}>
           <input

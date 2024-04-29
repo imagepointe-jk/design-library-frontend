@@ -7,6 +7,7 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { CartDesign, DesignQueryParams } from "../types";
 import { createNavigationUrl, getFirstHexCodeInString } from "../utility";
+import { QuoteForm } from "./QuoteForm";
 
 export function CartView() {
   const { cartData } = useApp();
@@ -20,20 +21,25 @@ export function CartView() {
   };
 
   return (
-    <div className={styles["main"]}>
+    <>
       <h2>Cart</h2>
-      <a
-        href={createNavigationUrl(defaultParams)}
-        className={styles["to-library"]}
-      >
-        <i className={"fa-solid fa-arrow-left"}></i>To Design Library
-      </a>
-      <div className={styles["items-container"]}>
-        {cartData.designs.map((design) => (
-          <CartRow design={design} key={design.id} />
-        ))}
+      <div className={styles["main"]}>
+        <div>
+          <a
+            href={createNavigationUrl(defaultParams)}
+            className={styles["to-library"]}
+          >
+            <i className={"fa-solid fa-arrow-left"}></i>To Design Library
+          </a>
+          <div className={styles["items-container"]}>
+            {cartData.designs.map((design) => (
+              <CartRow design={design} key={design.id} />
+            ))}
+          </div>
+        </div>
+        <QuoteForm />
       </div>
-    </div>
+    </>
   );
 }
 
@@ -41,7 +47,7 @@ type CartRowProps = {
   design: CartDesign;
 };
 
-function CartRow({ design: { requestedBackgroundColor, id } }: CartRowProps) {
+function CartRow({ design: { garmentColor, id } }: CartRowProps) {
   const [loading, setLoading] = useState(true);
   const [design, setDesign] = useState(null as TempDesign | null);
   const { removeDesignFromCart } = useApp();
@@ -72,7 +78,7 @@ function CartRow({ design: { requestedBackgroundColor, id } }: CartRowProps) {
             src={design.ImageURL}
             style={{
               backgroundColor:
-                getFirstHexCodeInString(requestedBackgroundColor) || undefined,
+                getFirstHexCodeInString(garmentColor) || undefined,
             }}
           />
           <div>Design #{design.DesignNumber}</div>

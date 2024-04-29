@@ -32,7 +32,8 @@ export const compareModeDataSchema = z.object({
 
 export const cartDesignSchema = z.object({
   id: z.number(),
-  requestedBackgroundColor: z.string(),
+  designNumber: z.string(),
+  garmentColor: z.string(),
 });
 
 export const cartDataSchema = z.object({

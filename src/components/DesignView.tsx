@@ -10,7 +10,6 @@ import {
 } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
-import { QuoteForm } from "./QuoteForm";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
 import { TempDesign } from "../sharedTypes";
@@ -26,7 +25,6 @@ export function DesignView({ designId }: DesignViewProps) {
   );
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
-  const [showQuoteForm, setShowQuoteForm] = useState(false);
   const { setLightboxData, cartData, addDesignToCart } = useApp();
 
   async function getDesignsToDisplay() {
@@ -70,7 +68,8 @@ export function DesignView({ designId }: DesignViewProps) {
           : "Color picking unavailable for this design.");
       addDesignToCart({
         id: viewedDesign.Id,
-        requestedBackgroundColor: colorToAddToCart,
+        designNumber: viewedDesign.DesignNumber,
+        garmentColor: colorToAddToCart,
       });
     } else console.log("go to cart");
   }
@@ -161,89 +160,79 @@ export function DesignView({ designId }: DesignViewProps) {
                 viewedIndex={viewedIndex}
                 setViewedIndex={setViewedIndex}
                 backgroundColor={bgColorToUse}
-                showArrowButtons={!showQuoteForm && !singleDesign}
-                showNavGallery={!showQuoteForm && !singleDesign}
+                showArrowButtons={!singleDesign}
+                showNavGallery={!singleDesign}
               />
             </div>
-            {!showQuoteForm && (
-              <div className={styles["details-area"]}>
-                <div>
-                  <h2
-                    className={`${styles["heading"]} ${styles["desktop-only"]}`}
-                  >{`#${viewedDesign.DesignNumber}`}</h2>
-                  <p className={styles["description"]}>
-                    {viewedDesign.Description}
-                  </p>
-                </div>
-                <div>
-                  {showColorChangeSection && (
-                    <BackgroundColorChanger
-                      selectedColor={selectedBgColor}
-                      onClickColor={onClickColor}
-                    />
-                  )}
-                  <div className={styles["filters-tags-container"]}>
-                    <div>
-                      <p className="bold">Filters</p>
-                      <p>
-                        {filters.length > 0 &&
-                          filters.map((sub, i, array) => {
-                            const onlySubcategory = sub && sub.split(" > ")[1];
-                            const comma = i < array.length - 1;
-                            return `${onlySubcategory}${comma ? ", " : ""}`;
-                          })}
-                        {filters.length === 0 && "No filters"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="bold">Search Tags</p>
-                      <p>
-                        {tags.length > 0 &&
-                          tags.map((sub, i, array) => {
-                            const comma = i < array.length - 1;
-                            return `${sub}${comma ? ", " : ""}`;
-                          })}
-                        {tags.length === 0 && "No tags"}
-                      </p>
-                    </div>
-                  </div>
-                  <p className={styles["quote-info"]}>
-                    Get a quote to view more garment color options and see this
-                    design customized for your union!
-                  </p>
-                  {!isDesignInCart && (
-                    <button
-                      className={styles["add-to-quote-button"]}
-                      onClick={clickQuoteButton}
-                    >
-                      ADD TO QUOTE
-                    </button>
-                  )}
-                  {isDesignInCart && (
-                    <a
-                      href={createNavigationUrl("cart")}
-                      className={styles["request-quote-button"]}
-                    >
-                      <span>REQUEST QUOTE</span>
-                    </a>
-                  )}
-                  <a
-                    href={similarDesignsUrl}
-                    className={styles["similar-designs-button"]}
-                  >
-                    Similar Designs<i className={"fa-solid fa-arrow-right"}></i>
-                  </a>
-                </div>
+            <div className={styles["details-area"]}>
+              <div>
+                <h2
+                  className={`${styles["heading"]} ${styles["desktop-only"]}`}
+                >{`#${viewedDesign.DesignNumber}`}</h2>
+                <p className={styles["description"]}>
+                  {viewedDesign.Description}
+                </p>
               </div>
-            )}
-            {showQuoteForm && (
-              <QuoteForm
-                designId={viewedDesign.Id}
-                designNumber={viewedDesign.DesignNumber}
-                garmentColor={fullColorStringToUse}
-                onClickBack={() => setShowQuoteForm(false)}
-              />
-            )}
+              <div>
+                {showColorChangeSection && (
+                  <BackgroundColorChanger
+                    selectedColor={selectedBgColor}
+                    onClickColor={onClickColor}
+                  />
+                )}
+                <div className={styles["filters-tags-container"]}>
+                  <div>
+                    <p className="bold">Filters</p>
+                    <p>
+                      {filters.length > 0 &&
+                        filters.map((sub, i, array) => {
+                          const onlySubcategory = sub && sub.split(" > ")[1];
+                          const comma = i < array.length - 1;
+                          return `${onlySubcategory}${comma ? ", " : ""}`;
+                        })}
+                      {filters.length === 0 && "No filters"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="bold">Search Tags</p>
+                    <p>
+                      {tags.length > 0 &&
+                        tags.map((sub, i, array) => {
+                          const comma = i < array.length - 1;
+                          return `${sub}${comma ? ", " : ""}`;
+                        })}
+                      {tags.length === 0 && "No tags"}
+                    </p>
+                  </div>
+                </div>
+                <p className={styles["quote-info"]}>
+                  Get a quote to view more garment color options and see this
+                  design customized for your union!
+                </p>
+                {!isDesignInCart && (
+                  <button
+                    className={styles["add-to-quote-button"]}
+                    onClick={clickQuoteButton}
+                  >
+                    ADD TO QUOTE
+                  </button>
+                )}
+                {isDesignInCart && (
+                  <a
+                    href={createNavigationUrl("cart")}
+                    className={styles["request-quote-button"]}
+                  >
+                    <span>REQUEST QUOTE</span>
+                  </a>
+                )}
+                <a
+                  href={similarDesignsUrl}
+                  className={styles["similar-designs-button"]}
+                >
+                  Similar Designs<i className={"fa-solid fa-arrow-right"}></i>
+                </a>
+              </div>
+            </div>
           </div>
         </>
       )}

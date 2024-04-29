@@ -1,14 +1,6 @@
 .main {
   flex: 3;
-}
-
-.main .back {
-  background: none;
-  color: black;
-}
-
-.back i {
-  margin-right: 5px;
+  max-width: 500px;
 }
 
 .main label {

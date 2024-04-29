@@ -10,8 +10,11 @@ import styles from "./styles/QuoteForm.module.css";
 import { useApp } from "./AppProvider";
 
 type Status = "success" | "failure";
+type QuoteFormProps = {
+  onSuccess: () => void;
+};
 
-export function QuoteForm() {
+export function QuoteForm({ onSuccess }: QuoteFormProps) {
   const [submittingRequest, setSubmittingRequest] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [invalidPhone, setInvalidPhone] = useState(false);
@@ -67,7 +70,6 @@ export function QuoteForm() {
       const unionWithLocal = `${union} (Local ${local})`;
       const comments = formData.get("comments") || "(no comments)";
 
-      //TODO: Empty cart on success
       const quoteRequest = validateQuoteRequest({
         firstName,
         lastName,
@@ -85,6 +87,7 @@ export function QuoteForm() {
       }
       setSubmittingRequest(false);
       setSubmitStatus("success");
+      onSuccess();
     } catch (error) {
       console.error(error);
       setSubmitStatus("failure");

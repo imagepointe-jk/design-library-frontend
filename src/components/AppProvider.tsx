@@ -40,6 +40,7 @@ type AppContextType = {
   cartData: CartData;
   addDesignToCart: (design: CartDesign) => void;
   removeDesignFromCart: (designId: number) => void;
+  emptyCart: () => void;
 };
 
 const AppContext = createContext(null as AppContextType | null);
@@ -62,6 +63,7 @@ export function useApp() {
     cartData: context?.cartData,
     addDesignToCart: context?.addDesignToCart,
     removeDesignFromCart: context?.removeDesignFromCart,
+    emptyCart: context?.emptyCart,
   };
 }
 
@@ -171,6 +173,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateCartData(newCartData);
   }
 
+  function emptyCart() {
+    const newCartData: CartData = {
+      ...cartData,
+      designs: [],
+    };
+    updateCartData(newCartData);
+  }
+
   async function fetchColors() {
     try {
       const colors = await getColors();
@@ -227,6 +237,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         cartData,
         addDesignToCart,
         removeDesignFromCart,
+        emptyCart,
       }}
     >
       {children}

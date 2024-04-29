@@ -10,15 +10,40 @@ import { createNavigationUrl, getFirstHexCodeInString } from "../utility";
 import { QuoteForm } from "./QuoteForm";
 
 export function CartView() {
-  const { cartData } = useApp();
-
-  if (!cartData) return <></>;
+  const { cartData, emptyCart } = useApp();
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const defaultParams: DesignQueryParams = {
     designType: "Screen Print",
     featuredOnly: false,
     pageNumber: 1,
   };
+
+  if (!cartData) return <></>;
+  if (showSuccessMessage)
+    return (
+      <div className={styles["success-message"]}>
+        <i
+          className={`fa-regular fa-circle-check ${styles["success-icon"]}`}
+        ></i>
+        <h2>Success!</h2>
+        <p>
+          Request submitted. A salesperson will reach out in 1-2 business days.
+        </p>
+        <a
+          href={createNavigationUrl(defaultParams)}
+          className={styles["to-library"]}
+        >
+          <i className="fa-solid fa-arrow-left"></i>
+          Keep Browsing
+        </a>
+      </div>
+    );
+
+  function onSuccess() {
+    setShowSuccessMessage(true);
+    if (emptyCart) emptyCart();
+  }
 
   return (
     <>
@@ -37,7 +62,7 @@ export function CartView() {
             ))}
           </div>
         </div>
-        <QuoteForm />
+        <QuoteForm onSuccess={onSuccess} />
       </div>
     </>
   );

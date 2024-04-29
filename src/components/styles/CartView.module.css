@@ -29,7 +29,7 @@
 }
 
 .items-container {
-  max-height: 450px;
+  height: 450px;
   overflow-y: auto;
   width: 600px;
   padding: 10px;

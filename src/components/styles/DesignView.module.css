@@ -26,6 +26,22 @@
 .main-flex .try-design-button {
   margin: auto;
   padding: 15px;
+  margin-bottom: 12px;
+}
+
+.main-flex .similar-designs-button {
+  margin: auto;
+  margin-top: 5px;
+  background: none;
+  border: 2px solid var(--color-alpha);
+  color: var(--color-alpha);
+  padding: 10px;
+  max-width: 200px;
+  font-size: 1rem;
+}
+
+.main-flex .similar-designs-button i {
+  margin-left: 5px;
 }
 
 .bg-color-button img {
@@ -60,8 +76,9 @@
 
 .gizmos-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 5px;
+  margin-bottom: 8px;
 }
 
 .main-flex .share-button,

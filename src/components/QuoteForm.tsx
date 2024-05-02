@@ -72,6 +72,8 @@ export function QuoteForm({
       const firstName = formData.get("first-name");
       const lastName = formData.get("last-name");
       const union = formData.get("union");
+      const local = formData.get("local");
+      const unionWithLocal = `${union} (Local ${local})`;
       const comments = formData.get("comments") || "";
 
       const quoteRequest = validateQuoteRequest({
@@ -79,7 +81,7 @@ export function QuoteForm({
         lastName,
         email,
         phone,
-        union,
+        union: unionWithLocal,
         designId,
         comments,
         designNumber,
@@ -108,20 +110,22 @@ export function QuoteForm({
         Back
       </button>
       <form onSubmit={submit}>
-        <input
-          type="text"
-          name="first-name"
-          id="first-name"
-          placeholder="First Name"
-          required
-        />
-        <input
-          type="text"
-          name="last-name"
-          id="last-name"
-          placeholder="Last Name"
-          required
-        />
+        <div className={styles["horz-inputs"]}>
+          <input
+            type="text"
+            name="first-name"
+            id="first-name"
+            placeholder="First Name"
+            required
+          />
+          <input
+            type="text"
+            name="last-name"
+            id="last-name"
+            placeholder="Last Name"
+            required
+          />
+        </div>
         <input
           type="email"
           name="email"
@@ -156,6 +160,13 @@ export function QuoteForm({
           name="union"
           id="union"
           placeholder="Union/Organization Name"
+          required
+        />
+        <input
+          type="text"
+          name="local"
+          id="local"
+          placeholder="Union Local"
           required
         />
         <textarea

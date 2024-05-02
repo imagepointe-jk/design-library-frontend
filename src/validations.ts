@@ -55,6 +55,7 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
   const featuredFromParams = params.get("featured");
   const allowDuplicateDesignNumbers = params.get("allowDuplicateDesignNumbers");
   const shouldExcludePrioritized = params.get("excludePrioritized");
+  const similarTo = params.get("similarTo");
 
   const parsedDesignType =
     tryParseDesignType(makeStringTitleCase(`${designTypeFromParams}`)) ||
@@ -81,6 +82,7 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
     featuredOnly: featuredFromParams === "true",
     allowDuplicateDesignNumbers: allowDuplicateDesignNumbers === "true",
     shouldExcludePrioritized: shouldExcludePrioritized === "true",
+    similarTo: similarTo && !isNaN(+similarTo) ? +similarTo : undefined,
   };
 
   return parsedSearchParams;

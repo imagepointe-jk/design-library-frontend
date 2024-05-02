@@ -41,6 +41,9 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
   const excludePrioritizedParam = params.shouldExcludePrioritized
     ? "excludePrioritized=true"
     : undefined;
+  const similarTo = params.similarTo
+    ? `similarTo=${params.similarTo}`
+    : undefined;
 
   return [
     designTypeParam,
@@ -54,6 +57,7 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     allowDuplicatesParam,
     sortByParam,
     excludePrioritizedParam,
+    similarTo,
   ]
     .filter((item) => item !== undefined)
     .join("&");
@@ -137,7 +141,6 @@ function isDesignId(param: any): param is DesignId {
   return param && typeof param.designId === "number";
 }
 
-//TODO: create reusable navigation url function so that we can easily preserve wordpress draft page query params
 export function createNavigationUrl(params: DesignId | DesignQueryParams) {
   //preserve previous search params; this allows the app to work on WordPress draft pages
   const existingSearchParams = new URLSearchParams(window.location.search);

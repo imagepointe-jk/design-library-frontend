@@ -47,7 +47,7 @@ export function TopSection() {
       featuredOnly: false,
       pageNumber: 1,
       category: "Quick Search",
-      subcategory: "Ladies",
+      subcategory: "Staff Favorites",
       designType: "Screen Print",
     };
 
@@ -80,7 +80,7 @@ export function TopSection() {
         ))
         .concat([
           <div className={styles["view-more-card"]}>
-            <h3>Women's Designs</h3>
+            <h3>Staff Favorites</h3>
             <button onClick={handleClickViewMore}>View More</button>
           </div>,
         ])

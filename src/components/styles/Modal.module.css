@@ -35,3 +35,11 @@
     overflow: scroll;
   }
 }
+
+@media screen and (max-height: 800px) {
+  .main.tall {
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+  }
+}

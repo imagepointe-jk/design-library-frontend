@@ -10,6 +10,7 @@ import {
 } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
+import { QuoteForm } from "./QuoteForm";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
 import { TempDesign } from "../sharedTypes";
@@ -25,7 +26,8 @@ export function DesignView({ designId }: DesignViewProps) {
   );
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
-  const { setLightboxData, cartData, addDesignsToCart } = useApp();
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const { setLightboxData } = useApp();
 
   async function getDesignsToDisplay() {
     try {
@@ -50,30 +52,6 @@ export function DesignView({ designId }: DesignViewProps) {
 
   function onClickColor(clickedColor: string) {
     setSelectedBgColor(clickedColor);
-  }
-
-  function clickQuoteButton() {
-    if (!addDesignsToCart || !relatedDesigns) return;
-
-    if (!isDesignInCart) {
-      const viewedDesign = relatedDesigns[viewedIndex];
-      //if they actually clicked a non-default color, use that.
-      //if not, check if the viewed design has transparency (and therefore had color picking options).
-      //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
-      //if it did, assume the user was fine with the default background color, and assign that.
-      const colorToAddToCart =
-        selectedBgColor ||
-        (viewedDesignHasTransparency
-          ? viewedDesign.DefaultBackgroundColor
-          : "Color picking unavailable for this design.");
-      addDesignsToCart([
-        {
-          id: viewedDesign.Id,
-          designNumber: viewedDesign.DesignNumber,
-          garmentColor: colorToAddToCart,
-        },
-      ]);
-    } else console.log("go to cart");
   }
 
   useEffect(() => {
@@ -120,9 +98,6 @@ export function DesignView({ designId }: DesignViewProps) {
   const similarDesignsUrl = similarDesignsParams
     ? createNavigationUrl(similarDesignsParams)
     : undefined;
-  const isDesignInCart = cartData?.designs.find(
-    (design) => viewedDesign?.Id === design.id
-  );
 
   return (
     <>
@@ -136,7 +111,7 @@ export function DesignView({ designId }: DesignViewProps) {
               className={`${styles["heading"]} ${styles["mobile-only"]}`}
             >{`#${viewedDesign.DesignNumber}`}</h2>
             <div className={styles["gallery-container"]}>
-              <div className={styles["gizmos-container"]}>
+              {/* <div className={styles["gizmos-container"]}>
                 <ShareButton designId={viewedDesign.Id} />
                 <button
                   className={styles["zoom-button"]}
@@ -155,86 +130,86 @@ export function DesignView({ designId }: DesignViewProps) {
                   <span>Enlarge</span>
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
-              </div>
+              </div> */}
               <DesignScrollView
                 imageUrls={images}
                 onScrollFn={onScrollFn}
                 viewedIndex={viewedIndex}
                 setViewedIndex={setViewedIndex}
                 backgroundColor={bgColorToUse}
-                showArrowButtons={!singleDesign}
-                showNavGallery={!singleDesign}
+                showArrowButtons={!showQuoteForm && !singleDesign}
+                showNavGallery={!showQuoteForm && !singleDesign}
               />
             </div>
-            <div className={styles["details-area"]}>
-              <div>
-                <h2
-                  className={`${styles["heading"]} ${styles["desktop-only"]}`}
-                >{`#${viewedDesign.DesignNumber}`}</h2>
-                <p className={styles["description"]}>
-                  {viewedDesign.Description}
-                </p>
-              </div>
-              <div>
-                {showColorChangeSection && (
-                  <BackgroundColorChanger
-                    selectedColor={selectedBgColor}
-                    onClickColor={onClickColor}
-                  />
-                )}
-                <div className={styles["filters-tags-container"]}>
-                  <div>
-                    <p className="bold">Filters</p>
-                    <p>
-                      {filters.length > 0 &&
-                        filters.map((sub, i, array) => {
-                          const onlySubcategory = sub && sub.split(" > ")[1];
-                          const comma = i < array.length - 1;
-                          return `${onlySubcategory}${comma ? ", " : ""}`;
-                        })}
-                      {filters.length === 0 && "No filters"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="bold">Search Tags</p>
-                    <p>
-                      {tags.length > 0 &&
-                        tags.map((sub, i, array) => {
-                          const comma = i < array.length - 1;
-                          return `${sub}${comma ? ", " : ""}`;
-                        })}
-                      {tags.length === 0 && "No tags"}
-                    </p>
-                  </div>
+            {!showQuoteForm && (
+              <div className={styles["details-area"]}>
+                <div>
+                  <h2
+                    className={`${styles["heading"]} ${styles["desktop-only"]}`}
+                  >{`#${viewedDesign.DesignNumber}`}</h2>
+                  <p className={styles["description"]}>
+                    {viewedDesign.Description}
+                  </p>
                 </div>
-                <p className={styles["quote-info"]}>
-                  Get a quote to view more garment color options and see this
-                  design customized for your union!
-                </p>
-                {!isDesignInCart && (
+                <div>
+                  {showColorChangeSection && (
+                    <BackgroundColorChanger
+                      selectedColor={selectedBgColor}
+                      onClickColor={onClickColor}
+                    />
+                  )}
+                  <div className={styles["filters-tags-container"]}>
+                    <div>
+                      <p className="bold">Filters</p>
+                      <p>
+                        {filters.length > 0 &&
+                          filters.map((sub, i, array) => {
+                            const onlySubcategory = sub && sub.split(" > ")[1];
+                            const comma = i < array.length - 1;
+                            return `${onlySubcategory}${comma ? ", " : ""}`;
+                          })}
+                        {filters.length === 0 && "No filters"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="bold">Search Tags</p>
+                      <p>
+                        {tags.length > 0 &&
+                          tags.map((sub, i, array) => {
+                            const comma = i < array.length - 1;
+                            return `${sub}${comma ? ", " : ""}`;
+                          })}
+                        {tags.length === 0 && "No tags"}
+                      </p>
+                    </div>
+                  </div>
+                  <p className={styles["quote-info"]}>
+                    Get a quote to view more garment color options and see this
+                    design customized for your union!
+                  </p>
                   <button
-                    className={styles["add-to-quote-button"]}
-                    onClick={clickQuoteButton}
+                    className={styles["try-design-button"]}
+                    onClick={() => setShowQuoteForm(true)}
                   >
-                    ADD TO QUOTE
+                    REQUEST QUOTE
                   </button>
-                )}
-                {isDesignInCart && (
                   <a
-                    href={createNavigationUrl("cart")}
-                    className={styles["request-quote-button"]}
+                    href={similarDesignsUrl}
+                    className={styles["similar-designs-button"]}
                   >
-                    <span>REQUEST QUOTE</span>
+                    Similar Designs<i className={"fa-solid fa-arrow-right"}></i>
                   </a>
-                )}
-                <a
-                  href={similarDesignsUrl}
-                  className={styles["similar-designs-button"]}
-                >
-                  Similar Designs<i className={"fa-solid fa-arrow-right"}></i>
-                </a>
+                </div>
               </div>
-            </div>
+            )}
+            {showQuoteForm && (
+              <QuoteForm
+                designId={viewedDesign.Id}
+                designNumber={viewedDesign.DesignNumber}
+                garmentColor={fullColorStringToUse}
+                onClickBack={() => setShowQuoteForm(false)}
+              />
+            )}
           </div>
         </>
       )}

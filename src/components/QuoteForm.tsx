@@ -7,19 +7,26 @@ import {
 } from "../validations";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/QuoteForm.module.css";
-import { useApp } from "./AppProvider";
 
-type Status = "success" | "failure";
 type QuoteFormProps = {
-  onSuccess: () => void;
+  designId: number;
+  designNumber: string;
+  garmentColor: string;
+  onClickBack: () => void;
 };
 
-export function QuoteForm({ onSuccess }: QuoteFormProps) {
+type Status = "success" | "failure";
+
+export function QuoteForm({
+  designId,
+  designNumber,
+  garmentColor,
+  onClickBack,
+}: QuoteFormProps) {
   const [submittingRequest, setSubmittingRequest] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [invalidPhone, setInvalidPhone] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null as Status | null);
-  const { cartData } = useApp();
   const phoneField = useRef(null as HTMLInputElement | null);
 
   function checkEmail(email: string) {
@@ -54,7 +61,6 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
   //TODO: Require phone number to be 9 digits
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!cartData) return;
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -68,7 +74,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
       const union = formData.get("union");
       const local = formData.get("local");
       const unionWithLocal = `${union} (Local ${local})`;
-      const comments = formData.get("comments") || "(no comments)";
+      const comments = formData.get("comments") || "";
 
       const quoteRequest = validateQuoteRequest({
         firstName,
@@ -76,8 +82,10 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         email,
         phone,
         union: unionWithLocal,
-        designs: cartData.designs,
+        designId,
         comments,
+        designNumber,
+        garmentColor,
       });
       setSubmittingRequest(true);
       const response = await sendQuoteRequest(quoteRequest);
@@ -87,7 +95,6 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
       }
       setSubmittingRequest(false);
       setSubmitStatus("success");
-      onSuccess();
     } catch (error) {
       console.error(error);
       setSubmitStatus("failure");
@@ -97,7 +104,11 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
 
   return (
     <div className={styles["main"]}>
-      <h2>Contact Info</h2>
+      <h2>Request Quote</h2>
+      <button className={styles["back"]} onClick={onClickBack}>
+        <i className="fa-solid fa-arrow-left"></i>
+        Back
+      </button>
       <form onSubmit={submit}>
         <div className={styles["horz-inputs"]}>
           <input
@@ -166,9 +177,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
           placeholder="Comments (Please specify garment type, sizes, quantities, etc.)"
         ></textarea>
         {!submittingRequest && submitStatus !== "success" && (
-          <button type="submit" disabled={cartData?.designs.length === 0}>
-            Submit Request
-          </button>
+          <button type="submit">Submit Request</button>
         )}
         {submittingRequest && <LoadingIndicator />}
         {!submittingRequest && submitStatus === "success" && (

@@ -12,54 +12,59 @@ import { DesignModalDisplay, Modal } from "./components/Modal";
 import { SearchArea } from "./components/SearchArea";
 
 function App() {
-  const { modalDisplay, lightboxData, setLightboxData, compareModeData } =
-    useApp();
-  const searchParams = new URLSearchParams(window.location.search);
-  const viewDesign = searchParams.get("viewDesign");
-  const viewCart = searchParams.get("viewCart");
-
-  if (viewCart === "true")
-    return (
-      <div className="root">
-        <CartView />
-      </div>
-    );
-
-  if (viewDesign && !isNaN(+viewDesign))
-    return (
-      <div className="root">
-        <DesignPage designId={+viewDesign} />
-      </div>
-    );
-
   return (
     <div className="root">
-      <DesignLibrary />
-      {modalDisplay instanceof DesignModalDisplay && (
-        <Modal heightType="tall">
-          <DesignView designId={modalDisplay.designId} />
-        </Modal>
-      )}
-      {modalDisplay === "search" && (
-        <Modal>
-          <SearchArea />
-        </Modal>
-      )}
-      {modalDisplay === "filters" && <FilterModal />}
-      {modalDisplay === "comparison" && (
-        <Modal>
-          <ComparisonArea />
-        </Modal>
-      )}
-      {lightboxData && setLightboxData && (
-        <Lightbox
-          data={lightboxData}
-          onClickClose={() => setLightboxData(null)}
-        />
-      )}
-      {compareModeData?.active && <ComparisonBar />}
+      <DesignView designId={14} />
     </div>
   );
+  // const { modalDisplay, lightboxData, setLightboxData, compareModeData } =
+  //   useApp();
+  // const searchParams = new URLSearchParams(window.location.search);
+  // const viewDesign = searchParams.get("viewDesign");
+  // const viewCart = searchParams.get("viewCart");
+
+  // if (viewCart === "true")
+  //   return (
+  //     <div className="root">
+  //       <CartView />
+  //     </div>
+  //   );
+
+  // if (viewDesign && !isNaN(+viewDesign))
+  //   return (
+  //     <div className="root">
+  //       <DesignPage designId={+viewDesign} />
+  //     </div>
+  //   );
+
+  // return (
+  //   <div className="root">
+  //     <DesignLibrary />
+  //     {modalDisplay instanceof DesignModalDisplay && (
+  //       <Modal heightType="tall">
+  //         <DesignView designId={modalDisplay.designId} />
+  //       </Modal>
+  //     )}
+  //     {modalDisplay === "search" && (
+  //       <Modal>
+  //         <SearchArea />
+  //       </Modal>
+  //     )}
+  //     {modalDisplay === "filters" && <FilterModal />}
+  //     {modalDisplay === "comparison" && (
+  //       <Modal>
+  //         <ComparisonArea />
+  //       </Modal>
+  //     )}
+  //     {lightboxData && setLightboxData && (
+  //       <Lightbox
+  //         data={lightboxData}
+  //         onClickClose={() => setLightboxData(null)}
+  //       />
+  //     )}
+  //     {compareModeData?.active && <ComparisonBar />}
+  //   </div>
+  // );
 }
 
 export default App;

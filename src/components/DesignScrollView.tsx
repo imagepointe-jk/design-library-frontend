@@ -37,7 +37,11 @@ export function DesignScrollView({
       ))
     : [];
   const mainImages = imageUrls
-    ? imageUrls.map((url) => <ImageWithFallback src={url} />)
+    ? imageUrls.map((url) => (
+        <div className={styles["single-img-container"]}>
+          <ImageWithFallback src={url} />
+        </div>
+      ))
     : [];
   return (
     <div className={styles["main"]}>

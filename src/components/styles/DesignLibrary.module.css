@@ -44,11 +44,15 @@
   max-width: 1024px;
 }
 
+.mobile-search-container {
+  display: none;
+}
+
 .settings-container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
-  flex-wrap: wrap;
   row-gap: 5px;
   position: relative;
 }
@@ -123,6 +127,20 @@
 }
 
 @media screen and (max-width: 1200px) {
+  .mobile-search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+  }
+
+  .mobile-search-container input {
+    width: 250px;
+  }
+
+  .mobile-search-container .mobile-search-button {
+    display: inline;
+  }
+
   .settings-subcontainer .settings-button {
     display: flex;
   }
@@ -140,7 +158,23 @@
   }
 }
 
+@media screen and (max-width: 850px) {
+  .settings-container {
+    flex-direction: column;
+  }
+}
+
 @media screen and (max-width: 480px) {
+  .settings-subcontainer {
+    gap: 0;
+  }
+
+  .settings-container .settings-subcontainer,
+  .settings-container .settings-subcontainer button,
+  .settings-container .settings-subcontainer a {
+    font-size: 0.8rem;
+  }
+
   .searching-for-area {
     flex-direction: column;
     gap: 0;

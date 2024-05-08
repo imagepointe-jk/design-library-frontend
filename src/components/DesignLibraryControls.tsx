@@ -1,8 +1,8 @@
-import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { createNavigationUrl } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
+import { submitSearch } from "./SearchArea";
 import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibraryControls() {
@@ -49,61 +49,64 @@ export function DesignLibraryControls() {
     !designQueryParams.subcategory;
 
   return (
-    <div className={styles["settings-container"]}>
-      <div className={styles["settings-subcontainer"]}>
-        {checkboxButtons.map((button) => (
-          <>
-            <input
-              className="button-styled-checkbox"
-              type="checkbox"
-              name={button}
-              id={`${buttonIdPrefix}${button}`}
-              checked={
-                (button === "All Designs" && allDesignsButtonChecked) ||
-                button === selectedSubcategory
-              }
-              onChange={(e) => clickQuickFilterButton(e, button)}
-            />
-            <label htmlFor={`${buttonIdPrefix}${button}`}>{button}</label>
-          </>
-        ))}
-        <button
-          className={styles["settings-button"]}
-          onClick={() => {
-            if (setModalDisplay) setModalDisplay("filters");
-          }}
-        >
-          <i className="fa-solid fa-sliders"></i>
-          Filters
-        </button>
-        <button
-          className={styles["settings-button"]}
-          onClick={() => {
-            if (setModalDisplay) setModalDisplay("search");
-          }}
-        >
-          <i className="fa-solid fa-magnifying-glass"></i>
-          Search
-        </button>
-        <button
-          className={`${styles["control-button"]} ${
-            compareModeData?.active ? styles["stop"] : ""
-          }`}
-          onClick={clickCompareButton}
-        >
-          <i className="fa-solid fa-grip"></i>
-          {compareModeData?.active ? "Stop Comparing" : "Compare"}
-        </button>
-        <a
-          href={createNavigationUrl("cart")}
-          className={styles["control-button"]}
-        >
-          <span>
-            <i className="fa-solid fa-cart-shopping"></i>
-            Quote Request
-          </span>
-        </a>
+    <>
+      <div className={styles["mobile-search-container"]}>
+        <form onSubmit={submitSearch}>
+          <input type="search" name="search" placeholder="Search designs..." />
+          <button type="submit" className={styles["mobile-search-button"]}>
+            <i className="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
       </div>
-    </div>
+      <div className={styles["settings-container"]}>
+        <div className={styles["settings-subcontainer"]}>
+          {checkboxButtons.map((button) => (
+            <>
+              <input
+                className="button-styled-checkbox"
+                type="checkbox"
+                name={button}
+                id={`${buttonIdPrefix}${button}`}
+                checked={
+                  (button === "All Designs" && allDesignsButtonChecked) ||
+                  button === selectedSubcategory
+                }
+                onChange={(e) => clickQuickFilterButton(e, button)}
+              />
+              <label htmlFor={`${buttonIdPrefix}${button}`}>{button}</label>
+            </>
+          ))}
+        </div>
+        <div className={styles["settings-subcontainer"]}>
+          <button
+            className={styles["settings-button"]}
+            onClick={() => {
+              if (setModalDisplay) setModalDisplay("filters");
+            }}
+          >
+            <i className="fa-solid fa-sliders"></i>
+            Filters
+          </button>
+          <button
+            className={`${styles["control-button"]} ${
+              compareModeData?.active ? styles["stop"] : ""
+            }`}
+            onClick={clickCompareButton}
+          >
+            <i className="fa-solid fa-grip"></i>
+            Compare
+          </button>
+          <a
+            href={createNavigationUrl("cart")}
+            className={styles["control-button"]}
+          >
+            <span>
+              <i className="fa-solid fa-cart-shopping"></i>
+              Quote Request
+            </span>
+          </a>
+        </div>
+      </div>
+    </>
   );
 }

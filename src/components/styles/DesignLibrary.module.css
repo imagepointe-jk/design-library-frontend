@@ -21,6 +21,15 @@
   font-size: 1.825rem;
 }
 
+.library-info-container .choose-library {
+  display: none;
+}
+
+.toggle-switch-container {
+  text-align: center;
+  margin: 10px 0;
+}
+
 .library-subtext {
   text-align: center;
   max-width: 800px;
@@ -120,6 +129,14 @@
 
   .library-info-container {
     margin-left: initial;
+  }
+
+  .library-info-container .library-name {
+    display: none;
+  }
+
+  .library-info-container .choose-library {
+    display: block;
   }
 }
 

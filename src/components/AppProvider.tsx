@@ -41,6 +41,7 @@ type AppContextType = {
   addDesignsToCart: (designs: CartDesign[]) => void;
   removeDesignFromCart: (designId: number) => void;
   emptyCart: () => void;
+  windowWidth: number;
 };
 
 const AppContext = createContext(null as AppContextType | null);
@@ -64,6 +65,7 @@ export function useApp() {
     addDesignsToCart: context?.addDesignsToCart,
     removeDesignFromCart: context?.removeDesignFromCart,
     emptyCart: context?.emptyCart,
+    windowWidth: context?.windowWidth,
   };
 }
 
@@ -107,6 +109,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [lightboxData, setLightboxData] = useState(null as LightboxData | null);
   const [compareModeData, scmd] = useState(getInitialCompareModeData()); //scmd = setCompareModeData. it should ONLY be used in one place.
   const [cartData, scd] = useState(getInitialCartData()); //scd = setCartData. it should ONLY be used in one place.
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   function updateCartData(data: CartData) {
     localStorage.setItem("design-library-cart-data", JSON.stringify(data));
@@ -220,9 +223,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  function handleResize() {
+    setWindowWidth(window.innerWidth);
+  }
+
   useEffect(() => {
     fetchColors();
     fetchCategories();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
@@ -244,6 +255,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         addDesignsToCart,
         removeDesignFromCart,
         emptyCart,
+        windowWidth,
       }}
     >
       {children}

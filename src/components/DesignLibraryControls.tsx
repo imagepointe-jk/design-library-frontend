@@ -11,22 +11,8 @@ export function DesignLibraryControls() {
     new URLSearchParams(window.location.search)
   );
   const buttonIdPrefix = "library-page-filter-button-";
-  const checkboxButtons = ["New Designs", "Best Sellers", "All Designs"];
+  const checkboxButtons = ["All Designs", "New Designs", "Best Sellers"];
   const selectedSubcategory = designQueryParams.subcategory;
-  const selectedDesignType = designQueryParams.designType;
-
-  function changeDesignType(newType: DesignType) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      designType: newType,
-      category: undefined,
-      subcategory: undefined,
-      featuredOnly: newType === "Screen Print",
-      pageNumber: 1,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
-  }
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -64,23 +50,6 @@ export function DesignLibraryControls() {
 
   return (
     <div className={styles["settings-container"]}>
-      <div className={styles["settings-subcontainer"]}>
-        {designTypes.map((type) => (
-          <label
-            className={styles["library-switcher-container"]}
-            htmlFor={`${buttonIdPrefix}${type}`}
-          >
-            <input
-              type="radio"
-              name="design-type"
-              id={`${buttonIdPrefix}${type}`}
-              checked={selectedDesignType === type}
-              onChange={(e) => changeDesignType(type)}
-            />
-            {type}
-          </label>
-        ))}
-      </div>
       <div className={styles["settings-subcontainer"]}>
         {checkboxButtons.map((button) => (
           <>

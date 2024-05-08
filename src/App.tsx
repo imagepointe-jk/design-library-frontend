@@ -29,6 +29,12 @@ function App() {
     return (
       <div className="root">
         <DesignPage designId={+viewDesign} />
+        {lightboxData && setLightboxData && (
+          <Lightbox
+            data={lightboxData}
+            onClickClose={() => setLightboxData(null)}
+          />
+        )}
       </div>
     );
 

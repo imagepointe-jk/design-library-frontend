@@ -3,6 +3,10 @@
   max-width: 500px;
 }
 
+.main h3 {
+  font-size: 1.5rem;
+}
+
 .main label {
   display: block;
 }
@@ -14,11 +18,12 @@
 .main form {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .main .horz-inputs {
   display: flex;
+  gap: 10px;
 }
 
 .main .horz-inputs input {

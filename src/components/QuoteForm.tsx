@@ -97,7 +97,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
 
   return (
     <div className={styles["main"]}>
-      <h2>Contact Info</h2>
+      <h3>Contact Info</h3>
       <form onSubmit={submit}>
         <div className={styles["horz-inputs"]}>
           <input

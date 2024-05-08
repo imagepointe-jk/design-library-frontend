@@ -1,3 +1,7 @@
+.main h2 {
+  font-size: 2rem;
+}
+
 .main-flex {
   display: flex;
   justify-content: center;

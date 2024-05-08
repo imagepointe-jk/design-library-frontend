@@ -46,29 +46,27 @@ export function CartView() {
   }
 
   return (
-    <>
+    <div className={styles["main"]}>
       <h2>Quote Request</h2>
-      <div className={styles["main"]}>
-        <a
-          href={createNavigationUrl(defaultParams)}
-          className={styles["to-library"]}
-        >
-          <i className={"fa-solid fa-arrow-left"}></i>To Design Library
-        </a>
-        <div className={styles["main-flex"]}>
-          <div className={styles["items-container"]}>
-            {cartData.designs.length > 0 &&
-              cartData.designs.map((design) => (
-                <CartRow design={design} key={design.id} />
-              ))}
-            {cartData.designs.length === 0 && (
-              <div className={styles["empty-cart-message"]}>(No designs)</div>
-            )}
-          </div>
-          <QuoteForm onSuccess={onSuccess} />
+      <a
+        href={createNavigationUrl(defaultParams)}
+        className={styles["to-library"]}
+      >
+        <i className={"fa-solid fa-arrow-left"}></i>To Design Library
+      </a>
+      <div className={styles["main-flex"]}>
+        <div className={styles["items-container"]}>
+          {cartData.designs.length > 0 &&
+            cartData.designs.map((design) => (
+              <CartRow design={design} key={design.id} />
+            ))}
+          {cartData.designs.length === 0 && (
+            <div className={styles["empty-cart-message"]}>(No designs)</div>
+          )}
         </div>
+        <QuoteForm onSuccess={onSuccess} />
       </div>
-    </>
+    </div>
   );
 }
 

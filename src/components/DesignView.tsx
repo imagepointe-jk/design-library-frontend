@@ -7,6 +7,7 @@ import {
   getDesignDefaultBackgroundColor,
   getDesignTags,
   getFirstHexCodeInString,
+  isDesignTransparent,
 } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
@@ -102,9 +103,9 @@ export function DesignView({ designId }: DesignViewProps) {
   const images = relatedDesigns
     ? relatedDesigns.map((design) => design.ImageURL || "")
     : [];
-  //assume for now that all .pngs are transparent
-  const viewedDesignHasTransparency =
-    viewedDesign?.ImageURL?.endsWith(".png") || false;
+  const viewedDesignHasTransparency = viewedDesign
+    ? isDesignTransparent(viewedDesign)
+    : false;
   const showColorChangeSection =
     relatedDesigns &&
     relatedDesigns[0].DesignType === "Screen Print" &&
@@ -247,7 +248,7 @@ type BackgroundColorChangerProps = {
   onClickColor: (clickedColor: string) => void;
 };
 
-function BackgroundColorChanger({
+export function BackgroundColorChanger({
   onClickColor,
   selectedColor,
 }: BackgroundColorChangerProps) {

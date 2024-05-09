@@ -8,7 +8,10 @@ import { ImageWithFallback } from "./ImageWithFallback";
 import {
   createNavigationUrl,
   getDesignDefaultBackgroundColor,
+  getFirstHexCodeInString,
+  isDesignTransparent,
 } from "../utility";
+import { BackgroundColorChanger } from "./DesignView";
 
 export function ComparisonArea() {
   const { compareModeData } = useApp();
@@ -41,21 +44,44 @@ export function ComparisonArea() {
       <div className={styles["cards-container"]}>
         {designs &&
           designs.map((design) => (
-            <div className={styles["card"]}>
-              <ImageWithFallback
-                src={design.ImageURL}
-                style={{
-                  backgroundColor: getDesignDefaultBackgroundColor(design),
-                }}
-              />
-              <h3>#{design.DesignNumber}</h3>
-              <a href={createNavigationUrl({ designId: design.Id })}>
-                View Design
-              </a>
-            </div>
+            <ComparisonDesignContainer design={design} />
           ))}
       </div>
       {loadingStatus === "loading" && <LoadingIndicator />}
     </>
+  );
+}
+
+type ComparisonDesignContainerProps = {
+  design: TempDesign;
+};
+function ComparisonDesignContainer({ design }: ComparisonDesignContainerProps) {
+  const [selectedBgColor, setSelectedBgColor] = useState(null as string | null);
+  const defaultBgColor = getDesignDefaultBackgroundColor(design);
+  let bgColorToUse = getFirstHexCodeInString(selectedBgColor || "");
+  if (!bgColorToUse) bgColorToUse = getFirstHexCodeInString(defaultBgColor);
+  if (!bgColorToUse) bgColorToUse = "#000000";
+  const showColorChanger = isDesignTransparent(design);
+
+  return (
+    <div className={styles["card"]}>
+      <ImageWithFallback
+        src={design.ImageURL}
+        style={{ backgroundColor: bgColorToUse }}
+      />
+      <h3>#{design.DesignNumber}</h3>
+      {showColorChanger && (
+        <BackgroundColorChanger
+          onClickColor={(color) => setSelectedBgColor(color)}
+          selectedColor={selectedBgColor}
+        />
+      )}
+      <a
+        className={styles["view-link"]}
+        href={createNavigationUrl({ designId: design.Id })}
+      >
+        View Design
+      </a>
+    </div>
   );
 }

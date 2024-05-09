@@ -168,3 +168,8 @@ export function createNavigationUrl(
     window.location.pathname
   }?${newSearchParams.toString()}`;
 }
+
+export function isDesignTransparent(design: TempDesign) {
+  //assume for now that all PNGs are transparent
+  return design.ImageURL?.endsWith(".png");
+}

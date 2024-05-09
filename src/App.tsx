@@ -53,7 +53,7 @@ function App() {
       )}
       {modalDisplay === "filters" && <FilterModal />}
       {modalDisplay === "comparison" && (
-        <Modal>
+        <Modal maxHeight={730}>
           <ComparisonArea />
         </Modal>
       )}

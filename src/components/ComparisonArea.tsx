@@ -36,7 +36,7 @@ export function ComparisonArea() {
 
   useEffect(() => {
     getDesignsToView();
-  }, []);
+  }, [compareModeData]);
 
   return (
     <div className={styles["main"]}>
@@ -51,6 +51,9 @@ export function ComparisonArea() {
           designs.map((design) => (
             <ComparisonDesignContainer design={design} />
           ))}
+        {designs && designs.length === 0 && (
+          <div className={styles["no-designs"]}>No Designs</div>
+        )}
       </div>
       <div className={styles["cart-link-container"]}>
         <a href={createNavigationUrl("cart")}>REQUEST QUOTE</a>
@@ -107,6 +110,14 @@ function ComparisonDesignContainer({ design }: ComparisonDesignContainerProps) {
           </div>
         )}
       </div>
+      <button
+        className={styles["remove-x"]}
+        onClick={() => {
+          if (removeComparisonId) removeComparisonId(design.Id);
+        }}
+      >
+        X
+      </button>
     </div>
   );
 }

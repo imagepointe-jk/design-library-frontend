@@ -28,12 +28,34 @@
   flex-wrap: wrap;
 }
 
+.no-designs {
+  color: lightgray;
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin: 100px 0;
+}
+
 .card {
   width: 300px;
+  position: relative;
 }
 
 .card img {
   width: 100%;
+}
+
+.card .remove-x {
+  background-color: var(--color-danger);
+  border-radius: 100px;
+  padding: 5px 8px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 1rem;
+}
+
+.card .remove-x:hover {
+  scale: 110%;
 }
 
 .cart-button-container {

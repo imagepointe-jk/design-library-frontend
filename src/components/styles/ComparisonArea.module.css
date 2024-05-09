@@ -24,7 +24,7 @@
 .cards-container {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 65px;
   flex-wrap: wrap;
 }
 
@@ -56,6 +56,11 @@
 
 .card .remove-x:hover {
   scale: 110%;
+}
+
+.main .card .scroll-view-container {
+  width: 300px;
+  height: 300px;
 }
 
 .cart-button-container {

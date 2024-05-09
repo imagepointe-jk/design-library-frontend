@@ -7,7 +7,10 @@ import { ImageWithFallback } from "./ImageWithFallback";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonBar.module.css";
 import { DesignModalDisplay } from "./Modal";
-import { getDesignDefaultBackgroundColor } from "../utility";
+import {
+  createNavigationUrl,
+  getDesignDefaultBackgroundColor,
+} from "../utility";
 
 export function ComparisonBar() {
   const {
@@ -39,12 +42,9 @@ export function ComparisonBar() {
         ))}
       </div>
       <div className={styles["buttons-container"]}>
-        <button
-          onClick={() => setModalDisplay("comparison")}
-          disabled={ids.length < 2}
-        >
+        <a className="disabled-link" href={createNavigationUrl("compare")}>
           <i className="fa-regular fa-eye"></i>Compare Now
-        </button>
+        </a>
       </div>
       <button
         className={styles["expand-retract-button"]}

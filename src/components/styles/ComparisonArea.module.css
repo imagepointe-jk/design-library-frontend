@@ -1,3 +1,26 @@
+.heading-container {
+  position: relative;
+}
+
+.heading-container .to-library {
+  position: absolute;
+  left: 0;
+}
+
+.main .to-library {
+  font-size: 1rem;
+  padding: 5px;
+  border-width: 1px;
+  background-color: initial;
+  color: black;
+  width: 230px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+}
+
 .cards-container {
   display: flex;
   justify-content: center;
@@ -13,6 +36,21 @@
   width: 100%;
 }
 
-.view-link {
+.cart-button-container {
+  display: flex;
+  justify-content: center;
   margin-top: 10px;
+}
+
+.cart-button-container i {
+  font-size: 1.5rem;
+  margin-right: 5px;
+  color: var(--color-alpha);
+  font-weight: bold;
+}
+
+.cart-link-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }

@@ -45,6 +45,11 @@
   padding: 10px;
 }
 
+.window .subcategories-container label {
+  display: block;
+  text-align: initial;
+}
+
 .preview-designs-area {
   display: flex;
   flex-direction: column;

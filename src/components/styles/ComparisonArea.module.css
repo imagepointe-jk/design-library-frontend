@@ -1,3 +1,7 @@
+.main {
+  margin-bottom: 50px;
+}
+
 .heading-container {
   position: relative;
 }
@@ -80,4 +84,18 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+
+.main .mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 1000px) {
+  .main .mobile-only {
+    display: flex;
+  }
+
+  .main .desktop-only {
+    display: none;
+  }
 }

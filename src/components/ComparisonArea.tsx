@@ -20,8 +20,17 @@ export function ComparisonArea() {
 
   return (
     <div className={styles["main"]}>
+      <a
+        className={`${styles["to-library"]} ${styles["mobile-only"]}`}
+        href={createNavigationUrl("home")}
+      >
+        <i className={"fa-solid fa-arrow-left"}></i>To Design Library
+      </a>
       <div className={styles["heading-container"]}>
-        <a className={styles["to-library"]} href={createNavigationUrl("home")}>
+        <a
+          className={`${styles["to-library"]} ${styles["desktop-only"]}`}
+          href={createNavigationUrl("home")}
+        >
           <i className={"fa-solid fa-arrow-left"}></i>To Design Library
         </a>
         <h2>Design Comparison</h2>

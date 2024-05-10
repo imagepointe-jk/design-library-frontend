@@ -65,7 +65,12 @@ function ComparisonDesignContainer({
   );
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null);
-  const { cartData, addDesignsToCart, removeComparisonId } = useApp();
+  const {
+    cartData,
+    addDesignsToCart,
+    removeComparisonId,
+    removeDesignFromCart,
+  } = useApp();
 
   const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
   const multipleDesigns = relatedDesigns ? relatedDesigns.length > 1 : false;
@@ -98,7 +103,6 @@ function ComparisonDesignContainer({
       related.sort((a) => (a.Id === designId ? -1 : 1));
       setRelatedDesigns(related);
       setLoadingStatus("success");
-      console.log("success");
     } catch (error) {
       console.error("Error getting related designs: ", error);
       setLoadingStatus("error");
@@ -153,6 +157,14 @@ function ComparisonDesignContainer({
         {isInCart && (
           <div>
             <i className="fa-solid fa-check"></i>Added to quote
+            <button
+              className={styles["remove-from-cart"]}
+              onClick={() => {
+                if (removeDesignFromCart) removeDesignFromCart(viewedDesign.Id);
+              }}
+            >
+              Remove
+            </button>
           </div>
         )}
       </div>

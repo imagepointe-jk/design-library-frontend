@@ -73,6 +73,16 @@
   margin-top: 10px;
 }
 
+.cart-button-container .remove-from-cart {
+  display: inline;
+  font-size: 0.825rem;
+  padding: 8px;
+  margin-left: 10px;
+  color: var(--color-alpha);
+  border: 2px solid;
+  background: none;
+}
+
 .cart-button-container i {
   font-size: 1.5rem;
   margin-right: 5px;

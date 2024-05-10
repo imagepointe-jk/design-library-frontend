@@ -184,6 +184,33 @@ export function DesignView({ designId }: DesignViewProps) {
                     onClickColor={onClickColor}
                   />
                 )}
+                <p className={styles["quote-info"]}>
+                  Request a quote to see this design customized for your union!
+                </p>
+                <div className={styles["buttons-container"]}>
+                  {!isDesignInCart && (
+                    <button
+                      className={styles["add-to-quote-button"]}
+                      onClick={clickQuoteButton}
+                    >
+                      ADD TO QUOTE
+                    </button>
+                  )}
+                  {isDesignInCart && (
+                    <a
+                      href={createNavigationUrl("cart")}
+                      className={styles["request-quote-button"]}
+                    >
+                      <span>REQUEST QUOTE</span>
+                    </a>
+                  )}
+                  <a
+                    href={similarDesignsUrl}
+                    className={styles["similar-designs-button"]}
+                  >
+                    Similar Designs<i className={"fa-solid fa-arrow-right"}></i>
+                  </a>
+                </div>
                 <div className={styles["filters-tags-container"]}>
                   <div>
                     <p className="bold">Filters</p>
@@ -209,32 +236,6 @@ export function DesignView({ designId }: DesignViewProps) {
                     </p>
                   </div>
                 </div>
-                <p className={styles["quote-info"]}>
-                  Get a quote to view more garment color options and see this
-                  design customized for your union!
-                </p>
-                {!isDesignInCart && (
-                  <button
-                    className={styles["add-to-quote-button"]}
-                    onClick={clickQuoteButton}
-                  >
-                    ADD TO QUOTE
-                  </button>
-                )}
-                {isDesignInCart && (
-                  <a
-                    href={createNavigationUrl("cart")}
-                    className={styles["request-quote-button"]}
-                  >
-                    <span>REQUEST QUOTE</span>
-                  </a>
-                )}
-                <a
-                  href={similarDesignsUrl}
-                  className={styles["similar-designs-button"]}
-                >
-                  Similar Designs<i className={"fa-solid fa-arrow-right"}></i>
-                </a>
               </div>
             </div>
           </div>

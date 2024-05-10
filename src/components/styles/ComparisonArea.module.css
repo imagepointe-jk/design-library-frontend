@@ -11,18 +11,26 @@
   left: 0;
 }
 
+.main .heading-container h2 {
+  font-size: 1.75rem;
+  margin-bottom: 60px !important; /*Fighting wordpress styles*/
+}
+
 .main .to-library {
   font-size: 1rem;
   padding: 5px;
   border-width: 1px;
   background-color: initial;
-  color: black;
+  color: var(--color-alpha);
   width: 230px;
   display: flex;
   gap: 10px;
   align-items: center;
   justify-content: center;
-  border: 2px solid black;
+}
+
+.main .to-library:hover {
+  text-decoration: underline;
 }
 
 .cards-container {
@@ -94,6 +102,18 @@
   display: flex;
   justify-content: center;
   margin-top: 40px;
+}
+
+.cart-link-container a {
+  padding: 15px;
+  font-size: 1.35rem;
+  font-weight: bold;
+  background-color: black;
+  transition: 0.2s;
+}
+
+.cart-link-container a:hover {
+  background-color: var(--color-alpha);
 }
 
 .main .mobile-only {

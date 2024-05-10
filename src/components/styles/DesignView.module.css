@@ -26,9 +26,10 @@
 .main-flex .add-to-quote-button,
 .main-flex .request-quote-button,
 .main-flex .request-quote-button span {
-  margin: auto;
+  /* margin: auto; */
   padding: 15px;
-  margin-bottom: 12px;
+  font-size: 1rem;
+  /* margin-bottom: 12px; */
 }
 
 .main-flex .request-quote-button {
@@ -42,14 +43,14 @@
 }
 
 .main-flex .similar-designs-button {
-  margin: auto;
-  margin-top: 5px;
+  /* margin: auto; */
+  /* margin-top: 5px; */
   background: none;
   border: 2px solid var(--color-alpha);
   color: var(--color-alpha);
-  padding: 10px;
+  padding: 13px;
   max-width: 200px;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .main-flex .similar-designs-button i {
@@ -153,6 +154,10 @@
   font-weight: 700;
 }
 
+.filters-tags-container {
+  font-size: 0.9rem;
+}
+
 .filters-tags-container div {
   margin: 10px 0;
 }
@@ -160,6 +165,13 @@
 .filters-tags-container p {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .quote-info {
@@ -197,5 +209,10 @@
 
   .main-flex .gizmos-container {
     justify-content: center;
+  }
+
+  .buttons-container {
+    flex-direction: column;
+    gap: 10px;
   }
 }

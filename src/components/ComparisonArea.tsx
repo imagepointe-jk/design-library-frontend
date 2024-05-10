@@ -1,87 +1,158 @@
 import { useEffect, useState } from "react";
-import { useApp } from "./AppProvider";
-import styles from "./styles/ComparisonArea.module.css";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { getDesignById } from "../fetch";
+import { getDesignsRelatedToId } from "../fetch";
 import { TempDesign } from "../sharedTypes";
-import { ImageWithFallback } from "./ImageWithFallback";
 import {
+  clamp,
   createNavigationUrl,
   getDesignDefaultBackgroundColor,
   getFirstHexCodeInString,
   isDesignTransparent,
 } from "../utility";
+import { useApp } from "./AppProvider";
+import { DesignScrollView } from "./DesignScrollView";
 import { BackgroundColorChanger } from "./DesignView";
+import { LoadingIndicator } from "./LoadingIndicator";
+import styles from "./styles/ComparisonArea.module.css";
 
 export function ComparisonArea() {
   const { compareModeData } = useApp();
-  const [designs, setDesigns] = useState(null as TempDesign[] | null);
-  const [loadingStatus, setLoadingStatus] = useState(
-    "loading" as "loading" | "error" | "success"
-  );
-
-  async function getDesignsToView() {
-    if (!compareModeData) return;
-    try {
-      const designs = await Promise.all(
-        compareModeData.selectedIds.map((id) => getDesignById(id))
-      );
-      setDesigns(designs);
-      setLoadingStatus("success");
-    } catch (error) {
-      console.error(error);
-      setLoadingStatus("error");
-    }
-  }
-
-  useEffect(() => {
-    getDesignsToView();
-  }, []);
+  const designIds = compareModeData?.selectedIds;
 
   return (
-    <>
-      <h2>Design Comparison</h2>
-      <div className={styles["cards-container"]}>
-        {designs &&
-          designs.map((design) => (
-            <ComparisonDesignContainer design={design} />
-          ))}
+    <div className={styles["main"]}>
+      <div className={styles["heading-container"]}>
+        <a className={styles["to-library"]} href={createNavigationUrl("home")}>
+          <i className={"fa-solid fa-arrow-left"}></i>To Design Library
+        </a>
+        <h2>Design Comparison</h2>
       </div>
-      {loadingStatus === "loading" && <LoadingIndicator />}
-    </>
+      <div className={styles["cards-container"]}>
+        {designIds &&
+          designIds.map((id) => <ComparisonDesignContainer designId={id} />)}
+        {designIds && designIds.length === 0 && (
+          <div className={styles["no-designs"]}>No Designs</div>
+        )}
+      </div>
+      <div className={styles["cart-link-container"]}>
+        <a href={createNavigationUrl("cart")}>REQUEST QUOTE</a>
+      </div>
+    </div>
   );
 }
 
 type ComparisonDesignContainerProps = {
-  design: TempDesign;
+  designId: number;
 };
-function ComparisonDesignContainer({ design }: ComparisonDesignContainerProps) {
+function ComparisonDesignContainer({
+  designId,
+}: ComparisonDesignContainerProps) {
+  const [relatedDesigns, setRelatedDesigns] = useState(
+    null as TempDesign[] | null
+  );
+  const [loadingStatus, setLoadingStatus] = useState(
+    "loading" as "loading" | "error" | "success"
+  );
+  const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null);
-  const defaultBgColor = getDesignDefaultBackgroundColor(design);
+  const { cartData, addDesignsToCart, removeComparisonId } = useApp();
+
+  const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
+  const multipleDesigns = relatedDesigns ? relatedDesigns.length > 1 : false;
+
+  useEffect(() => {
+    getDesignsToDisplay();
+  }, []);
+
+  if (!viewedDesign)
+    return (
+      <div>
+        {loadingStatus === "error" && "Error"}
+        {loadingStatus === "loading" && <LoadingIndicator />}
+      </div>
+    );
+
+  const showColorChanger = isDesignTransparent(viewedDesign);
+  const isInCart = !!cartData?.designs.find(
+    (item) => item.id === viewedDesign.Id
+  );
+  const defaultBgColor = getDesignDefaultBackgroundColor(viewedDesign);
   let bgColorToUse = getFirstHexCodeInString(selectedBgColor || "");
   if (!bgColorToUse) bgColorToUse = getFirstHexCodeInString(defaultBgColor);
   if (!bgColorToUse) bgColorToUse = "#000000";
-  const showColorChanger = isDesignTransparent(design);
+
+  async function getDesignsToDisplay() {
+    setLoadingStatus("loading");
+    try {
+      const related = await getDesignsRelatedToId(designId);
+      related.sort((a) => (a.Id === designId ? -1 : 1));
+      setRelatedDesigns(related);
+      setLoadingStatus("success");
+      console.log("success");
+    } catch (error) {
+      console.error("Error getting related designs: ", error);
+      setLoadingStatus("error");
+    }
+  }
+
+  function clickAddToCart() {
+    if (!addDesignsToCart || !viewedDesign) return;
+
+    addDesignsToCart([
+      {
+        id: viewedDesign.Id,
+        designNumber: viewedDesign.DesignNumber,
+        garmentColor: selectedBgColor ? selectedBgColor : defaultBgColor,
+      },
+    ]);
+  }
+
+  function onScrollFn(direction: "left" | "right", maxScrollIndex: number) {
+    const increment = direction === "left" ? -1 : 1;
+    const clampedViewedIndex = clamp(
+      viewedIndex + increment,
+      0,
+      maxScrollIndex
+    );
+    setViewedIndex(clampedViewedIndex);
+    setSelectedBgColor(null);
+  }
 
   return (
     <div className={styles["card"]}>
-      <ImageWithFallback
-        src={design.ImageURL}
-        style={{ backgroundColor: bgColorToUse }}
+      <DesignScrollView
+        imageUrls={relatedDesigns.map(
+          (design) => design.ImageURL || "no image"
+        )}
+        backgroundColor={bgColorToUse}
+        onScrollFn={onScrollFn}
+        viewedIndex={viewedIndex}
+        showArrowButtons={multipleDesigns}
+        showNavGallery={false}
+        mainImgContainerClassName={styles["scroll-view-container"]}
       />
-      <h3>#{design.DesignNumber}</h3>
+      <h3>#{viewedDesign.DesignNumber}</h3>
       {showColorChanger && (
         <BackgroundColorChanger
           onClickColor={(color) => setSelectedBgColor(color)}
           selectedColor={selectedBgColor}
         />
       )}
-      <a
-        className={styles["view-link"]}
-        href={createNavigationUrl({ designId: design.Id })}
+      <div className={styles["cart-button-container"]}>
+        {!isInCart && <button onClick={clickAddToCart}>Add to Quote</button>}
+        {isInCart && (
+          <div>
+            <i className="fa-solid fa-check"></i>Added to quote
+          </div>
+        )}
+      </div>
+      <button
+        className={styles["remove-x"]}
+        onClick={() => {
+          if (removeComparisonId) removeComparisonId(viewedDesign.Id);
+        }}
       >
-        View Design
-      </a>
+        X
+      </button>
     </div>
   );
 }

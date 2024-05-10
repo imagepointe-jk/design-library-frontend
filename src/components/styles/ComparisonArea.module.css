@@ -1,18 +1,83 @@
+.heading-container {
+  position: relative;
+}
+
+.heading-container .to-library {
+  position: absolute;
+  left: 0;
+}
+
+.main .to-library {
+  font-size: 1rem;
+  padding: 5px;
+  border-width: 1px;
+  background-color: initial;
+  color: black;
+  width: 230px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+}
+
 .cards-container {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 65px;
   flex-wrap: wrap;
+}
+
+.no-designs {
+  color: lightgray;
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin: 100px 0;
 }
 
 .card {
   width: 300px;
+  position: relative;
 }
 
 .card img {
   width: 100%;
 }
 
-.view-link {
+.card .remove-x {
+  background-color: var(--color-danger);
+  border-radius: 100px;
+  padding: 5px 8px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 1rem;
+}
+
+.card .remove-x:hover {
+  scale: 110%;
+}
+
+.main .card .scroll-view-container {
+  width: 300px;
+  height: 300px;
+}
+
+.cart-button-container {
+  display: flex;
+  justify-content: center;
   margin-top: 10px;
+}
+
+.cart-button-container i {
+  font-size: 1.5rem;
+  margin-right: 5px;
+  color: var(--color-alpha);
+  font-weight: bold;
+}
+
+.cart-link-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }

@@ -144,7 +144,7 @@ function isDesignId(param: any): param is DesignId {
 }
 
 export function createNavigationUrl(
-  params: DesignId | DesignQueryParams | "cart"
+  params: DesignId | DesignQueryParams | "cart" | "compare" | "home"
 ) {
   //preserve previous search params; this allows the app to work on WordPress draft pages
   const existingSearchParams = new URLSearchParams(window.location.search);
@@ -158,9 +158,17 @@ export function createNavigationUrl(
     newSearchParams.set("viewDesign", `${params.designId}`);
   } else if (params === "cart") {
     newSearchParams.set("viewCart", "true");
+  } else if (params === "compare") {
+    newSearchParams.set("viewCompare", "true");
   } else {
+    const defaultParams: DesignQueryParams = {
+      designType: "Screen Print",
+      featuredOnly: false,
+      pageNumber: 1,
+    };
+    const paramsToUse = params === "home" ? defaultParams : params;
     newSearchParams = new URLSearchParams(
-      `${newSearchParams.toString()}&${buildDesignQueryParams(params)}`
+      `${newSearchParams.toString()}&${buildDesignQueryParams(paramsToUse)}`
     );
   }
 

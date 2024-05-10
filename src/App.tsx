@@ -17,11 +17,19 @@ function App() {
   const searchParams = new URLSearchParams(window.location.search);
   const viewDesign = searchParams.get("viewDesign");
   const viewCart = searchParams.get("viewCart");
+  const viewCompare = searchParams.get("viewCompare");
 
   if (viewCart === "true")
     return (
       <div className="root">
         <CartView />
+      </div>
+    );
+
+  if (viewCompare === "true")
+    return (
+      <div className="root">
+        <ComparisonArea />
       </div>
     );
 
@@ -52,11 +60,6 @@ function App() {
         </Modal>
       )}
       {modalDisplay === "filters" && <FilterModal />}
-      {modalDisplay === "comparison" && (
-        <Modal maxHeight={730}>
-          <ComparisonArea />
-        </Modal>
-      )}
       {lightboxData && setLightboxData && (
         <Lightbox
           data={lightboxData}

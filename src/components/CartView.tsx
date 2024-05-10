@@ -13,12 +13,6 @@ export function CartView() {
   const { cartData, emptyCart } = useApp();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  const defaultParams: DesignQueryParams = {
-    designType: "Screen Print",
-    featuredOnly: false,
-    pageNumber: 1,
-  };
-
   if (!cartData) return <></>;
   if (showSuccessMessage)
     return (
@@ -30,10 +24,7 @@ export function CartView() {
         <p>
           Request submitted. A salesperson will reach out in 1-2 business days.
         </p>
-        <a
-          href={createNavigationUrl(defaultParams)}
-          className={styles["to-library"]}
-        >
+        <a href={createNavigationUrl("home")} className={styles["to-library"]}>
           <i className="fa-solid fa-arrow-left"></i>
           Keep Browsing
         </a>
@@ -48,10 +39,7 @@ export function CartView() {
   return (
     <div className={styles["main"]}>
       <h2>Quote Request</h2>
-      <a
-        href={createNavigationUrl(defaultParams)}
-        className={styles["to-library"]}
-      >
+      <a href={createNavigationUrl("home")} className={styles["to-library"]}>
         <i className={"fa-solid fa-arrow-left"}></i>To Design Library
       </a>
       <div className={styles["main-flex"]}>

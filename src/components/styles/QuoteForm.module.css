@@ -5,6 +5,7 @@
 
 .main h3 {
   font-size: 1.5rem;
+  margin-bottom: 24px !important; /*fighting wordpress styles*/
 }
 
 .main label {

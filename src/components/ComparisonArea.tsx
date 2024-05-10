@@ -28,7 +28,9 @@ export function ComparisonArea() {
       </div>
       <div className={styles["cards-container"]}>
         {designIds &&
-          designIds.map((id) => <ComparisonDesignContainer designId={id} />)}
+          designIds.map((id) => (
+            <ComparisonDesignContainer key={id} designId={id} />
+          ))}
         {designIds && designIds.length === 0 && (
           <div className={styles["no-designs"]}>No Designs</div>
         )}

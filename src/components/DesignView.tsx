@@ -201,7 +201,7 @@ export function DesignView({ designId }: DesignViewProps) {
                       href={createNavigationUrl("cart")}
                       className={styles["request-quote-button"]}
                     >
-                      <span>REQUEST QUOTE</span>
+                      REQUEST QUOTE
                     </a>
                   )}
                   <a

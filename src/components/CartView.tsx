@@ -40,7 +40,7 @@ export function CartView() {
     <div className={styles["main"]}>
       <h2>Quote Request</h2>
       <a href={createNavigationUrl("home")} className={styles["to-library"]}>
-        <i className={"fa-solid fa-arrow-left"}></i>To Design Library
+        <i className={"fa-solid fa-arrow-left"}></i>Add More Designs
       </a>
       <div className={styles["main-flex"]}>
         <div className={styles["items-container"]}>

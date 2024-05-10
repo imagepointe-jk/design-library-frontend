@@ -74,6 +74,7 @@ export function DesignView({ designId }: DesignViewProps) {
           garmentColor: colorToAddToCart,
         },
       ]);
+      window.location.href = createNavigationUrl("cart");
     } else console.log("go to cart");
   }
 

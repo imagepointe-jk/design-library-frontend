@@ -8,6 +8,7 @@ import {
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/QuoteForm.module.css";
 import { useApp } from "./AppProvider";
+import { createNavigationUrl } from "../utility";
 
 type Status = "success" | "failure";
 type QuoteFormProps = {
@@ -95,6 +96,11 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
     }
   }
 
+  const waitingForSubmitClick =
+    !submittingRequest && submitStatus !== "success";
+  const submitSuccess = !submittingRequest && submitStatus === "success";
+  const submitFailure = !submittingRequest && submitStatus === "failure";
+
   return (
     <div className={styles["main"]}>
       <h3>Contact Info</h3>
@@ -165,19 +171,26 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
           rows={10}
           placeholder="Comments (Please specify garment type, sizes, quantities, etc.)"
         ></textarea>
-        {!submittingRequest && submitStatus !== "success" && (
-          <button type="submit" disabled={cartData?.designs.length === 0}>
-            Submit Request
-          </button>
-        )}
-        {submittingRequest && <LoadingIndicator />}
-        {!submittingRequest && submitStatus === "success" && (
+        <div className={styles["buttons-container"]}>
+          {waitingForSubmitClick && (
+            <button type="submit" disabled={cartData?.designs.length === 0}>
+              Submit Request
+            </button>
+          )}
+          {submittingRequest && (
+            <div className={styles["submit-container"]}>
+              <LoadingIndicator />
+            </div>
+          )}
+          <a href={createNavigationUrl("home")}>Add More</a>
+        </div>
+        {submitSuccess && (
           <div>
             <i className="fa-solid fa-circle-check"></i>Request submitted. A
             salesperson will reach out in 1-2 business days.
           </div>
         )}
-        {!submittingRequest && submitStatus === "failure" && (
+        {submitFailure && (
           <div>
             <i className="fa-solid fa-triangle-exclamation"></i>We're sorry,
             there was an error submitting your request. Feel free to{" "}

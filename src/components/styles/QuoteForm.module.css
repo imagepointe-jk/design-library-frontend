@@ -29,3 +29,20 @@
 .main .horz-inputs input {
   width: 50%;
 }
+
+.buttons-container {
+  display: flex;
+  gap: 10px;
+}
+
+.submit-container,
+.buttons-container button,
+.buttons-container a {
+  flex: 1;
+}
+
+.buttons-container a {
+  background: none;
+  color: var(--color-alpha);
+  border: 2px solid;
+}

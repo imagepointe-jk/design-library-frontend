@@ -139,7 +139,7 @@ export function DesignLibrary() {
     const newParams: DesignQueryParams = {
       ...designQueryParams,
       pageNumber: 1,
-      countPerPage: count,
+      perPage: count,
     };
 
     window.location.href = createNavigationUrl(newParams);
@@ -257,7 +257,7 @@ export function DesignLibrary() {
                 <PageControls
                   totalPages={pageCount}
                   pageSizeChoices={pageSizeChoices}
-                  curItemsPerPage={designQueryParams.countPerPage || 0}
+                  curItemsPerPage={designQueryParams.perPage || 0}
                   curPageNumber={designQueryParams.pageNumber}
                   onClickPageNumber={clickPageButton}
                   onSubmitJumpToPage={jumpToPage}

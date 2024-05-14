@@ -14,7 +14,8 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { Modal } from "./Modal";
 import { NodeScrollView } from "./NodeScrollView";
 import styles from "./styles/FilterModal.module.css";
-import { TempDesign } from "../sharedTypes";
+import { Design } from "../dbSchema";
+// import { TempDesign } from "../sharedTypes";
 
 const maxSubcategoriesBeforeScrollable = 15;
 const buttonIdPrefix = "filter-modal-filter-button-";
@@ -30,9 +31,7 @@ export function FilterModal() {
   const [pendingQueryParams, setPendingQueryParams] = useState(
     null as DesignQueryParams | null
   );
-  const [previewDesigns, setPreviewDesigns] = useState(
-    null as TempDesign[] | null
-  );
+  const [previewDesigns, setPreviewDesigns] = useState(null as Design[] | null);
   const [previewDesignsLoading, setPreviewDesignsLoading] = useState(true);
   const queryParamsToUse = pendingQueryParams
     ? pendingQueryParams
@@ -61,12 +60,12 @@ export function FilterModal() {
               getDesignDefaultBackgroundColor(design) || "#000000",
           }}
         >
-          <ImageWithFallback src={design.ImageURL} />
+          <ImageWithFallback src={design.imageUrl} />
         </div>
       ))
     : undefined;
   const previewDesignUrls = previewDesigns
-    ? previewDesigns.map((design) => design.ImageURL)
+    ? previewDesigns.map((design) => design.imageUrl)
     : undefined;
   const scrollViewKey = btoa(JSON.stringify(previewDesignUrls));
 
@@ -106,7 +105,7 @@ export function FilterModal() {
     const previewDesignsQueryParams: DesignQueryParams = {
       ...queryParamsToUse,
       pageNumber: 1,
-      countPerPage: 5,
+      perPage: 5,
     };
     const previewDesignsQueryString = buildDesignQueryParams(
       previewDesignsQueryParams

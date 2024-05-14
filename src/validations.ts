@@ -15,6 +15,7 @@ import {
 } from "./types";
 import { makeStringTitleCase } from "./utility";
 import { designSchema } from "./dbSchema";
+import { pageSizeChoices } from "./constants";
 
 export function validateDesignResultsJson(json: any) {
   return designResultsSchema.parse(json);
@@ -54,7 +55,7 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
   const subcategoryFromParams = params.get("subcategories");
   const tagsFromParams = params.get("tags");
   const keywordsFromParams = params.get("keywords");
-  const countPerPageFromParams = params.get("perPage");
+  const perPageFromParams = params.get("perPage");
   const pageNumberFromParams = params.get("pageNumber");
   const featuredFromParams = params.get("featured");
   const allowDuplicateDesignNumbers = params.get("allowDuplicateDesignNumbers");
@@ -73,10 +74,10 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
     subcategory: subcategoryFromParams
       ? makeStringTitleCase(subcategoryFromParams)
       : undefined,
-    countPerPage:
-      countPerPageFromParams && !isNaN(+countPerPageFromParams)
-        ? +countPerPageFromParams
-        : undefined,
+    perPage:
+      perPageFromParams && !isNaN(+perPageFromParams)
+        ? +perPageFromParams
+        : pageSizeChoices[0],
     keywords: keywordsFromParams ? keywordsFromParams.split(",") : undefined,
     pageNumber:
       pageNumberFromParams && !isNaN(+pageNumberFromParams)

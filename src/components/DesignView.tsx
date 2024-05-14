@@ -113,9 +113,17 @@ export function DesignView({ designId }: DesignViewProps) {
     relatedDesigns &&
     relatedDesigns[0].designType.name === "Screen Print" &&
     viewedDesignHasTransparency;
+  //!
+  //!
+  //!
+  //!
+  const TEMP_FORCED_DESIGN_TYPE =
+    relatedDesigns && relatedDesigns[0].designType.name === "Embroidery"
+      ? "Embroidery"
+      : "Screen Print";
   const similarDesignsParams: DesignQueryParams | undefined = relatedDesigns
     ? {
-        designType: relatedDesigns[0].designType,
+        designType: TEMP_FORCED_DESIGN_TYPE,
         featuredOnly: false,
         pageNumber: 1,
         similarTo: designId,
@@ -125,7 +133,7 @@ export function DesignView({ designId }: DesignViewProps) {
     ? createNavigationUrl(similarDesignsParams)
     : undefined;
   const isDesignInCart = cartData?.designs.find(
-    (design) => viewedDesign?.Id === design.id
+    (design) => viewedDesign?.id === design.id
   );
 
   return (
@@ -138,18 +146,18 @@ export function DesignView({ designId }: DesignViewProps) {
           <div className={styles["main-flex"]}>
             <h2
               className={`${styles["heading"]} ${styles["mobile-only"]}`}
-            >{`#${viewedDesign.DesignNumber}`}</h2>
+            >{`#${viewedDesign.designNumber}`}</h2>
             <div className={styles["gallery-container"]}>
               <div className={styles["gizmos-container"]}>
-                <ShareButton designId={viewedDesign.Id} />
+                <ShareButton designId={viewedDesign.id} />
                 <button
                   className={styles["zoom-button"]}
                   onClick={() => {
                     if (setLightboxData) {
                       setLightboxData({
                         images: relatedDesigns.map((design) => ({
-                          url: design.ImageURL || "",
-                          backgroundColor: design.DefaultBackgroundColor,
+                          url: design.imageUrl || "",
+                          backgroundColor: `#${design.defaultBackgroundColor.hexCode}`,
                         })),
                         initialIndex: viewedIndex,
                       });
@@ -174,9 +182,9 @@ export function DesignView({ designId }: DesignViewProps) {
               <div>
                 <h2
                   className={`${styles["heading"]} ${styles["desktop-only"]}`}
-                >{`#${viewedDesign.DesignNumber}`}</h2>
+                >{`#${viewedDesign.designNumber}`}</h2>
                 <p className={styles["description"]}>
-                  {viewedDesign.Description}
+                  {viewedDesign.description}
                 </p>
               </div>
               <div>
@@ -272,7 +280,8 @@ export function BackgroundColorChanger({
                 color === selectedColor ? styles["selected-swatch"] : ""
               }`}
               style={{
-                backgroundColor: getFirstHexCodeInString(color) || "white",
+                // backgroundColor: getFirstHexCodeInString(color) || "white",
+                backgroundColor: color,
               }}
               onClick={() => onClickColor(color)}
             ></div>

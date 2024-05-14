@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { clamp, getFirstHexCodeInString } from "../utility";
+import { clamp /*getFirstHexCodeInString*/ } from "../utility";
 import styles from "./styles/Lightbox.module.css";
 
 export type LightboxImage = {
@@ -26,7 +26,8 @@ export function Lightbox({
   const [isScrolling, setIsScrolling] = useState(false);
   const imageRef = useRef(null as HTMLImageElement | null);
   const image = images[viewIndex];
-  const bgColor = getFirstHexCodeInString(image.backgroundColor);
+  // const bgColor = getFirstHexCodeInString(image.backgroundColor);
+  const bgColor = image.backgroundColor;
 
   const canGoLeft = viewIndex > 0;
   const canGoRight = viewIndex < images.length - 1;

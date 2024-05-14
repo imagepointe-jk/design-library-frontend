@@ -26,9 +26,7 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     ? `keywords=${params.keywords.join(",")}`
     : undefined;
   const designTypeParam = `designtype=${params.designType.toLocaleLowerCase()}`;
-  const perPageParam = params.countPerPage
-    ? `perPage=${params.countPerPage}`
-    : undefined;
+  const perPageParam = params.perPage ? `perPage=${params.perPage}` : undefined;
   const pageNumberParam = params.pageNumber
     ? `pageNumber=${params.pageNumber}`
     : undefined;

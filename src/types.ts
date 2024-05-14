@@ -54,7 +54,7 @@ export type DesignQueryParams = {
   subcategory?: string;
   tags?: string[];
   keywords?: string[];
-  countPerPage?: number;
+  perPage?: number;
   pageNumber: number;
   featuredOnly: boolean;
   allowDuplicateDesignNumbers?: boolean;

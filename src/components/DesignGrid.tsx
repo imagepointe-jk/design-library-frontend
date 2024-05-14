@@ -1,10 +1,11 @@
-import { TempDesign } from "../sharedTypes";
+import { Design } from "../dbSchema";
+// import { TempDesign } from "../sharedTypes";
 import { getDesignDefaultBackgroundColor } from "../utility";
 import { DesignCard } from "./DesignCard";
 import styles from "./styles/DesignGrid.module.css";
 
 type DesignGridProps = {
-  designs: TempDesign[];
+  designs: Design[];
 };
 
 export function DesignGrid({ designs }: DesignGridProps) {
@@ -12,10 +13,10 @@ export function DesignGrid({ designs }: DesignGridProps) {
     <div className={styles["design-grid"]}>
       {designs.map((design) => (
         <DesignCard
-          key={design.Id}
-          designNumber={design.DesignNumber}
-          designId={design.Id}
-          imgUrl={design.ImageURL || ""}
+          key={design.id}
+          designNumber={`${design.designNumber}`}
+          designId={design.id}
+          imgUrl={design.imageUrl}
           backgroundColor={getDesignDefaultBackgroundColor(design) || "#000000"}
         />
       ))}

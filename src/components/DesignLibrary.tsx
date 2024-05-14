@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { pageSizeChoices } from "../constants";
 import { getDesigns } from "../fetch";
-import { DesignQueryParams, TempDesignResults } from "../types";
+import {
+  DesignQueryParams,
+  DesignResults /*TempDesignResults*/,
+} from "../types";
 import {
   buildDesignQueryParams,
   createNavigationUrl,
@@ -20,7 +23,7 @@ import { DesignType } from "../sharedTypes";
 import { useApp } from "./AppProvider";
 
 export function DesignLibrary() {
-  const [designResults, setDesignResults] = useState<TempDesignResults | null>(
+  const [designResults, setDesignResults] = useState<DesignResults | null>(
     null
   );
   const designQueryParams = parseSearchParams(
@@ -151,7 +154,7 @@ export function DesignLibrary() {
       ? designQueryParams.keywords.join(" ")
       : undefined;
   const pageCount = designResults
-    ? Math.ceil(designResults.total / designResults.perPage)
+    ? Math.ceil(designResults.totalResults / designResults.perPage)
     : 0;
 
   const showSidebar = windowWidth && windowWidth > 1200;

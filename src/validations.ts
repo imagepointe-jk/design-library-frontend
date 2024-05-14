@@ -2,28 +2,30 @@ import { z } from "zod";
 import {
   designTypeSchema,
   quoteRequestSchema,
-  tempDesignSchema,
+  // tempDesignSchema,
 } from "./sharedTypes";
 import {
   DesignQueryParams,
   cartDataSchema,
   categoryDataSchema,
   compareModeDataSchema,
+  designResultsSchema,
   subcategoryDataSchema,
-  tempDesignResultsSchema,
+  // tempDesignResultsSchema,
 } from "./types";
 import { makeStringTitleCase } from "./utility";
+import { designSchema } from "./dbSchema";
 
 export function validateDesignResultsJson(json: any) {
-  return tempDesignResultsSchema.parse(json);
+  return designResultsSchema.parse(json);
 }
 
 export function validateSingleDesignJson(json: any) {
-  return tempDesignSchema.parse(json);
+  return designSchema.parse(json);
 }
 
 export function validateDesignArrayJson(json: any) {
-  return z.array(tempDesignSchema).parse(json);
+  return z.array(designSchema).parse(json);
 }
 
 export function validateCategories(json: any) {

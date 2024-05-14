@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useApp } from "./AppProvider";
 import styles from "./styles/CartView.module.css";
-import { TempDesign } from "../sharedTypes";
+// import { TempDesign } from "../sharedTypes";
 import { getDesignById } from "../fetch";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { CartDesign, DesignQueryParams } from "../types";
-import { createNavigationUrl, getFirstHexCodeInString } from "../utility";
+import { createNavigationUrl /*getFirstHexCodeInString*/ } from "../utility";
 import { QuoteForm } from "./QuoteForm";
+import { Design } from "../dbSchema";
 
 export function CartView() {
   const { cartData, emptyCart } = useApp();
@@ -64,7 +65,7 @@ type CartRowProps = {
 
 function CartRow({ design: { garmentColor, id } }: CartRowProps) {
   const [loading, setLoading] = useState(true);
-  const [design, setDesign] = useState(null as TempDesign | null);
+  const [design, setDesign] = useState(null as Design | null);
   const { removeDesignFromCart } = useApp();
 
   async function getDesignToView() {
@@ -91,13 +92,14 @@ function CartRow({ design: { garmentColor, id } }: CartRowProps) {
           <div className={styles["design-row-image-container"]}>
             <ImageWithFallback
               className={styles["design-image"]}
-              src={design.ImageURL}
+              src={design.imageUrl}
               style={{
                 backgroundColor:
-                  getFirstHexCodeInString(garmentColor) || undefined,
+                  /*getFirstHexCodeInString(garmentColor) || undefined*/ design
+                    .defaultBackgroundColor.hexCode,
               }}
             />
-            <div>Design #{design.DesignNumber}</div>
+            <div>Design #{design.designNumber}</div>
           </div>
           <button
             className={styles["remove-button"]}

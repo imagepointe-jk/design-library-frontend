@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { maxComparisonDesigns } from "../constants";
 import { getDesignById } from "../fetch";
-import { TempDesign } from "../sharedTypes";
+// import { TempDesign } from "../sharedTypes";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { LoadingIndicator } from "./LoadingIndicator";
@@ -11,6 +11,7 @@ import {
   createNavigationUrl,
   getDesignDefaultBackgroundColor,
 } from "../utility";
+import { Design } from "../dbSchema";
 
 export function ComparisonBar() {
   const {
@@ -64,7 +65,7 @@ export function ComparisonBar() {
 }
 
 function ComparisonSquare({ designId }: { designId?: number }) {
-  const [design, setDesign] = useState(null as TempDesign | null);
+  const [design, setDesign] = useState(null as Design | null);
   const [loading, setLoading] = useState(false);
   const { removeComparisonId, setModalDisplay } = useApp();
 
@@ -92,7 +93,7 @@ function ComparisonSquare({ designId }: { designId?: number }) {
       {defined && (
         <>
           <ImageWithFallback
-            src={design.ImageURL}
+            src={design.imageUrl}
             className={styles["comparison-image"]}
             onClick={() => setModalDisplay(new DesignModalDisplay(designId))}
             style={{ backgroundColor: getDesignDefaultBackgroundColor(design) }}

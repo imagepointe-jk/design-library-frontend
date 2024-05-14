@@ -18,21 +18,18 @@ function App() {
   const viewDesign = searchParams.get("viewDesign");
   const viewCart = searchParams.get("viewCart");
   const viewCompare = searchParams.get("viewCompare");
-
   if (viewCart === "true")
     return (
       <div className="root">
         <CartView />
       </div>
     );
-
   if (viewCompare === "true")
     return (
       <div className="root">
         <ComparisonArea />
       </div>
     );
-
   if (viewDesign && !isNaN(+viewDesign))
     return (
       <div className="root">
@@ -45,7 +42,6 @@ function App() {
         )}
       </div>
     );
-
   return (
     <div className="root">
       <DesignLibrary />
@@ -69,6 +65,7 @@ function App() {
       {compareModeData?.active && <ComparisonBar />}
     </div>
   );
+  // return <></>;
 }
 
 export default App;

@@ -228,8 +228,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    fetchColors();
-    fetchCategories();
+    // fetchColors();
+    // fetchCategories();
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);

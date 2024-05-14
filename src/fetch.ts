@@ -12,7 +12,7 @@ import {
 const serverURL = () =>
   //@ts-ignore
   import.meta.env.MODE === "development"
-    ? "http://localhost:3000"
+    ? "http://localhost:3000/api"
     : //@ts-ignore
       import.meta.env.VITE_SERVER_URL;
 

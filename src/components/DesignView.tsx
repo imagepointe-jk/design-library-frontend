@@ -3,27 +3,26 @@ import { getDesignsRelatedToId } from "../fetch";
 import {
   clamp,
   createNavigationUrl,
-  getDesignCategoryHierarchies,
+  // getDesignCategoryHierarchies,
   getDesignDefaultBackgroundColor,
   getDesignTags,
-  getFirstHexCodeInString,
+  // getFirstHexCodeInString,
   isDesignTransparent,
 } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
-import { TempDesign } from "../sharedTypes";
+// import { TempDesign } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
+import { Design } from "../dbSchema";
 
 type DesignViewProps = {
   designId: number;
 };
 
 export function DesignView({ designId }: DesignViewProps) {
-  const [relatedDesigns, setRelatedDesigns] = useState<TempDesign[] | null>(
-    null
-  );
+  const [relatedDesigns, setRelatedDesigns] = useState<Design[] | null>(null);
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
   const { setLightboxData, cartData, addDesignsToCart } = useApp();
@@ -31,7 +30,7 @@ export function DesignView({ designId }: DesignViewProps) {
   async function getDesignsToDisplay() {
     try {
       const related = await getDesignsRelatedToId(designId);
-      related.sort((a) => (a.Id === designId ? -1 : 1));
+      related.sort((a) => (a.id === designId ? -1 : 1));
       setRelatedDesigns(related);
     } catch (error) {
       console.error("Error getting related designs: ", error);
@@ -65,12 +64,12 @@ export function DesignView({ designId }: DesignViewProps) {
       const colorToAddToCart =
         selectedBgColor ||
         (viewedDesignHasTransparency
-          ? viewedDesign.DefaultBackgroundColor
+          ? viewedDesign.defaultBackgroundColor.hexCode
           : "Color picking unavailable for this design.");
       addDesignsToCart([
         {
-          id: viewedDesign.Id,
-          designNumber: viewedDesign.DesignNumber,
+          id: viewedDesign.id,
+          designNumber: `${viewedDesign.designNumber}`,
           garmentColor: colorToAddToCart,
         },
       ]);
@@ -86,34 +85,37 @@ export function DesignView({ designId }: DesignViewProps) {
   const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
   const viewedDesignBgColor =
     (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
-  const selectedHexCode =
-    selectedBgColor && getFirstHexCodeInString(selectedBgColor);
+  const selectedHexCode = selectedBgColor;
+  // selectedBgColor && getFirstHexCodeInString(selectedBgColor);
   const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
   const fullColorStringToUse =
     selectedBgColor ||
-    viewedDesign?.DefaultBackgroundColor ||
+    viewedDesign?.defaultBackgroundColor ||
     "(no color selected)";
+  // const filters = viewedDesign
+  //   ? getDesignCategoryHierarchies(viewedDesign).filter(
+  //       (sub) => sub !== undefined
+  //     )
+  //   : [];
   const filters = viewedDesign
-    ? getDesignCategoryHierarchies(viewedDesign).filter(
-        (sub) => sub !== undefined
-      )
+    ? viewedDesign.designSubcategories.map((sub) => sub.name)
     : [];
   const tags = viewedDesign
     ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
     : [];
   const images = relatedDesigns
-    ? relatedDesigns.map((design) => design.ImageURL || "")
+    ? relatedDesigns.map((design) => design.imageUrl || "")
     : [];
   const viewedDesignHasTransparency = viewedDesign
     ? isDesignTransparent(viewedDesign)
     : false;
   const showColorChangeSection =
     relatedDesigns &&
-    relatedDesigns[0].DesignType === "Screen Print" &&
+    relatedDesigns[0].designType.name === "Screen Print" &&
     viewedDesignHasTransparency;
   const similarDesignsParams: DesignQueryParams | undefined = relatedDesigns
     ? {
-        designType: relatedDesigns[0].DesignType,
+        designType: relatedDesigns[0].designType,
         featuredOnly: false,
         pageNumber: 1,
         similarTo: designId,

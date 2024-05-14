@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { getDesignsRelatedToId } from "../fetch";
-import { TempDesign } from "../sharedTypes";
+// import { TempDesign } from "../sharedTypes";
 import {
   clamp,
   createNavigationUrl,
   getDesignDefaultBackgroundColor,
-  getFirstHexCodeInString,
+  // getFirstHexCodeInString,
   isDesignTransparent,
 } from "../utility";
 import { useApp } from "./AppProvider";
@@ -13,6 +13,7 @@ import { DesignScrollView } from "./DesignScrollView";
 import { BackgroundColorChanger } from "./DesignView";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonArea.module.css";
+import { Design } from "../dbSchema";
 
 export function ComparisonArea() {
   const { compareModeData } = useApp();
@@ -57,9 +58,7 @@ type ComparisonDesignContainerProps = {
 function ComparisonDesignContainer({
   designId,
 }: ComparisonDesignContainerProps) {
-  const [relatedDesigns, setRelatedDesigns] = useState(
-    null as TempDesign[] | null
-  );
+  const [relatedDesigns, setRelatedDesigns] = useState(null as Design[] | null);
   const [loadingStatus, setLoadingStatus] = useState(
     "loading" as "loading" | "error" | "success"
   );
@@ -89,18 +88,20 @@ function ComparisonDesignContainer({
 
   const showColorChanger = isDesignTransparent(viewedDesign);
   const isInCart = !!cartData?.designs.find(
-    (item) => item.id === viewedDesign.Id
+    (item) => item.id === viewedDesign.id
   );
   const defaultBgColor = getDesignDefaultBackgroundColor(viewedDesign);
-  let bgColorToUse = getFirstHexCodeInString(selectedBgColor || "");
-  if (!bgColorToUse) bgColorToUse = getFirstHexCodeInString(defaultBgColor);
+  let bgColorToUse =
+    /*getFirstHexCodeInString(selectedBgColor || "");*/ selectedBgColor;
+  if (!bgColorToUse)
+    bgColorToUse = /*getFirstHexCodeInString(defaultBgColor);*/ defaultBgColor;
   if (!bgColorToUse) bgColorToUse = "#000000";
 
   async function getDesignsToDisplay() {
     setLoadingStatus("loading");
     try {
       const related = await getDesignsRelatedToId(designId);
-      related.sort((a) => (a.Id === designId ? -1 : 1));
+      related.sort((a) => (a.id === designId ? -1 : 1));
       setRelatedDesigns(related);
       setLoadingStatus("success");
     } catch (error) {
@@ -114,8 +115,8 @@ function ComparisonDesignContainer({
 
     addDesignsToCart([
       {
-        id: viewedDesign.Id,
-        designNumber: viewedDesign.DesignNumber,
+        id: viewedDesign.id,
+        designNumber: `${viewedDesign.designNumber}`,
         garmentColor: selectedBgColor ? selectedBgColor : defaultBgColor,
       },
     ]);
@@ -136,7 +137,7 @@ function ComparisonDesignContainer({
     <div className={styles["card"]}>
       <DesignScrollView
         imageUrls={relatedDesigns.map(
-          (design) => design.ImageURL || "no image"
+          (design) => design.imageUrl || "no image"
         )}
         backgroundColor={bgColorToUse}
         onScrollFn={onScrollFn}
@@ -145,7 +146,7 @@ function ComparisonDesignContainer({
         showNavGallery={false}
         mainImgContainerClassName={styles["scroll-view-container"]}
       />
-      <h3>#{viewedDesign.DesignNumber}</h3>
+      <h3>#{viewedDesign.designNumber}</h3>
       {showColorChanger && (
         <BackgroundColorChanger
           onClickColor={(color) => setSelectedBgColor(color)}
@@ -160,7 +161,7 @@ function ComparisonDesignContainer({
             <button
               className={styles["remove-from-cart"]}
               onClick={() => {
-                if (removeDesignFromCart) removeDesignFromCart(viewedDesign.Id);
+                if (removeDesignFromCart) removeDesignFromCart(viewedDesign.id);
               }}
             >
               Remove
@@ -171,7 +172,7 @@ function ComparisonDesignContainer({
       <button
         className={styles["remove-x"]}
         onClick={() => {
-          if (removeComparisonId) removeComparisonId(viewedDesign.Id);
+          if (removeComparisonId) removeComparisonId(viewedDesign.id);
         }}
       >
         X

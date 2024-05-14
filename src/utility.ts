@@ -1,4 +1,5 @@
-import { TempDesign } from "./sharedTypes";
+// import { TempDesign } from "./sharedTypes";
+import { Design } from "./dbSchema";
 import { DesignQueryParams } from "./types";
 
 export function deduplicateStrings(strings: string[]) {
@@ -69,62 +70,64 @@ export function clamp(value: number, min: number, max: number) {
   return value;
 }
 
-export function getDesignTags(design: TempDesign) {
-  const {
-    Tag1,
-    Tag2,
-    Tag3,
-    Tag4,
-    Tag5,
-    Tag6,
-    Tag7,
-    Tag8,
-    Tag9,
-    Tag10,
-    Tag11,
-    Tag12,
-  } = design;
-  return [
-    Tag1,
-    Tag2,
-    Tag3,
-    Tag4,
-    Tag5,
-    Tag6,
-    Tag7,
-    Tag8,
-    Tag9,
-    Tag10,
-    Tag11,
-    Tag12,
-  ];
+export function getDesignTags(design: Design) {
+  // const {
+  //   Tag1,
+  //   Tag2,
+  //   Tag3,
+  //   Tag4,
+  //   Tag5,
+  //   Tag6,
+  //   Tag7,
+  //   Tag8,
+  //   Tag9,
+  //   Tag10,
+  //   Tag11,
+  //   Tag12,
+  // } = design;
+  // return [
+  //   Tag1,
+  //   Tag2,
+  //   Tag3,
+  //   Tag4,
+  //   Tag5,
+  //   Tag6,
+  //   Tag7,
+  //   Tag8,
+  //   Tag9,
+  //   Tag10,
+  //   Tag11,
+  //   Tag12,
+  // ];
+  return design.designTags.map((tag) => tag.name);
 }
 
-export function getDesignCategoryHierarchies(design: TempDesign) {
-  const {
-    Subcategory1,
-    Subcategory2,
-    Subcategory3,
-    Subcategory4,
-    Subcategory5,
-  } = design;
-  return [Subcategory1, Subcategory2, Subcategory3, Subcategory4, Subcategory5];
-}
+// export function getDesignCategoryHierarchies(design: Design) {
+//   const {
+//     Subcategory1,
+//     Subcategory2,
+//     Subcategory3,
+//     Subcategory4,
+//     Subcategory5,
+//   } = design;
+//   return [Subcategory1, Subcategory2, Subcategory3, Subcategory4, Subcategory5];
+// }
 
-export function getFirstHexCodeInString(str: string) {
-  const match = str.match(/#[a-zA-Z\d]{6}/g);
-  return match ? match[0] : null;
-}
+// export function getFirstHexCodeInString(str: string) {
+//   const match = str.match(/#[a-zA-Z\d]{6}/g);
+//   return match ? match[0] : null;
+// }
 
-export function getDesignDefaultBackgroundColor(design: TempDesign) {
-  const hexCode = getFirstHexCodeInString(design.DefaultBackgroundColor);
-  if (!hexCode) {
-    console.error(
-      `Couldn't find hex code in ${design.DefaultBackgroundColor} for design ${design.DesignNumber}`
-    );
-    return "";
-  }
-  return hexCode;
+export function getDesignDefaultBackgroundColor(design: Design) {
+  return `#${design.defaultBackgroundColor}`;
+  // const hexCode = getFirstHexCodeInString(design.DefaultBackgroundColor);
+  // if (!hexCode) {
+  //   console.error(
+  //     `Couldn't find hex code in ${design.DefaultBackgroundColor} for design ${design.DesignNumber}`
+  //   );
+  //   return "";
+  // }
+  // return hexCode;
 }
 
 export function splitDesignCategoryHierarchy(hierarchy: string) {
@@ -177,7 +180,7 @@ export function createNavigationUrl(
   }?${newSearchParams.toString()}`;
 }
 
-export function isDesignTransparent(design: TempDesign) {
+export function isDesignTransparent(design: Design) {
   //assume for now that all PNGs are transparent
-  return design.ImageURL?.endsWith(".png");
+  return design.imageUrl.endsWith(".png");
 }

@@ -45,9 +45,7 @@ export async function getDesignById(designId: number) {
 }
 
 export async function getDesignsRelatedToId(designId: number) {
-  const response = await fetch(
-    `${serverURL()}/designs/${designId}?getRelatedToId=true`
-  );
+  const response = await fetch(`${serverURL()}/designs/${designId}/related`);
   const json = await response.json();
   if (!response.ok) {
     console.error(

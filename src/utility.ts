@@ -16,8 +16,13 @@ export function makeStringTitleCase(str: string) {
 
 export function buildDesignQueryParams(params: DesignQueryParams) {
   const tagsParam = params.tags ? `tags=${params.tags.join(",")}` : undefined;
+  // const isAgeSubcategory =
+  //   params.subcategory &&
+  //   ["new designs", "classics"].includes(
+  //     params.subcategory.toLocaleLowerCase()
+  //   );
   const subcategoryParam = params.subcategory
-    ? `subcategories=${encodeURIComponent(params.subcategory)}` //this will be a comma separated list if we decide to allow multiple subcategories
+    ? `subcategory=${encodeURIComponent(params.subcategory)}` //this will be a comma separated list if we decide to allow multiple subcategories
     : undefined;
   const categoryParam = params.category
     ? `category=${encodeURIComponent(params.category)}`
@@ -43,6 +48,9 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
   const similarTo = params.similarTo
     ? `similarTo=${params.similarTo}`
     : undefined;
+  const twoYearsAgo = `${getTimeStampYearsAgo(2)}`;
+  const before = params.before ? `before=${twoYearsAgo}` : undefined;
+  const after = params.after ? `after=${twoYearsAgo}` : undefined;
 
   return [
     designTypeParam,
@@ -57,9 +65,18 @@ export function buildDesignQueryParams(params: DesignQueryParams) {
     sortByParam,
     excludePrioritizedParam,
     similarTo,
+    before,
+    after,
   ]
     .filter((item) => item !== undefined)
     .join("&");
+}
+
+//gets the timestamp of the date X years before the current date.
+export function getTimeStampYearsAgo(yearsAgo: number) {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - yearsAgo);
+  return date.getTime();
 }
 
 export function clamp(value: number, min: number, max: number) {
@@ -168,6 +185,7 @@ export function createNavigationUrl(
       pageNumber: 1,
     };
     const paramsToUse = params === "home" ? defaultParams : params;
+    console.log("4", buildDesignQueryParams(paramsToUse));
     newSearchParams = new URLSearchParams(
       `${newSearchParams.toString()}&${buildDesignQueryParams(paramsToUse)}`
     );

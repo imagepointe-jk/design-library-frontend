@@ -1,5 +1,5 @@
 import { DesignQueryParams } from "../types";
-import { createNavigationUrl } from "../utility";
+import { createNavigationUrl, getTimeStampYearsAgo } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { submitSearch } from "./SearchArea";
@@ -27,7 +27,14 @@ export function DesignLibraryControls() {
     if (filterName === "All Designs") {
       newParams.category = undefined;
       newParams.subcategory = undefined;
+      newParams.after = undefined;
+      newParams.before = undefined;
       newParams.featuredOnly = !isChecked;
+    } else if (filterName === "New Designs") {
+      newParams.category = undefined;
+      newParams.subcategory = undefined;
+      newParams.featuredOnly = !isChecked;
+      newParams.after = getTimeStampYearsAgo(2);
     } else {
       newParams.category = isChecked ? "Quick Search" : undefined;
       newParams.subcategory = isChecked ? filterName : undefined;
@@ -46,7 +53,11 @@ export function DesignLibraryControls() {
     designQueryParams &&
     !designQueryParams.featuredOnly &&
     !designQueryParams.category &&
-    !designQueryParams.subcategory;
+    !designQueryParams.subcategory &&
+    !designQueryParams.before &&
+    !designQueryParams.after;
+  //assume for now that the "after" param will only be set to a value corresponding to "new" designs
+  const newDesignsButtonChecked = designQueryParams.after !== undefined;
 
   return (
     <>
@@ -69,6 +80,7 @@ export function DesignLibraryControls() {
                 id={`${buttonIdPrefix}${button}`}
                 checked={
                   (button === "All Designs" && allDesignsButtonChecked) ||
+                  (button === "New Designs" && newDesignsButtonChecked) ||
                   button === selectedSubcategory
                 }
                 onChange={(e) => clickQuickFilterButton(e, button)}

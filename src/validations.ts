@@ -52,7 +52,7 @@ export function tryParseDesignType(str: string) {
 export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
   const designTypeFromParams = params.get("designType");
   const categoryFromParams = params.get("category");
-  const subcategoryFromParams = params.get("subcategories");
+  const subcategoryFromParams = params.get("subcategory");
   const tagsFromParams = params.get("tags");
   const keywordsFromParams = params.get("keywords");
   const perPageFromParams = params.get("perPage");
@@ -61,6 +61,8 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
   const allowDuplicateDesignNumbers = params.get("allowDuplicateDesignNumbers");
   const shouldExcludePrioritized = params.get("excludePrioritized");
   const similarTo = params.get("similarTo");
+  const before = params.get("before");
+  const after = params.get("after");
 
   const parsedDesignType =
     tryParseDesignType(makeStringTitleCase(`${designTypeFromParams}`)) ||
@@ -88,6 +90,8 @@ export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
     allowDuplicateDesignNumbers: allowDuplicateDesignNumbers === "true",
     shouldExcludePrioritized: shouldExcludePrioritized === "true",
     similarTo: similarTo && !isNaN(+similarTo) ? +similarTo : undefined,
+    after: after && !isNaN(+after) ? +after : undefined,
+    before: before && !isNaN(+before) ? +before : undefined,
   };
 
   return parsedSearchParams;

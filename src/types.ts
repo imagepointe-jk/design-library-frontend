@@ -61,6 +61,8 @@ export type DesignQueryParams = {
   sortBy?: string;
   shouldExcludePrioritized?: boolean;
   similarTo?: number;
+  before?: number;
+  after?: number;
 };
 
 export type CategoryData = z.infer<typeof categoryDataSchema>;

@@ -13,7 +13,7 @@ import { DesignScrollView } from "./DesignScrollView";
 import { BackgroundColorChanger } from "./DesignView";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonArea.module.css";
-import { Design } from "../dbSchema";
+import { Color, Design } from "../dbSchema";
 
 export function ComparisonArea() {
   const { compareModeData } = useApp();
@@ -63,7 +63,7 @@ function ComparisonDesignContainer({
     "loading" as "loading" | "error" | "success"
   );
   const [viewedIndex, setViewedIndex] = useState(0);
-  const [selectedBgColor, setSelectedBgColor] = useState(null as string | null);
+  const [selectedBgColor, setSelectedBgColor] = useState(null as Color | null);
   const {
     cartData,
     addDesignsToCart,
@@ -91,8 +91,7 @@ function ComparisonDesignContainer({
     (item) => item.id === viewedDesign.id
   );
   const defaultBgColor = getDesignDefaultBackgroundColor(viewedDesign);
-  let bgColorToUse =
-    /*getFirstHexCodeInString(selectedBgColor || "");*/ selectedBgColor;
+  let bgColorToUse = /*getFirstHexCodeInString(selectedBgColor || "");*/ `#${selectedBgColor?.hexCode}`;
   if (!bgColorToUse)
     bgColorToUse = /*getFirstHexCodeInString(defaultBgColor);*/ defaultBgColor;
   if (!bgColorToUse) bgColorToUse = "#000000";
@@ -117,7 +116,9 @@ function ComparisonDesignContainer({
       {
         id: viewedDesign.id,
         designNumber: `${viewedDesign.designNumber}`,
-        garmentColor: selectedBgColor ? selectedBgColor : defaultBgColor,
+        garmentColor: selectedBgColor
+          ? `#${selectedBgColor?.hexCode}`
+          : defaultBgColor,
       },
     ]);
   }

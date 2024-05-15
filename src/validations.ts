@@ -14,7 +14,7 @@ import {
   // tempDesignResultsSchema,
 } from "./types";
 import { makeStringTitleCase } from "./utility";
-import { designCategorySchema, designSchema } from "./dbSchema";
+import { colorSchema, designCategorySchema, designSchema } from "./dbSchema";
 import { pageSizeChoices } from "./constants";
 
 export function validateDesignResultsJson(json: any) {
@@ -38,7 +38,7 @@ export function validateCategories(json: any) {
 // }
 
 export function validateColors(json: any) {
-  return z.array(z.string()).parse(json);
+  return z.array(colorSchema).parse(json);
 }
 
 export function tryParseDesignType(str: string) {

@@ -16,7 +16,7 @@ import { DesignModalDisplay } from "./Modal";
 import { LightboxData } from "./Lightbox";
 import { validateCartData, validateCompareModeData } from "../validations";
 import { maxComparisonDesigns } from "../constants";
-import { DesignCategory } from "../dbSchema";
+import { Color, DesignCategory } from "../dbSchema";
 
 type ModalDisplay =
   | "search"
@@ -26,7 +26,7 @@ type ModalDisplay =
   | null;
 
 type AppContextType = {
-  colors: string[] | null;
+  colors: Color[] | null;
   categories: DesignCategory[] | null;
   categoriesLoading: boolean;
   modalDisplay: ModalDisplay;
@@ -102,7 +102,7 @@ function getInitialCartData() {
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState(null as DesignCategory[] | null);
-  const [colors, setColors] = useState(null as string[] | null);
+  const [colors, setColors] = useState(null as Color[] | null);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [modalDisplay, setModalDisplay] = useState(null as ModalDisplay);
   const [lightboxData, setLightboxData] = useState(null as LightboxData | null);
@@ -228,7 +228,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    // fetchColors();
+    fetchColors();
     fetchCategories();
     window.addEventListener("resize", handleResize);
     return () => {

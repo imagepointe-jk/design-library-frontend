@@ -15,7 +15,7 @@ import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
 // import { TempDesign } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
-import { Design } from "../dbSchema";
+import { Color, Design } from "../dbSchema";
 
 type DesignViewProps = {
   designId: number;
@@ -24,7 +24,7 @@ type DesignViewProps = {
 export function DesignView({ designId }: DesignViewProps) {
   const [relatedDesigns, setRelatedDesigns] = useState<Design[] | null>(null);
   const [viewedIndex, setViewedIndex] = useState(0);
-  const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
+  const [selectedBgColor, setSelectedBgColor] = useState(null as Color | null); //the color the user has selected to override design's default color
   const { setLightboxData, cartData, addDesignsToCart } = useApp();
 
   async function getDesignsToDisplay() {
@@ -48,7 +48,7 @@ export function DesignView({ designId }: DesignViewProps) {
     setSelectedBgColor(null);
   }
 
-  function onClickColor(clickedColor: string) {
+  function onClickColor(clickedColor: Color) {
     setSelectedBgColor(clickedColor);
   }
 
@@ -61,11 +61,16 @@ export function DesignView({ designId }: DesignViewProps) {
       //if not, check if the viewed design has transparency (and therefore had color picking options).
       //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
       //if it did, assume the user was fine with the default background color, and assign that.
-      const colorToAddToCart =
-        selectedBgColor ||
-        (viewedDesignHasTransparency
-          ? viewedDesign.defaultBackgroundColor.hexCode
-          : "Color picking unavailable for this design.");
+      // const colorToAddToCart =
+      //   selectedBgColor ||
+      //   (viewedDesignHasTransparency
+      //     ? viewedDesign.defaultBackgroundColor.hexCode
+      //     : "Color picking unavailable for this design.");
+      const colorToAddToCart = selectedBgColor
+        ? `#${selectedBgColor.hexCode}`
+        : viewedDesignHasTransparency
+        ? `#${viewedDesign.defaultBackgroundColor.hexCode}`
+        : "Color picking unavailable for this design.";
       addDesignsToCart([
         {
           id: viewedDesign.id,
@@ -85,13 +90,13 @@ export function DesignView({ designId }: DesignViewProps) {
   const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
   const viewedDesignBgColor =
     (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
-  const selectedHexCode = selectedBgColor;
+  const selectedHexCode = `#${selectedBgColor}`;
   // selectedBgColor && getFirstHexCodeInString(selectedBgColor);
   const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
-  const fullColorStringToUse =
-    selectedBgColor ||
-    viewedDesign?.defaultBackgroundColor ||
-    "(no color selected)";
+  // const fullColorStringToUse =
+  //   selectedBgColor ||
+  //   viewedDesign?.defaultBackgroundColor ||
+  //   "(no color selected)";
   // const filters = viewedDesign
   //   ? getDesignCategoryHierarchies(viewedDesign).filter(
   //       (sub) => sub !== undefined
@@ -256,8 +261,8 @@ export function DesignView({ designId }: DesignViewProps) {
 }
 
 type BackgroundColorChangerProps = {
-  selectedColor: string | null;
-  onClickColor: (clickedColor: string) => void;
+  selectedColor: Color | null;
+  onClickColor: (clickedColor: Color) => void;
 };
 
 export function BackgroundColorChanger({
@@ -266,7 +271,8 @@ export function BackgroundColorChanger({
 }: BackgroundColorChangerProps) {
   const { colors } = useApp();
 
-  const selectedColorName = selectedColor?.split(" - ")[1];
+  // const selectedColorName = selectedColor?.split(" - ")[1];
+  const selectedColorName = selectedColor?.name;
 
   return (
     <div className={styles["bg-color-container"]}>
@@ -277,11 +283,13 @@ export function BackgroundColorChanger({
           colors.map((color) => (
             <div
               className={`${styles["color-picker-swatch"]} ${
-                color === selectedColor ? styles["selected-swatch"] : ""
+                color.name === selectedColor?.name
+                  ? styles["selected-swatch"]
+                  : ""
               }`}
               style={{
                 // backgroundColor: getFirstHexCodeInString(color) || "white",
-                backgroundColor: color,
+                backgroundColor: `#${color.hexCode}`,
               }}
               onClick={() => onClickColor(color)}
             ></div>

@@ -234,9 +234,8 @@ export function DesignView({ designId }: DesignViewProps) {
                     <p>
                       {filters.length > 0 &&
                         filters.map((sub, i, array) => {
-                          const onlySubcategory = sub && sub.split(" > ")[1];
                           const comma = i < array.length - 1;
-                          return `${onlySubcategory}${comma ? ", " : ""}`;
+                          return `${sub}${comma ? ", " : ""}`;
                         })}
                       {filters.length === 0 && "No filters"}
                     </p>

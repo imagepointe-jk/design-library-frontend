@@ -1,6 +1,11 @@
+import {
+  getDefaultQueryParams,
+  getModifiedQueryParams,
+  updateWindowSearchParams,
+} from "../query";
 import { designTypes } from "../sharedTypes";
-import { DesignQueryParams } from "../types";
-import { createNavigationUrl } from "../utility";
+// import { DesignQueryParams } from "../types";
+// import { createNavigationUrl } from "../utility";
 import { tryParseDesignType } from "../validations";
 import styles from "./styles/SearchArea.module.css";
 
@@ -55,14 +60,34 @@ export function submitSearch(e: React.FormEvent<HTMLFormElement>) {
   const form = e.target as HTMLFormElement;
   const formData = new FormData(form);
   const keywords = formData.get("search");
-  const designType = tryParseDesignType(`${formData.get("design-type")}`);
-  const newParams: DesignQueryParams = {
-    designType: designType ? designType : "Screen Print",
-    pageNumber: 1,
-    keywords: keywords?.toString().split(" "),
-    featuredOnly: false,
-    allowDuplicateDesignNumbers: true,
-  };
+  if (keywords) return;
 
-  window.location.href = createNavigationUrl(newParams);
+  const designType = tryParseDesignType(`${formData.get("design-type")}`);
+  // const newParams: DesignQueryParams = {
+  //   designType: designType ? designType : "Screen Print",
+  //   pageNumber: 1,
+  //   keywords: keywords?.toString().split(" "),
+  //   featuredOnly: false,
+  //   allowDuplicateDesignNumbers: true,
+  // };
+
+  // window.location.href = createNavigationUrl(newParams);
+  const defaultQueryParams = getDefaultQueryParams().stringified;
+  const withDesignType = getModifiedQueryParams(
+    defaultQueryParams,
+    "designType",
+    encodeURIComponent(designType || "Screen Print")
+  ).stringified;
+  const withKeyword = getModifiedQueryParams(
+    withDesignType,
+    "keyword",
+    `${keywords}`
+  ).stringified;
+  const withAllowDuplicates = getModifiedQueryParams(
+    withKeyword,
+    "allowDuplicateDesignNumbers",
+    "true"
+  ).stringified;
+
+  updateWindowSearchParams(withAllowDuplicates);
 }

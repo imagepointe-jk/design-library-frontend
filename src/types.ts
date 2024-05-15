@@ -48,23 +48,6 @@ export const cartDataSchema = z.object({
   designs: z.array(cartDesignSchema),
 });
 
-export type DesignQueryParams = {
-  designType: DesignType;
-  category?: string;
-  subcategory?: string;
-  tags?: string[];
-  keywords?: string[];
-  perPage?: number;
-  pageNumber: number;
-  featuredOnly: boolean;
-  allowDuplicateDesignNumbers?: boolean;
-  sortBy?: string;
-  shouldExcludePrioritized?: boolean;
-  similarTo?: number;
-  before?: number;
-  after?: number;
-};
-
 export type CategoryData = z.infer<typeof categoryDataSchema>;
 export type SubcategoryData = z.infer<typeof subcategoryDataSchema>;
 export type CategoryHierarchy = z.infer<typeof categoryHierarchySchema>;

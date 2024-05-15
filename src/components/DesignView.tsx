@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getDesignsRelatedToId } from "../fetch";
 import {
   clamp,
-  createNavigationUrl,
+  // createNavigationUrl,
   // getDesignCategoryHierarchies,
   getDesignDefaultBackgroundColor,
   getDesignTags,
@@ -14,8 +14,13 @@ import { DesignScrollView } from "./DesignScrollView";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
 // import { TempDesign } from "../sharedTypes";
-import { DesignQueryParams } from "../types";
+// import { DesignQueryParams } from "../types";
 import { Color, Design } from "../dbSchema";
+import {
+  createNavigationUrl,
+  getDefaultQueryParams,
+  getModifiedQueryParams,
+} from "../query";
 
 type DesignViewProps = {
   designId: number;
@@ -124,21 +129,28 @@ export function DesignView({ designId }: DesignViewProps) {
   //!
   //!
   //!
-  const TEMP_FORCED_DESIGN_TYPE =
-    relatedDesigns && relatedDesigns[0].designType.name === "Embroidery"
-      ? "Embroidery"
-      : "Screen Print";
-  const similarDesignsParams: DesignQueryParams | undefined = relatedDesigns
-    ? {
-        designType: TEMP_FORCED_DESIGN_TYPE,
-        featuredOnly: false,
-        pageNumber: 1,
-        similarTo: designId,
-      }
-    : undefined;
-  const similarDesignsUrl = similarDesignsParams
-    ? createNavigationUrl(similarDesignsParams)
-    : undefined;
+  // const TEMP_FORCED_DESIGN_TYPE =
+  //   relatedDesigns && relatedDesigns[0].designType.name === "Embroidery"
+  //     ? "Embroidery"
+  //     : "Screen Print";
+  // const similarDesignsParams: DesignQueryParams | undefined = relatedDesigns
+  //   ? {
+  //       designType: TEMP_FORCED_DESIGN_TYPE,
+  //       featuredOnly: false,
+  //       pageNumber: 1,
+  //       similarTo: designId,
+  //     }
+  //   : undefined;
+  const defaultQueryParams = getDefaultQueryParams().stringified;
+  // const similarDesignsUrl = similarDesignsParams
+  //   ? createNavigationUrl(similarDesignsParams)
+  //   : undefined;
+  const similarDesignsParams = getModifiedQueryParams(
+    defaultQueryParams,
+    "similarTo",
+    `${designId}`
+  );
+  const similarDesignsUrl = `${window.location.origin}/${window.location.pathname}?${similarDesignsParams}`;
   const isDesignInCart = cartData?.designs.find(
     (design) => viewedDesign?.id === design.id
   );

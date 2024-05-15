@@ -8,10 +8,11 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonBar.module.css";
 import { DesignModalDisplay } from "./Modal";
 import {
-  createNavigationUrl,
+  // createNavigationUrl,
   getDesignDefaultBackgroundColor,
 } from "../utility";
 import { Design } from "../dbSchema";
+import { createNavigationUrl } from "../query";
 
 export function ComparisonBar() {
   const {

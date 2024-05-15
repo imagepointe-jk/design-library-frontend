@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { pageSizeChoices } from "../constants";
 import { getDesigns } from "../fetch";
 import {
-  DesignQueryParams,
+  /*DesignQueryParams,*/
   DesignResults /*TempDesignResults*/,
 } from "../types";
 import {
-  buildDesignQueryParams,
-  createNavigationUrl,
+  /*buildDesignQueryParams,*/
+  // createNavigationUrl,
   splitDesignCategoryHierarchy,
 } from "../utility";
-import { parseSearchParams } from "../validations";
+// import { parseSearchParams } from "../validations";
 import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
 import { LoadingIndicator } from "./LoadingIndicator";
@@ -21,12 +21,18 @@ import styles from "./styles/DesignLibrary.module.css";
 import { ToggleSwitch } from "./ToggleSwitch";
 import { DesignType } from "../sharedTypes";
 import { useApp } from "./AppProvider";
+import {
+  createNavigationUrl,
+  getModifiedQueryParams,
+  parseDesignQueryParams,
+  updateWindowSearchParams,
+} from "../query";
 
 export function DesignLibrary() {
   const [designResults, setDesignResults] = useState<DesignResults | null>(
     null
   );
-  const designQueryParams = parseSearchParams(
+  const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
   const [isFetchingResults, setIsFetchingResults] = useState(true);
@@ -44,26 +50,27 @@ export function DesignLibrary() {
       featuredOnly,
       similarTo,
     } = designQueryParams;
-    const shouldExcludePrioritized =
-      designType === "Screen Print" &&
-      !allowDuplicateDesignNumbers &&
-      !category &&
-      !subcategory &&
-      pageNumber === 1 &&
-      !tags &&
-      !keywords &&
-      !featuredOnly &&
-      !similarTo;
-    const designQueryParamsToUse: DesignQueryParams = {
-      ...designQueryParams,
-      shouldExcludePrioritized,
-      sortBy: "priority",
-    };
+    // const shouldExcludePrioritized =
+    //   designType === "Screen Print" &&
+    //   !allowDuplicateDesignNumbers &&
+    //   !category &&
+    //   !subcategory &&
+    //   pageNumber === 1 &&
+    //   !tags &&
+    //   !keywords &&
+    //   !featuredOnly &&
+    //   !similarTo;
+    // const designQueryParamsToUse: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   shouldExcludePrioritized,
+    //   sortBy: "priority",
+    // };
     try {
       setIsFetchingResults(true);
-      const fetchedDesigns = await getDesigns(
-        buildDesignQueryParams(designQueryParamsToUse)
-      );
+      const fetchedDesigns = await getDesigns(window.location.search);
+      // const fetchedDesigns = await getDesigns(
+      //   buildDesignQueryParams(designQueryParamsToUse)
+      // );
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
     } catch (error) {
@@ -73,76 +80,110 @@ export function DesignLibrary() {
   }
 
   function clearSearch() {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      keywords: undefined,
-      allowDuplicateDesignNumbers: false,
-    };
-    window.location.href = createNavigationUrl(newParams);
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   keywords: undefined,
+    //   allowDuplicateDesignNumbers: false,
+    // };
+    // window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "keywords",
+      null
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function clearSimilar() {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      similarTo: undefined,
-      allowDuplicateDesignNumbers: false,
-    };
-    window.location.href = createNavigationUrl(newParams);
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   similarTo: undefined,
+    //   allowDuplicateDesignNumbers: false,
+    // };
+    // window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "similarTo",
+      null
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function changeDesignType(newType: DesignType) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      designType: newType,
-      category: undefined,
-      subcategory: undefined,
-      featuredOnly: newType === "Screen Print",
-      pageNumber: 1,
-    };
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   designType: newType,
+    //   category: undefined,
+    //   subcategory: undefined,
+    //   featuredOnly: newType === "Screen Print",
+    //   pageNumber: 1,
+    // };
 
-    window.location.href = createNavigationUrl(newParams);
+    // window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "designType",
+      newType
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function handleClickSidebarSubcategory(hierarchy: string) {
-    const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);
-
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      category: hierarchySplit.category,
-      subcategory: hierarchySplit.subcategory,
-      featuredOnly: false,
-      pageNumber: 1,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
+    // const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   category: hierarchySplit.category,
+    //   subcategory: hierarchySplit.subcategory,
+    //   featuredOnly: false,
+    //   pageNumber: 1,
+    // };
+    // window.location.href = createNavigationUrl(newParams);
   }
 
   function clickPageButton(pageNumber: number) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      pageNumber: pageNumber,
-    };
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   pageNumber: pageNumber,
+    // };
 
-    window.location.href = createNavigationUrl(newParams);
+    // window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "pageNumber",
+      `${pageNumber}`
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function jumpToPage(jumpToPage: number) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      pageNumber: +jumpToPage,
-    };
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   pageNumber: +jumpToPage,
+    // };
 
-    window.location.href = createNavigationUrl(newParams);
+    // window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "pageNumber",
+      `${jumpToPage}`
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function changeResultsPerPage(count: number) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      pageNumber: 1,
-      perPage: count,
-    };
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   pageNumber: 1,
+    //   perPage: count,
+    // };
 
-    window.location.href = createNavigationUrl(newParams);
+    // window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "perPage",
+      `${count}`
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   useEffect(() => {
@@ -182,9 +223,7 @@ export function DesignLibrary() {
               <h2>
                 Similar to{" "}
                 <a
-                  href={createNavigationUrl({
-                    designId: designQueryParams.similarTo,
-                  })}
+                  href={createNavigationUrl(designQueryParams.similarTo)}
                   className="normal-link"
                 >
                   #{designQueryParams.similarTo}

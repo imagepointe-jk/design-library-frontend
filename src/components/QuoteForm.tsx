@@ -8,7 +8,8 @@ import {
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/QuoteForm.module.css";
 import { useApp } from "./AppProvider";
-import { createNavigationUrl } from "../utility";
+import { createNavigationUrl } from "../query";
+// import { createNavigationUrl } from "../utility";
 
 type Status = "success" | "failure";
 type QuoteFormProps = {

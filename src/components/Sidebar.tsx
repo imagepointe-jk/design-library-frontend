@@ -1,7 +1,12 @@
+import {
+  getModifiedQueryParams,
+  parseDesignQueryParams,
+  updateWindowSearchParams,
+} from "../query";
 import { DesignType } from "../sharedTypes";
-import { DesignQueryParams } from "../types";
-import { createNavigationUrl } from "../utility";
-import { parseSearchParams } from "../validations";
+// import { DesignQueryParams } from "../types";
+// import { createNavigationUrl } from "../utility";
+// import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { HierarchyItem, HierarchyList } from "./HierarchyList";
 import { submitSearch } from "./SearchArea";
@@ -15,7 +20,7 @@ type SidebarProps = {
 
 export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
   const { categories } = useApp();
-  const designQueryParams = parseSearchParams(
+  const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
   const filterSidebarHierarchy: HierarchyItem[] = categories
@@ -44,27 +49,60 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
     designQueryParams.subcategory !== undefined;
 
   function handleClearFilters() {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      category: undefined,
-      subcategory: undefined,
-      pageNumber: 1,
-    };
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   category: undefined,
+    //   subcategory: undefined,
+    //   pageNumber: 1,
+    // };
 
-    window.location.href = createNavigationUrl(newParams);
+    // window.location.href = createNavigationUrl(newParams);
+    const withoutCategory = getModifiedQueryParams(
+      window.location.search,
+      "category",
+      null
+    ).stringified;
+    const withoutSubcategory = getModifiedQueryParams(
+      withoutCategory,
+      "subcategory",
+      null
+    ).stringified;
+    updateWindowSearchParams(withoutSubcategory);
   }
 
   function changeDesignType(newType: DesignType) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      designType: newType,
-      category: undefined,
-      subcategory: undefined,
-      featuredOnly: newType === "Screen Print",
-      pageNumber: 1,
-    };
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   designType: newType,
+    //   category: undefined,
+    //   subcategory: undefined,
+    //   featuredOnly: newType === "Screen Print",
+    //   pageNumber: 1,
+    // };
 
-    window.location.href = createNavigationUrl(newParams);
+    // window.location.href = createNavigationUrl(newParams);
+    const withoutCategory = getModifiedQueryParams(
+      window.location.search,
+      "category",
+      null
+    ).stringified;
+    const withoutSubcategory = getModifiedQueryParams(
+      withoutCategory,
+      "subcategory",
+      null
+    ).stringified;
+    const withPageNumber = getModifiedQueryParams(
+      withoutSubcategory,
+      "pageNumber",
+      "1"
+    ).stringified;
+    const withNewType = getModifiedQueryParams(
+      withPageNumber,
+      "designType",
+      newType
+    ).stringified;
+
+    updateWindowSearchParams(withNewType);
   }
 
   return (

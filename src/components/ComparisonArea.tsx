@@ -3,7 +3,7 @@ import { getDesignsRelatedToId } from "../fetch";
 // import { TempDesign } from "../sharedTypes";
 import {
   clamp,
-  createNavigationUrl,
+  // createNavigationUrl,
   getDesignDefaultBackgroundColor,
   // getFirstHexCodeInString,
   isDesignTransparent,
@@ -14,6 +14,7 @@ import { BackgroundColorChanger } from "./DesignView";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonArea.module.css";
 import { Color, Design } from "../dbSchema";
+import { createNavigationUrl } from "../query";
 
 export function ComparisonArea() {
   const { compareModeData } = useApp();

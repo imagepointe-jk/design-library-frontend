@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { createNavigationUrl } from "../utility";
+// import { createNavigationUrl } from "../utility";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { DesignModalDisplay } from "./Modal";
@@ -8,6 +8,7 @@ import {
   maxComparisonDesigns,
   maxComparisonDesignsErrorMessageDuration,
 } from "../constants";
+import { createNavigationUrl } from "../query";
 
 type DesignCardProps = {
   designId: number;
@@ -62,7 +63,7 @@ export function DesignCard({
     <div className={styles["design-card-parent"]}>
       <a
         className={styles["design-card"]}
-        href={createNavigationUrl({ designId })}
+        href={createNavigationUrl(designId)}
         onClick={handleClickCard}
       >
         <div className={styles["img-container"]} style={{ backgroundColor }}>

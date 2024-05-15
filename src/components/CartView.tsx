@@ -5,10 +5,11 @@ import styles from "./styles/CartView.module.css";
 import { getDesignById } from "../fetch";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { ImageWithFallback } from "./ImageWithFallback";
-import { CartDesign, DesignQueryParams } from "../types";
-import { createNavigationUrl /*getFirstHexCodeInString*/ } from "../utility";
+import { CartDesign /*DesignQueryParams*/ } from "../types";
+// import { createNavigationUrl /*getFirstHexCodeInString*/ } from "../utility";
 import { QuoteForm } from "./QuoteForm";
 import { Design } from "../dbSchema";
+import { createNavigationUrl } from "../query";
 
 export function CartView() {
   const { cartData, emptyCart } = useApp();

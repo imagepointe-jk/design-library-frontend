@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { getDesigns } from "../fetch";
-import { CategoryData, DesignQueryParams, SubcategoryData } from "../types";
+import { CategoryData, /*DesignQueryParams,*/ SubcategoryData } from "../types";
 import {
-  createNavigationUrl,
-  buildDesignQueryParams,
+  // createNavigationUrl,
+  // buildDesignQueryParams,
   getDesignDefaultBackgroundColor,
 } from "../utility";
-import { parseSearchParams } from "../validations";
+// import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
 import { ImageWithFallback } from "./ImageWithFallback";

@@ -1,13 +1,23 @@
-import { DesignQueryParams } from "../types";
-import { createNavigationUrl, getTimeStampYearsAgo } from "../utility";
-import { parseSearchParams } from "../validations";
+// import { DesignQueryParams } from "../types";
+// import { createNavigationUrl, getTimeStampYearsAgo } from "../utility";
+// import { parseSearchParams } from "../validations";
+import {
+  createNavigationUrl,
+  getDefaultQueryParams,
+  getModifiedQueryParams,
+  parseDesignQueryParams,
+  updateWindowSearchParams,
+} from "../query";
 import { useApp } from "./AppProvider";
 import { submitSearch } from "./SearchArea";
 import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibraryControls() {
   const { setModalDisplay, compareModeData, setCompareModeActive } = useApp();
-  const designQueryParams = parseSearchParams(
+  // const designQueryParams = parseSearchParams(
+  //   new URLSearchParams(window.location.search)
+  // );
+  const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
   const buttonIdPrefix = "library-page-filter-button-";
@@ -19,29 +29,72 @@ export function DesignLibraryControls() {
     filterName: string
   ) {
     const isChecked = e.target.checked;
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      pageNumber: 1,
-    };
+    // const newParams: DesignQueryParams = {
+    //   ...designQueryParams,
+    //   pageNumber: 1,
+    // };
 
+    // if (filterName === "All Designs") {
+    //   newParams.category = undefined;
+    //   newParams.subcategory = undefined;
+    //   newParams.after = undefined;
+    //   newParams.before = undefined;
+    //   newParams.featuredOnly = !isChecked;
+    // } else if (filterName === "New Designs") {
+    //   newParams.category = undefined;
+    //   newParams.subcategory = undefined;
+    //   newParams.featuredOnly = !isChecked;
+    //   newParams.after = getTimeStampYearsAgo(2);
+    // } else {
+    //   newParams.category = isChecked ? "Quick Search" : undefined;
+    //   newParams.subcategory = isChecked ? filterName : undefined;
+    //   newParams.featuredOnly = !isChecked;
+    // }
+
+    // window.location.href = createNavigationUrl(newParams);
+
+    let params = "";
     if (filterName === "All Designs") {
-      newParams.category = undefined;
-      newParams.subcategory = undefined;
-      newParams.after = undefined;
-      newParams.before = undefined;
-      newParams.featuredOnly = !isChecked;
+      if (isChecked) {
+        params = getDefaultQueryParams().stringified;
+      } else {
+        params = getModifiedQueryParams(
+          window.location.search,
+          "featured",
+          "true"
+        ).stringified;
+      }
     } else if (filterName === "New Designs") {
-      newParams.category = undefined;
-      newParams.subcategory = undefined;
-      newParams.featuredOnly = !isChecked;
-      newParams.after = getTimeStampYearsAgo(2);
-    } else {
-      newParams.category = isChecked ? "Quick Search" : undefined;
-      newParams.subcategory = isChecked ? filterName : undefined;
-      newParams.featuredOnly = !isChecked;
+      if (isChecked) {
+        params = getModifiedQueryParams(
+          window.location.search,
+          "age",
+          "new"
+        ).stringified;
+      } else {
+        params = getModifiedQueryParams(
+          window.location.search,
+          "age",
+          null
+        ).stringified;
+      }
+    } else if (filterName === "Best Sellers") {
+      if (isChecked) {
+        params = getModifiedQueryParams(
+          window.location.search,
+          "subcategory",
+          encodeURIComponent("Best Sellers")
+        ).stringified;
+      } else {
+        params = getModifiedQueryParams(
+          window.location.search,
+          "subcategory",
+          null
+        ).stringified;
+      }
     }
 
-    window.location.href = createNavigationUrl(newParams);
+    updateWindowSearchParams(params);
   }
 
   function clickCompareButton() {

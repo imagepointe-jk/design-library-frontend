@@ -1,6 +1,6 @@
 // import { TempDesign } from "./sharedTypes";
 import { Design } from "./dbSchema";
-import { DesignQueryParams } from "./types";
+// import { DesignQueryParams } from "./types";
 
 export function deduplicateStrings(strings: string[]) {
   const set = new Set(strings);
@@ -12,64 +12,6 @@ export function makeStringTitleCase(str: string) {
     .split(" ")
     .map((word) => `${word[0].toUpperCase()}${word.substring(1)}`)
     .join(" ");
-}
-
-export function buildDesignQueryParams(params: DesignQueryParams) {
-  const tagsParam = params.tags ? `tags=${params.tags.join(",")}` : undefined;
-  // const isAgeSubcategory =
-  //   params.subcategory &&
-  //   ["new designs", "classics"].includes(
-  //     params.subcategory.toLocaleLowerCase()
-  //   );
-  const subcategoryParam = params.subcategory
-    ? `subcategory=${encodeURIComponent(params.subcategory)}` //this will be a comma separated list if we decide to allow multiple subcategories
-    : undefined;
-  const categoryParam = params.category
-    ? `category=${encodeURIComponent(params.category)}`
-    : undefined;
-  const keywordsParam = params.keywords
-    ? `keywords=${params.keywords.join(",")}`
-    : undefined;
-  const designTypeParam = `designType=${params.designType.toLocaleLowerCase()}`;
-  const perPageParam = params.perPage ? `perPage=${params.perPage}` : undefined;
-  const pageNumberParam = params.pageNumber
-    ? `pageNumber=${params.pageNumber}`
-    : undefined;
-  const featuredParam = params.featuredOnly ? "featured=true" : undefined;
-  const allowDuplicatesParam = params.allowDuplicateDesignNumbers
-    ? "allowDuplicateDesignNumbers=true"
-    : undefined;
-  const sortByParam = params.sortBy
-    ? `sortBy=${encodeURIComponent(params.sortBy)}`
-    : undefined;
-  const excludePrioritizedParam = params.shouldExcludePrioritized
-    ? "excludePrioritized=true"
-    : undefined;
-  const similarTo = params.similarTo
-    ? `similarTo=${params.similarTo}`
-    : undefined;
-  const twoYearsAgo = `${getTimeStampYearsAgo(2)}`;
-  const before = params.before ? `before=${twoYearsAgo}` : undefined;
-  const after = params.after ? `after=${twoYearsAgo}` : undefined;
-
-  return [
-    designTypeParam,
-    subcategoryParam,
-    categoryParam,
-    perPageParam,
-    pageNumberParam,
-    tagsParam,
-    keywordsParam,
-    featuredParam,
-    allowDuplicatesParam,
-    sortByParam,
-    excludePrioritizedParam,
-    similarTo,
-    before,
-    after,
-  ]
-    .filter((item) => item !== undefined)
-    .join("&");
 }
 
 //gets the timestamp of the date X years before the current date.
@@ -153,48 +95,13 @@ export function splitDesignCategoryHierarchy(hierarchy: string) {
   };
 }
 
-type DesignId = {
-  designId: number;
-};
+// type DesignId = {
+//   designId: number;
+// };
 
-function isDesignId(param: any): param is DesignId {
-  return param && typeof param.designId === "number";
-}
-
-export function createNavigationUrl(
-  params: DesignId | DesignQueryParams | "cart" | "compare" | "home"
-) {
-  //preserve previous search params; this allows the app to work on WordPress draft pages
-  const existingSearchParams = new URLSearchParams(window.location.search);
-  let newSearchParams = new URLSearchParams();
-  const pageId = existingSearchParams.get("page_id");
-  const preview = existingSearchParams.get("preview");
-  if (pageId) newSearchParams.set("page_id", pageId);
-  if (preview) newSearchParams.set("preview", preview);
-
-  if (isDesignId(params)) {
-    newSearchParams.set("viewDesign", `${params.designId}`);
-  } else if (params === "cart") {
-    newSearchParams.set("viewCart", "true");
-  } else if (params === "compare") {
-    newSearchParams.set("viewCompare", "true");
-  } else {
-    const defaultParams: DesignQueryParams = {
-      designType: "Screen Print",
-      featuredOnly: false,
-      pageNumber: 1,
-    };
-    const paramsToUse = params === "home" ? defaultParams : params;
-    console.log("4", buildDesignQueryParams(paramsToUse));
-    newSearchParams = new URLSearchParams(
-      `${newSearchParams.toString()}&${buildDesignQueryParams(paramsToUse)}`
-    );
-  }
-
-  return `${window.location.origin}${
-    window.location.pathname
-  }?${newSearchParams.toString()}`;
-}
+// function isDesignId(param: any): param is DesignId {
+//   return param && typeof param.designId === "number";
+// }
 
 export function isDesignTransparent(design: Design) {
   //assume for now that all PNGs are transparent

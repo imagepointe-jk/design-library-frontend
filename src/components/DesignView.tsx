@@ -90,7 +90,9 @@ export function DesignView({ designId }: DesignViewProps) {
   const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
   const viewedDesignBgColor =
     (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
-  const selectedHexCode = `#${selectedBgColor}`;
+  const selectedHexCode = selectedBgColor
+    ? `#${selectedBgColor.hexCode}`
+    : null;
   // selectedBgColor && getFirstHexCodeInString(selectedBgColor);
   const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
   // const fullColorStringToUse =

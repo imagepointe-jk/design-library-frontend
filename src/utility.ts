@@ -117,7 +117,7 @@ export function getDesignTags(design: Design) {
 // }
 
 export function getDesignDefaultBackgroundColor(design: Design) {
-  return `#${design.defaultBackgroundColor}`;
+  return `#${design.defaultBackgroundColor.hexCode}`;
   // const hexCode = getFirstHexCodeInString(design.DefaultBackgroundColor);
   // if (!hexCode) {
   //   console.error(

@@ -91,7 +91,9 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
           name="Library"
           stacked={true}
           checked={
-            designQueryParams.designType === "Screen Print" ? "one" : "two"
+            designQueryParams.designType.toLocaleLowerCase() === "screen print"
+              ? "one"
+              : "two"
           }
           onClick={(clicked) =>
             changeDesignType(clicked === "one" ? "Screen Print" : "Embroidery")

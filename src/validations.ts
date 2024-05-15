@@ -50,7 +50,7 @@ export function tryParseDesignType(str: string) {
 }
 
 export function parseSearchParams(params: URLSearchParams): DesignQueryParams {
-  const designTypeFromParams = params.get("designtype");
+  const designTypeFromParams = params.get("designType");
   const categoryFromParams = params.get("category");
   const subcategoryFromParams = params.get("subcategories");
   const tagsFromParams = params.get("tags");

@@ -7,14 +7,14 @@ import {
 import {
   DesignQueryParams,
   cartDataSchema,
-  categoryDataSchema,
+  // categoryDataSchema,
   compareModeDataSchema,
   designResultsSchema,
   subcategoryDataSchema,
   // tempDesignResultsSchema,
 } from "./types";
 import { makeStringTitleCase } from "./utility";
-import { designSchema } from "./dbSchema";
+import { designCategorySchema, designSchema } from "./dbSchema";
 import { pageSizeChoices } from "./constants";
 
 export function validateDesignResultsJson(json: any) {
@@ -30,12 +30,12 @@ export function validateDesignArrayJson(json: any) {
 }
 
 export function validateCategories(json: any) {
-  return z.array(categoryDataSchema).parse(json);
+  return z.array(designCategorySchema).parse(json);
 }
 
-export function validateSubcategories(json: any) {
-  return z.array(subcategoryDataSchema).parse(json);
-}
+// export function validateSubcategories(json: any) {
+//   return z.array(subcategoryDataSchema).parse(json);
+// }
 
 export function validateColors(json: any) {
   return z.array(z.string()).parse(json);

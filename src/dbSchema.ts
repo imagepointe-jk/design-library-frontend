@@ -6,12 +6,19 @@ export const designSubcategorySchema = z.object({
   name: z.string(),
 });
 
-export const designTagSchema = z.object({
+export const designTypeSchema = z.object({
   id: z.number(),
   name: z.string(),
 });
 
-export const designTypeSchema = z.object({
+export const designCategorySchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  designSubcategories: z.array(designSubcategorySchema),
+  designType: designTypeSchema,
+});
+
+export const designTagSchema = z.object({
   id: z.number(),
   name: z.string(),
 });
@@ -38,3 +45,4 @@ export const designSchema = z.object({
 });
 
 export type Design = z.infer<typeof designSchema>;
+export type DesignCategory = z.infer<typeof designCategorySchema>;

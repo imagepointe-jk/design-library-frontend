@@ -5,17 +5,18 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getCategories, getColors, getSubcategories } from "../fetch";
+import { getCategories, getColors /*getSubcategories*/ } from "../fetch";
 import {
   CartData,
   CartDesign,
-  CategoryHierarchy,
+  // CategoryHierarchy,
   CompareModeData,
 } from "../types";
 import { DesignModalDisplay } from "./Modal";
 import { LightboxData } from "./Lightbox";
 import { validateCartData, validateCompareModeData } from "../validations";
 import { maxComparisonDesigns } from "../constants";
+import { DesignCategory } from "../dbSchema";
 
 type ModalDisplay =
   | "search"
@@ -26,7 +27,7 @@ type ModalDisplay =
 
 type AppContextType = {
   colors: string[] | null;
-  categories: CategoryHierarchy[] | null;
+  categories: DesignCategory[] | null;
   categoriesLoading: boolean;
   modalDisplay: ModalDisplay;
   setModalDisplay: (newDisplay: ModalDisplay) => void;
@@ -100,9 +101,7 @@ function getInitialCartData() {
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [categories, setCategories] = useState(
-    null as CategoryHierarchy[] | null
-  );
+  const [categories, setCategories] = useState(null as DesignCategory[] | null);
   const [colors, setColors] = useState(null as string[] | null);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [modalDisplay, setModalDisplay] = useState(null as ModalDisplay);
@@ -202,20 +201,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
   async function fetchCategories() {
     try {
       const categories = await getCategories();
-      const subcategories = await getSubcategories();
-      const categoriesWithHierarchy: CategoryHierarchy[] = categories.map(
-        (category) => {
-          const categoryHierarchy: CategoryHierarchy = {
-            DesignType: category.DesignType,
-            Name: category.Name,
-            Subcategories: subcategories.filter(
-              (subcategory) => subcategory.ParentCategory === category.Name
-            ),
-          };
-          return categoryHierarchy;
-        }
-      );
-      setCategories(categoriesWithHierarchy);
+      // const subcategories = await getSubcategories();
+      // const categoriesWithHierarchy: CategoryHierarchy[] = categories.map(
+      //   (category) => {
+      //     const categoryHierarchy: CategoryHierarchy = {
+      //       DesignType: category.DesignType,
+      //       Name: category.Name,
+      //       Subcategories: subcategories.filter(
+      //         (subcategory) => subcategory.ParentCategory === category.Name
+      //       ),
+      //     };
+      //     return categoryHierarchy;
+      //   }
+      // );
+      // setCategories(categoriesWithHierarchy);
+      setCategories(categories);
       setCategoriesLoading(false);
     } catch (error) {
       console.error(error);
@@ -229,7 +229,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // fetchColors();
-    // fetchCategories();
+    fetchCategories();
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);

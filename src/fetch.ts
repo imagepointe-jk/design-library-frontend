@@ -6,7 +6,7 @@ import {
   validateDesignArrayJson,
   validateDesignResultsJson,
   validateSingleDesignJson,
-  validateSubcategories,
+  // validateSubcategories,
 } from "./validations";
 
 const serverURL = () =>
@@ -59,29 +59,32 @@ export async function getDesignsRelatedToId(designId: number) {
   return validateDesignArrayJson(json);
 }
 
-export async function getSubcategories() {
-  var requestOptions = {
-    method: "GET",
-  };
+// export async function getSubcategories() {
+//   var requestOptions = {
+//     method: "GET",
+//   };
 
-  const response = await fetch(`${serverURL()}/subcategories`, requestOptions);
-  const json = await response.json();
-  if (!response.ok) {
-    console.error(
-      `Error ${response.status} while retrieving subcategories. Message: ${json.message}`
-    );
-    throw new Error();
-  }
+//   const response = await fetch(`${serverURL()}/subcategories`, requestOptions);
+//   const json = await response.json();
+//   if (!response.ok) {
+//     console.error(
+//       `Error ${response.status} while retrieving subcategories. Message: ${json.message}`
+//     );
+//     throw new Error();
+//   }
 
-  return validateSubcategories(json);
-}
+//   return validateSubcategories(json);
+// }
 
 export async function getCategories() {
   var requestOptions = {
     method: "GET",
   };
 
-  const response = await fetch(`${serverURL()}/categories`, requestOptions);
+  const response = await fetch(
+    `${serverURL()}/designs/categories`,
+    requestOptions
+  );
   const json = await response.json();
   if (!response.ok) {
     console.error(
@@ -93,24 +96,24 @@ export async function getCategories() {
   return validateCategories(json);
 }
 
-export async function getCategoriesWithHierarchy() {
-  const categories = await getCategories();
-  const subcategories = await getSubcategories();
-  const categoriesWithHierarchy: CategoryHierarchy[] = categories.map(
-    (category) => {
-      const categoryHierarchy: CategoryHierarchy = {
-        DesignType: category.DesignType,
-        Name: category.Name,
-        Subcategories: subcategories.filter(
-          (subcategory) => subcategory.ParentCategory === category.Name
-        ),
-      };
-      return categoryHierarchy;
-    }
-  );
+// export async function getCategoriesWithHierarchy() {
+//   const categories = await getCategories();
+//   const subcategories = await getSubcategories();
+//   const categoriesWithHierarchy: CategoryHierarchy[] = categories.map(
+//     (category) => {
+//       const categoryHierarchy: CategoryHierarchy = {
+//         DesignType: category.DesignType,
+//         Name: category.Name,
+//         Subcategories: subcategories.filter(
+//           (subcategory) => subcategory.ParentCategory === category.Name
+//         ),
+//       };
+//       return categoryHierarchy;
+//     }
+//   );
 
-  return categoriesWithHierarchy;
-}
+//   return categoriesWithHierarchy;
+// }
 
 export async function getColors() {
   const response = await fetch(`${serverURL()}/colors`);

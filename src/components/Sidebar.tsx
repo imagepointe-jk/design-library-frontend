@@ -21,19 +21,20 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
   const filterSidebarHierarchy: HierarchyItem[] = categories
     ? categories
         .filter(
-          (category) => category.DesignType === designQueryParams.designType
+          (category) =>
+            category.designType.name.toLocaleLowerCase() ===
+            designQueryParams.designType.toLocaleLowerCase()
         )
         .map((category) => ({
           parentName:
-            category.Name === "Event/Awareness"
+            category.name === "Event/Awareness"
               ? "Event / Awareness"
-              : category.Name,
-          selected: designQueryParams.category === category.Name,
-          children: category.Subcategories.map((subcategory) => ({
-            childName: subcategory.Name,
-            selected: subcategory.Name === designQueryParams.subcategory,
-            onClickChild: () =>
-              onClickSidebarSubcategory(subcategory.Hierarchy),
+              : category.name,
+          selected: designQueryParams.category === category.name,
+          children: category.designSubcategories.map((subcategory) => ({
+            childName: subcategory.name,
+            selected: subcategory.name === designQueryParams.subcategory,
+            onClickChild: () => onClickSidebarSubcategory(subcategory.name),
           })),
         }))
     : [];

@@ -56,6 +56,8 @@ export function getDefaultQueryParams() {
 //   }
 // }
 
+//TODO: Refactor this so that we can pass multiple modifications in one function call
+//calling the function multiple times to make multiple modifications is inefficient
 export function getModifiedQueryParams(
   curSearchParams: string,
   key: string,
@@ -68,10 +70,9 @@ export function getModifiedQueryParams(
 
   if (key === "age") {
     const twoYearsAgo = getTimeStampYearsAgo(2);
-    if (valueToSet === null) {
-      params.delete("before");
-      params.delete("after");
-    } else if (valueToSet === "new") {
+    params.delete("before");
+    params.delete("after");
+    if (valueToSet === "new") {
       params.set("after", `${twoYearsAgo}`);
     } else if (valueToSet === "old") {
       params.set("before", `${twoYearsAgo}`);

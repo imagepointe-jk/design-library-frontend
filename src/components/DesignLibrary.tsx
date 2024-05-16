@@ -128,7 +128,7 @@ export function DesignLibrary() {
     updateWindowSearchParams(modifiedParams);
   }
 
-  function handleClickSidebarSubcategory(hierarchy: string) {
+  function handleClickSidebarSubcategory(clickedName: string) {
     // const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);
     // const newParams: DesignQueryParams = {
     //   ...designQueryParams,
@@ -138,6 +138,36 @@ export function DesignLibrary() {
     //   pageNumber: 1,
     // };
     // window.location.href = createNavigationUrl(newParams);
+    let modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "age",
+      null
+    ).stringified;
+    modifiedParams = getModifiedQueryParams(
+      modifiedParams,
+      "subcategory",
+      null
+    ).stringified;
+    if (clickedName === "New Designs") {
+      modifiedParams = getModifiedQueryParams(
+        modifiedParams,
+        "age",
+        "new"
+      ).stringified;
+    } else if (clickedName === "Classics") {
+      modifiedParams = getModifiedQueryParams(
+        modifiedParams,
+        "age",
+        "old"
+      ).stringified;
+    } else {
+      modifiedParams = getModifiedQueryParams(
+        modifiedParams,
+        "subcategory",
+        clickedName
+      ).stringified;
+    }
+    updateWindowSearchParams(modifiedParams);
   }
 
   function clickPageButton(pageNumber: number) {

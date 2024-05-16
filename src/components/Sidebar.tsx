@@ -23,6 +23,21 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
   const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
+  let selectedParentCategory = categories?.find(
+    (cat) =>
+      !!cat.designSubcategories.find(
+        (sub) => sub.name === designQueryParams.subcategory
+      )
+  )?.name;
+  if (selectedParentCategory === "Event/Awareness")
+    selectedParentCategory = "Event / Awareness";
+  //assume for now that the "after" param will only be set to a value corresponding to "new" designs
+  const newDesignsButtonChecked = designQueryParams.after !== undefined;
+  //assume for now that the "before" param will only be set to a value corresponding to "classic" designs
+  const classicsButtonChecked = designQueryParams.before !== undefined;
+  if (newDesignsButtonChecked || classicsButtonChecked)
+    selectedParentCategory = "Quick Search";
+
   const filterSidebarHierarchy: HierarchyItem[] = categories
     ? categories
         .filter(
@@ -35,10 +50,18 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
             category.name === "Event/Awareness"
               ? "Event / Awareness"
               : category.name,
-          selected: designQueryParams.category === category.name,
+          selected:
+            selectedParentCategory === category.name ||
+            (category.name === "Quick Search" && newDesignsButtonChecked) ||
+            (category.name === "Classics" && classicsButtonChecked) ||
+            (category.name === "Event/Awareness" &&
+              selectedParentCategory === "Event / Awareness"),
           children: category.designSubcategories.map((subcategory) => ({
             childName: subcategory.name,
-            selected: subcategory.name === designQueryParams.subcategory,
+            selected:
+              subcategory.name === designQueryParams.subcategory ||
+              (subcategory.name === "New Designs" && newDesignsButtonChecked) ||
+              (subcategory.name === "Classics" && classicsButtonChecked),
             onClickChild: () => onClickSidebarSubcategory(subcategory.name),
           })),
         }))
@@ -151,7 +174,7 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
       )}
       <HierarchyList
         hierarchy={filterSidebarHierarchy}
-        defaultExpandedParent={designQueryParams.category}
+        defaultExpandedParent={selectedParentCategory}
         parentClassName={styles["filter-parent"]}
         parentSelectedClassName={styles["filter-parent-selected"]}
         parentExpandedClassName={styles["filter-parent-expanded"]}

@@ -25,7 +25,6 @@ export function DesignLibraryControls() {
   const selectedSubcategory = designQueryParams.subcategory
     ? decodeURIComponent(designQueryParams.subcategory)
     : undefined;
-  console.log("selected", selectedSubcategory);
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,

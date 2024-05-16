@@ -27,7 +27,7 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
     (cat) =>
       !!cat.designSubcategories.find(
         (sub) => sub.name === designQueryParams.subcategory
-      )
+      ) && cat.designType.name === designQueryParams.designType
   )?.name;
   if (selectedParentCategory === "Event/Awareness")
     selectedParentCategory = "Event / Awareness";

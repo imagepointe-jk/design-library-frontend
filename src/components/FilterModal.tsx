@@ -19,6 +19,7 @@ import {
   getDefaultQueryParams,
   getModifiedQueryParams,
   parseDesignQueryParams,
+  updateWindowSearchParams,
 } from "../query";
 // import { TempDesign } from "../sharedTypes";
 
@@ -36,9 +37,13 @@ export function FilterModal() {
   // const [pendingQueryParams, setPendingQueryParams] = useState(
   //   null as DesignQueryParams | null
   // );
+  // const selectedSubcategoryInParams = designQueryParams.subcategory;
+  const selectedNew = designQueryParams.after !== undefined;
+  const selectedOld = designQueryParams.before !== undefined;
   const selectedCategoryInParams = categories
     ? categories.find(
         (cat) =>
+          ((selectedNew || selectedOld) && cat.name === "Quick Search") ||
           !!cat.designSubcategories.find(
             (sub) =>
               sub.name ===
@@ -48,7 +53,10 @@ export function FilterModal() {
     : undefined;
   const selectedSubcategoryIndexInParams = selectedCategoryInParams
     ? selectedCategoryInParams.designSubcategories.findIndex(
-        (sub) => sub.name === designQueryParams.subcategory
+        (sub) =>
+          (sub.name === "New Designs" && selectedNew) ||
+          (sub.name === "Classics" && selectedOld) ||
+          sub.name === designQueryParams.subcategory
       )
     : -1;
   const [selectedCategory, setSelectedCategory] = useState(
@@ -64,7 +72,6 @@ export function FilterModal() {
   //   : designQueryParams;
   // const selectedCategoryInParams = queryParamsToUse.category;
   // const selectedSubcategoryInParams = queryParamsToUse.subcategory;
-  const selectedSubcategoryInParams = designQueryParams.subcategory;
 
   const categoriesToShow = categories
     ? categories.filter(
@@ -128,6 +135,34 @@ export function FilterModal() {
   }
 
   function applyFilters() {
+    let params = getModifiedQueryParams(
+      window.location.search,
+      "pageNumber",
+      "1"
+    ).stringified;
+    params = getModifiedQueryParams(params, "age", null).stringified;
+    params = getModifiedQueryParams(params, "subcategory", null).stringified;
+    if (!selectedCategory) {
+      updateWindowSearchParams(params);
+      return;
+    }
+    const selectedSubcategory =
+      selectedCategory.designSubcategories[selectedSubcategoryIndex];
+
+    if (selectedSubcategory.name === "New Designs") {
+      params = getModifiedQueryParams(params, "age", "new").stringified;
+    } else if (selectedSubcategory.name === "Classics") {
+      params = getModifiedQueryParams(params, "age", "old").stringified;
+    } else {
+      params = getModifiedQueryParams(
+        params,
+        "subcategory",
+        selectedSubcategory.name
+      ).stringified;
+    }
+
+    updateWindowSearchParams(params);
+
     // if (!pendingQueryParams) return;
     // window.location.href = createNavigationUrl(pendingQueryParams);
   }
@@ -140,7 +175,6 @@ export function FilterModal() {
     }
     const selectedSubcategory =
       selectedCategory.designSubcategories[selectedSubcategoryIndex];
-    console.log(selectedSubcategory);
 
     let params = getDefaultQueryParams().stringified;
     params = getModifiedQueryParams(params, "perPage", "5").stringified;
@@ -154,7 +188,6 @@ export function FilterModal() {
         "subcategory",
         selectedSubcategory.name
       ).stringified;
-      console.log(params);
     }
 
     try {
@@ -164,7 +197,6 @@ export function FilterModal() {
         throw new Error("No design found for the filter selection.");
       setPreviewDesigns(results.designs);
     } catch (error) {
-      console.log("Couldn't get preview designs: ", error);
       setPreviewDesigns(null);
     }
     setPreviewDesignsLoading(false);
@@ -233,22 +265,22 @@ export function FilterModal() {
           />
         </div>
       </div>
-      {/* <div className={styles["filter-action-button-row"]}>
+      <div className={styles["filter-action-button-row"]}>
         <button
           className={styles["filter-action-button"]}
-          disabled={pendingQueryParams === null}
+          disabled={selectedCategory === undefined}
           onClick={applyFilters}
         >
           Apply Filters
         </button>
         <button
           className={`${styles["filter-action-button"]} ${styles["clear-selection-button"]}`}
-          disabled={pendingQueryParams === null}
-          onClick={() => setPendingQueryParams(null)}
+          disabled={selectedCategory === undefined}
+          onClick={() => setSelectedCategory(undefined)}
         >
           Clear Selection
         </button>
-      </div> */}
+      </div>
     </Modal>
   );
 }

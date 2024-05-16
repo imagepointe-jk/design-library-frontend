@@ -82,7 +82,18 @@ function ComparisonDesignContainer({
   if (!viewedDesign)
     return (
       <div>
-        {loadingStatus === "error" && "Error"}
+        {loadingStatus === "error" && (
+          <div>
+            <p>Error.</p>
+            <button
+              onClick={() => {
+                if (removeComparisonId) removeComparisonId(designId);
+              }}
+            >
+              Remove
+            </button>
+          </div>
+        )}
         {loadingStatus === "loading" && <LoadingIndicator />}
       </div>
     );
@@ -92,7 +103,10 @@ function ComparisonDesignContainer({
     (item) => item.id === viewedDesign.id
   );
   const defaultBgColor = getDesignDefaultBackgroundColor(viewedDesign);
-  let bgColorToUse = /*getFirstHexCodeInString(selectedBgColor || "");*/ `#${selectedBgColor?.hexCode}`;
+  let bgColorToUse =
+    /*getFirstHexCodeInString(selectedBgColor || "");*/ selectedBgColor
+      ? `#${selectedBgColor.hexCode}`
+      : undefined;
   if (!bgColorToUse)
     bgColorToUse = /*getFirstHexCodeInString(defaultBgColor);*/ defaultBgColor;
   if (!bgColorToUse) bgColorToUse = "#000000";

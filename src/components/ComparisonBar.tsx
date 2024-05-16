@@ -86,18 +86,24 @@ function ComparisonSquare({ designId }: { designId?: number }) {
     getDesignToView();
   }, [designId]);
 
-  const defined = design && designId && removeComparisonId && setModalDisplay;
+  if (!removeComparisonId || !setModalDisplay) return <></>;
+
+  const defined = design && designId;
 
   return (
     <div className={styles["image-container"]}>
       {loading && <LoadingIndicator />}
-      {defined && (
+      {designId && (
         <>
           <ImageWithFallback
-            src={design.imageUrl}
+            src={design ? design.imageUrl : "none"}
             className={styles["comparison-image"]}
             onClick={() => setModalDisplay(new DesignModalDisplay(designId))}
-            style={{ backgroundColor: getDesignDefaultBackgroundColor(design) }}
+            style={{
+              backgroundColor: design
+                ? getDesignDefaultBackgroundColor(design)
+                : "white",
+            }}
           />
           <button
             className={styles["remove-button"]}

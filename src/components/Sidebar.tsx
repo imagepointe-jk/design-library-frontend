@@ -69,7 +69,9 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
 
   const filtersActive =
     designQueryParams.category !== undefined ||
-    designQueryParams.subcategory !== undefined;
+    designQueryParams.subcategory !== undefined ||
+    designQueryParams.before !== undefined ||
+    designQueryParams.after !== undefined;
 
   function handleClearFilters() {
     // const newParams: DesignQueryParams = {
@@ -80,17 +82,22 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
     // };
 
     // window.location.href = createNavigationUrl(newParams);
-    const withoutCategory = getModifiedQueryParams(
+    let modifiedParams = getModifiedQueryParams(
       window.location.search,
       "category",
       null
     ).stringified;
-    const withoutSubcategory = getModifiedQueryParams(
-      withoutCategory,
+    modifiedParams = getModifiedQueryParams(
+      modifiedParams,
       "subcategory",
       null
     ).stringified;
-    updateWindowSearchParams(withoutSubcategory);
+    modifiedParams = getModifiedQueryParams(
+      modifiedParams,
+      "age",
+      null
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function changeDesignType(newType: DesignType) {

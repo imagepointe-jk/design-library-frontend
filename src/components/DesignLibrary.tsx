@@ -15,7 +15,7 @@ import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { PageControls } from "./PageControls";
-import { Sidebar } from "./Sidebar";
+import { Sidebar, changeDesignType } from "./Sidebar";
 import { TopSection } from "./TopSection";
 import styles from "./styles/DesignLibrary.module.css";
 import { ToggleSwitch } from "./ToggleSwitch";
@@ -67,7 +67,9 @@ export function DesignLibrary() {
     // };
     try {
       setIsFetchingResults(true);
-      const fetchedDesigns = await getDesigns(window.location.search);
+      const fetchedDesigns = await getDesigns(
+        window.location.search.replace("?", "")
+      );
       // const fetchedDesigns = await getDesigns(
       //   buildDesignQueryParams(designQueryParamsToUse)
       // );
@@ -115,24 +117,24 @@ export function DesignLibrary() {
     updateWindowSearchParams(modifiedParams);
   }
 
-  function changeDesignType(newType: DesignType) {
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   designType: newType,
-    //   category: undefined,
-    //   subcategory: undefined,
-    //   featuredOnly: newType === "Screen Print",
-    //   pageNumber: 1,
-    // };
+  // function changeDesignType(newType: DesignType) {
+  //   // const newParams: DesignQueryParams = {
+  //   //   ...designQueryParams,
+  //   //   designType: newType,
+  //   //   category: undefined,
+  //   //   subcategory: undefined,
+  //   //   featuredOnly: newType === "Screen Print",
+  //   //   pageNumber: 1,
+  //   // };
 
-    // window.location.href = createNavigationUrl(newParams);
-    const modifiedParams = getModifiedQueryParams(
-      window.location.search,
-      "designType",
-      newType
-    ).stringified;
-    updateWindowSearchParams(modifiedParams);
-  }
+  //   // window.location.href = createNavigationUrl(newParams);
+  //   const modifiedParams = getModifiedQueryParams(
+  //     window.location.search,
+  //     "designType",
+  //     newType
+  //   ).stringified;
+  //   updateWindowSearchParams(modifiedParams);
+  // }
 
   function handleClickSidebarSubcategory(clickedName: string) {
     // const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);

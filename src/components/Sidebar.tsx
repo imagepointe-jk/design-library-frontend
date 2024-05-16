@@ -100,41 +100,6 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
     updateWindowSearchParams(modifiedParams);
   }
 
-  function changeDesignType(newType: DesignType) {
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   designType: newType,
-    //   category: undefined,
-    //   subcategory: undefined,
-    //   featuredOnly: newType === "Screen Print",
-    //   pageNumber: 1,
-    // };
-
-    // window.location.href = createNavigationUrl(newParams);
-    const withoutCategory = getModifiedQueryParams(
-      window.location.search,
-      "category",
-      null
-    ).stringified;
-    const withoutSubcategory = getModifiedQueryParams(
-      withoutCategory,
-      "subcategory",
-      null
-    ).stringified;
-    const withPageNumber = getModifiedQueryParams(
-      withoutSubcategory,
-      "pageNumber",
-      "1"
-    ).stringified;
-    const withNewType = getModifiedQueryParams(
-      withPageNumber,
-      "designType",
-      newType
-    ).stringified;
-
-    updateWindowSearchParams(withNewType);
-  }
-
   return (
     <div className={styles["main"]}>
       <form onSubmit={submitSearch}>
@@ -190,4 +155,39 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
       />
     </div>
   );
+}
+
+export function changeDesignType(newType: DesignType) {
+  // const newParams: DesignQueryParams = {
+  //   ...designQueryParams,
+  //   designType: newType,
+  //   category: undefined,
+  //   subcategory: undefined,
+  //   featuredOnly: newType === "Screen Print",
+  //   pageNumber: 1,
+  // };
+
+  // window.location.href = createNavigationUrl(newParams);
+  const withoutCategory = getModifiedQueryParams(
+    window.location.search,
+    "category",
+    null
+  ).stringified;
+  const withoutSubcategory = getModifiedQueryParams(
+    withoutCategory,
+    "subcategory",
+    null
+  ).stringified;
+  const withPageNumber = getModifiedQueryParams(
+    withoutSubcategory,
+    "pageNumber",
+    "1"
+  ).stringified;
+  const withNewType = getModifiedQueryParams(
+    withPageNumber,
+    "designType",
+    newType
+  ).stringified;
+
+  updateWindowSearchParams(withNewType);
 }

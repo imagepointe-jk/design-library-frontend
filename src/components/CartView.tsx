@@ -88,19 +88,20 @@ function CartRow({ design: { garmentColor, id } }: CartRowProps) {
   return (
     <div className={styles["design-row"]}>
       {loading && <LoadingIndicator />}
-      {!loading && design && (
+      {!loading && (
         <>
           <div className={styles["design-row-image-container"]}>
             <ImageWithFallback
               className={styles["design-image"]}
-              src={design.imageUrl}
+              src={design ? design.imageUrl : "none"}
               style={{
                 backgroundColor:
                   /*getFirstHexCodeInString(garmentColor) || undefined*/ design
-                    .defaultBackgroundColor.hexCode,
+                    ? design.defaultBackgroundColor.hexCode
+                    : "white",
               }}
             />
-            <div>Design #{design.designNumber}</div>
+            <div>{design ? `Design #${design.designNumber}` : "Not Found"}</div>
           </div>
           <button
             className={styles["remove-button"]}

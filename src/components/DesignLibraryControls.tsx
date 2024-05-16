@@ -22,7 +22,10 @@ export function DesignLibraryControls() {
   );
   const buttonIdPrefix = "library-page-filter-button-";
   const checkboxButtons = ["All Designs", "New Designs", "Best Sellers"];
-  const selectedSubcategory = designQueryParams.subcategory;
+  const selectedSubcategory = designQueryParams.subcategory
+    ? decodeURIComponent(designQueryParams.subcategory)
+    : undefined;
+  console.log("selected", selectedSubcategory);
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,

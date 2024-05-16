@@ -149,8 +149,8 @@ export function DesignView({ designId }: DesignViewProps) {
     defaultQueryParams,
     "similarTo",
     `${designId}`
-  );
-  const similarDesignsUrl = `${window.location.origin}/${window.location.pathname}?${similarDesignsParams}`;
+  ).stringified;
+  const similarDesignsUrl = `${window.location.origin}${window.location.pathname}?${similarDesignsParams}`;
   const isDesignInCart = cartData?.designs.find(
     (design) => viewedDesign?.id === design.id
   );

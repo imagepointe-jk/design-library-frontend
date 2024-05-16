@@ -53,41 +53,27 @@ export function DesignLibraryControls() {
 
     // window.location.href = createNavigationUrl(newParams);
 
-    let params = "";
+    let params = getDefaultQueryParams().stringified;
     if (filterName === "All Designs") {
-      if (isChecked) {
-        params = getDefaultQueryParams().stringified;
-      } else {
-        params = getModifiedQueryParams(
-          window.location.search,
-          "featured",
-          "true"
-        ).stringified;
+      if (!isChecked) {
+        params = getModifiedQueryParams(params, "featured", "true").stringified;
       }
     } else if (filterName === "New Designs") {
       if (isChecked) {
-        params = getModifiedQueryParams(
-          window.location.search,
-          "age",
-          "new"
-        ).stringified;
+        params = getModifiedQueryParams(params, "age", "new").stringified;
       } else {
-        params = getModifiedQueryParams(
-          window.location.search,
-          "age",
-          null
-        ).stringified;
+        params = getModifiedQueryParams(params, "age", null).stringified;
       }
     } else if (filterName === "Best Sellers") {
       if (isChecked) {
         params = getModifiedQueryParams(
-          window.location.search,
+          params,
           "subcategory",
           encodeURIComponent("Best Sellers")
         ).stringified;
       } else {
         params = getModifiedQueryParams(
-          window.location.search,
+          params,
           "subcategory",
           null
         ).stringified;

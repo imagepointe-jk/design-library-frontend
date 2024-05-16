@@ -14,7 +14,12 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { Modal } from "./Modal";
 import { NodeScrollView } from "./NodeScrollView";
 import styles from "./styles/FilterModal.module.css";
-import { Design } from "../dbSchema";
+import { Design, DesignCategory, DesignSubcategory } from "../dbSchema";
+import {
+  getDefaultQueryParams,
+  getModifiedQueryParams,
+  parseDesignQueryParams,
+} from "../query";
 // import { TempDesign } from "../sharedTypes";
 
 const maxSubcategoriesBeforeScrollable = 15;
@@ -22,34 +27,62 @@ const buttonIdPrefix = "filter-modal-filter-button-";
 
 export function FilterModal() {
   const { categories, categoriesLoading } = useApp();
-  const designQueryParams = parseSearchParams(
+  const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
   //the pending query params are the query the user has started building
   //after they started clicking filter buttons.
   //won't be submitted until apply filters is clicked.
-  const [pendingQueryParams, setPendingQueryParams] = useState(
-    null as DesignQueryParams | null
+  // const [pendingQueryParams, setPendingQueryParams] = useState(
+  //   null as DesignQueryParams | null
+  // );
+  const selectedCategoryInParams = categories
+    ? categories.find(
+        (cat) =>
+          !!cat.designSubcategories.find(
+            (sub) =>
+              sub.name ===
+              decodeURIComponent(designQueryParams.subcategory || "")
+          )
+      )
+    : undefined;
+  const selectedSubcategoryIndexInParams = selectedCategoryInParams
+    ? selectedCategoryInParams.designSubcategories.findIndex(
+        (sub) => sub.name === designQueryParams.subcategory
+      )
+    : -1;
+  const [selectedCategory, setSelectedCategory] = useState(
+    selectedCategoryInParams
+  );
+  const [selectedSubcategoryIndex, setSelectedSubcategoryIndex] = useState(
+    selectedSubcategoryIndexInParams
   );
   const [previewDesigns, setPreviewDesigns] = useState(null as Design[] | null);
   const [previewDesignsLoading, setPreviewDesignsLoading] = useState(true);
-  const queryParamsToUse = pendingQueryParams
-    ? pendingQueryParams
-    : designQueryParams;
-  const selectedCategoryInParams = queryParamsToUse.category;
-  const selectedSubcategoryInParams = queryParamsToUse.subcategory;
+  // const queryParamsToUse = pendingQueryParams
+  //   ? pendingQueryParams
+  //   : designQueryParams;
+  // const selectedCategoryInParams = queryParamsToUse.category;
+  // const selectedSubcategoryInParams = queryParamsToUse.subcategory;
+  const selectedSubcategoryInParams = designQueryParams.subcategory;
 
-  const selectedCategory = categories?.find(
-    (category) => category.Name === queryParamsToUse.category
-  );
   const categoriesToShow = categories
     ? categories.filter(
-        (category) => category.DesignType === queryParamsToUse.designType
+        (category) => category.designType.name === designQueryParams.designType
       )
-    : [];
-  const subcategoriesToShow = selectedCategory
-    ? selectedCategory.Subcategories
-    : [];
+    : undefined;
+  // const selectedCategory = categories?.find(
+  //   (category) => category.Name === queryParamsToUse.category
+  // );
+  // const categoriesToShow = categories
+  //   ? categories.filter(
+  //       (category) => category.DesignType === queryParamsToUse.designType
+  //     )
+  //   : [];
+  // const subcategoriesToShow = selectedCategory
+  //   ? selectedCategory.Subcategories
+  //   : [];
+  const subcategoriesToShow = selectedCategory?.designSubcategories;
 
   const previewDesignImages = previewDesigns
     ? previewDesigns.map((design) => (
@@ -71,62 +104,103 @@ export function FilterModal() {
 
   function clickFilterButton(
     buttonType: "Category" | "Subcategory",
-    value: string | null
+    clickedIndex: number
   ) {
-    const newParams: DesignQueryParams = { ...queryParamsToUse };
+    if (!categories) return;
 
     if (buttonType === "Category") {
-      newParams.category = value || undefined;
-      newParams.subcategory = undefined;
+      setSelectedCategory(categories[clickedIndex]);
+      setSelectedSubcategoryIndex(0);
     } else {
-      newParams.subcategory = value || undefined;
+      setSelectedSubcategoryIndex(clickedIndex);
     }
-    newParams.featuredOnly = false;
-    newParams.pageNumber = 1;
 
-    setPendingQueryParams(newParams);
+    // const newParams: DesignQueryParams = { ...queryParamsToUse };
+    // if (buttonType === "Category") {
+    //   newParams.category = value || undefined;
+    //   newParams.subcategory = undefined;
+    // } else {
+    //   newParams.subcategory = value || undefined;
+    // }
+    // newParams.featuredOnly = false;
+    // newParams.pageNumber = 1;
+    // setPendingQueryParams(newParams);
   }
 
   function applyFilters() {
-    if (!pendingQueryParams) return;
-    window.location.href = createNavigationUrl(pendingQueryParams);
+    // if (!pendingQueryParams) return;
+    // window.location.href = createNavigationUrl(pendingQueryParams);
   }
 
   async function getPreviewDesigns() {
-    if (
-      queryParamsToUse.category === undefined &&
-      queryParamsToUse.subcategory === undefined
-    ) {
+    if (!selectedCategory || selectedSubcategoryIndex === -1 || !categories) {
       setPreviewDesigns(null);
       setPreviewDesignsLoading(false);
       return;
     }
+    const selectedSubcategory =
+      selectedCategory.designSubcategories[selectedSubcategoryIndex];
+    console.log(selectedSubcategory);
 
-    const previewDesignsQueryParams: DesignQueryParams = {
-      ...queryParamsToUse,
-      pageNumber: 1,
-      perPage: 5,
-    };
-    const previewDesignsQueryString = buildDesignQueryParams(
-      previewDesignsQueryParams
-    );
+    let params = getDefaultQueryParams().stringified;
+    params = getModifiedQueryParams(params, "perPage", "5").stringified;
+    if (selectedSubcategory.name === "New Designs") {
+      params = getModifiedQueryParams(params, "age", "new").stringified;
+    } else if (selectedSubcategory.name === "Classics") {
+      params = getModifiedQueryParams(params, "age", "old").stringified;
+    } else {
+      params = getModifiedQueryParams(
+        params,
+        "subcategory",
+        selectedSubcategory.name
+      ).stringified;
+      console.log(params);
+    }
+
     try {
       setPreviewDesignsLoading(true);
-      const results = await getDesigns(previewDesignsQueryString);
+      const results = await getDesigns(params);
       if (!results)
         throw new Error("No design found for the filter selection.");
       setPreviewDesigns(results.designs);
-      setPreviewDesignsLoading(false);
     } catch (error) {
-      console.error("Couldn't get preview designs: ", error);
+      console.log("Couldn't get preview designs: ", error);
       setPreviewDesigns(null);
-      setPreviewDesignsLoading(false);
     }
+    setPreviewDesignsLoading(false);
+    // if (
+    //   queryParamsToUse.category === undefined &&
+    //   queryParamsToUse.subcategory === undefined
+    // ) {
+    //   setPreviewDesigns(null);
+    //   setPreviewDesignsLoading(false);
+    //   return;
+    // }
+    // const previewDesignsQueryParams: DesignQueryParams = {
+    //   ...queryParamsToUse,
+    //   pageNumber: 1,
+    //   perPage: 5,
+    // };
+    // const previewDesignsQueryString = buildDesignQueryParams(
+    //   previewDesignsQueryParams
+    // );
+    // try {
+    //   setPreviewDesignsLoading(true);
+    //   const results = await getDesigns(previewDesignsQueryString);
+    //   if (!results)
+    //     throw new Error("No design found for the filter selection.");
+    //   setPreviewDesigns(results.designs);
+    //   setPreviewDesignsLoading(false);
+    // } catch (error) {
+    //   console.error("Couldn't get preview designs: ", error);
+    //   setPreviewDesigns(null);
+    //   setPreviewDesignsLoading(false);
+    // }
   }
 
   useEffect(() => {
     getPreviewDesigns();
-  }, [pendingQueryParams]);
+  }, [selectedCategory, selectedSubcategoryIndex]);
 
   if (categoriesLoading) return <LoadingIndicator />;
   if (!categories) return <ErrorPage />;
@@ -140,12 +214,13 @@ export function FilterModal() {
       <div className={styles["main-flex"]}>
         <ParentCategories
           categoriesToShow={categoriesToShow}
-          selectedCategory={selectedCategoryInParams}
+          // selectedCategory={selectedCategoryInParams}
+          selectedCategory={selectedCategory?.name}
           onClickFilterButton={clickFilterButton}
         />
         <Subcategories
           subcategories={subcategoriesToShow}
-          selectedSubcategory={selectedSubcategoryInParams}
+          selectedIndex={selectedSubcategoryIndex}
           onClickFilterButton={clickFilterButton}
         />
         <div className={styles["preview-designs-area"]}>
@@ -158,7 +233,7 @@ export function FilterModal() {
           />
         </div>
       </div>
-      <div className={styles["filter-action-button-row"]}>
+      {/* <div className={styles["filter-action-button-row"]}>
         <button
           className={styles["filter-action-button"]}
           disabled={pendingQueryParams === null}
@@ -173,17 +248,18 @@ export function FilterModal() {
         >
           Clear Selection
         </button>
-      </div>
+      </div> */}
     </Modal>
   );
 }
 
 type ParentCategoriesProps = {
-  categoriesToShow: CategoryData[] | null;
+  // categoriesToShow: CategoryData[] | null;
+  categoriesToShow: DesignCategory[] | undefined;
   selectedCategory: string | undefined;
   onClickFilterButton: (
     buttonType: "Category" | "Subcategory",
-    value: string | null
+    clickedIndex: number
   ) => void;
 };
 
@@ -194,23 +270,18 @@ function ParentCategories({
 }: ParentCategoriesProps) {
   return (
     <div className={styles["parent-category-column"]}>
-      {categoriesToShow?.map((category) => (
+      {categoriesToShow?.map((category, i) => (
         <>
           <input
             className="button-styled-checkbox"
             type="checkbox"
             name="parent-category"
-            id={`${buttonIdPrefix}${category.Name}`}
-            onChange={(e) =>
-              onClickFilterButton(
-                "Category",
-                e.target.checked ? category.Name : null
-              )
-            }
-            checked={category.Name === selectedCategory}
+            id={`${buttonIdPrefix}${category.name}`}
+            onChange={(e) => onClickFilterButton("Category", i)}
+            checked={category.name === selectedCategory}
           />
-          <label htmlFor={`${buttonIdPrefix}${category.Name}`}>
-            {category.Name}
+          <label htmlFor={`${buttonIdPrefix}${category.name}`}>
+            {category.name}
           </label>
         </>
       ))}
@@ -219,51 +290,50 @@ function ParentCategories({
 }
 
 type SubcategoriesProps = {
-  subcategories: SubcategoryData[];
-  selectedSubcategory: string | undefined;
+  subcategories: DesignSubcategory[] | undefined;
+  selectedIndex: number;
   onClickFilterButton: (
     buttonType: "Category" | "Subcategory",
-    value: string | null
+    clickedIndex: number
   ) => void;
 };
 
 function Subcategories({
   subcategories,
-  selectedSubcategory,
+  selectedIndex,
   onClickFilterButton,
 }: SubcategoriesProps) {
   return (
-    <div>
-      <h3>Subcategories</h3>
-      <div
-        className={styles["subcategories-container"]}
-        style={{
-          overflowY:
-            subcategories.length > maxSubcategoriesBeforeScrollable
-              ? "scroll"
-              : undefined,
-        }}
-      >
-        {subcategories.map((subcategory) => (
-          <>
-            <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>
-              <input
-                type="checkbox"
-                name="subcategory"
-                id={`${buttonIdPrefix}${subcategory.Name}`}
-                onChange={(e) =>
-                  onClickFilterButton(
-                    "Subcategory",
-                    e.target.checked ? subcategory.Name : null
-                  )
-                }
-                checked={subcategory.Name === selectedSubcategory}
-              />
-              {subcategory.Name}
-            </label>
-          </>
-        ))}
+    <>
+      <div>
+        <h3>Subcategories</h3>
+        <div
+          className={styles["subcategories-container"]}
+          style={{
+            overflowY:
+              subcategories &&
+              subcategories.length > maxSubcategoriesBeforeScrollable
+                ? "scroll"
+                : undefined,
+          }}
+        >
+          {subcategories &&
+            subcategories.map((subcategory, i) => (
+              <>
+                <label htmlFor={`${buttonIdPrefix}${subcategory.name}`}>
+                  <input
+                    type="checkbox"
+                    name="subcategory"
+                    id={`${buttonIdPrefix}${subcategory.name}`}
+                    onChange={(e) => onClickFilterButton("Subcategory", i)}
+                    checked={i === selectedIndex}
+                  />
+                  {subcategory.name}
+                </label>
+              </>
+            ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

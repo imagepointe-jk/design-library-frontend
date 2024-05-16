@@ -18,7 +18,6 @@ const serverURL = () =>
 
 export async function getDesigns(queryParamsString: string) {
   const response = await fetch(`${serverURL()}/designs?${queryParamsString}`);
-  console.log(`${serverURL()}/designs?${queryParamsString}`);
   const json = await response.json();
   if (response.status === 404) {
     return null;

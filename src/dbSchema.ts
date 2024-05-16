@@ -46,4 +46,5 @@ export const designSchema = z.object({
 
 export type Design = z.infer<typeof designSchema>;
 export type DesignCategory = z.infer<typeof designCategorySchema>;
+export type DesignSubcategory = z.infer<typeof designSubcategorySchema>;
 export type Color = z.infer<typeof colorSchema>;

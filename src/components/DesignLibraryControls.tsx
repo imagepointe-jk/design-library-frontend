@@ -71,7 +71,7 @@ export function DesignLibraryControls() {
         params = getModifiedQueryParams(
           params,
           "subcategory",
-          encodeURIComponent("Best Sellers")
+          "Best Sellers"
         ).stringified;
       } else {
         params = getModifiedQueryParams(

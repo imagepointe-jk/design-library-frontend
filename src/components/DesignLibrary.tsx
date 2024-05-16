@@ -292,17 +292,19 @@ export function DesignLibrary() {
                     <DesignGrid designs={designResults.designs} />
                   )}
               </div>
-              {designResults && !isFetchingResults && (
-                <PageControls
-                  totalPages={pageCount}
-                  pageSizeChoices={pageSizeChoices}
-                  curItemsPerPage={designQueryParams.perPage || 0}
-                  curPageNumber={designQueryParams.pageNumber}
-                  onClickPageNumber={clickPageButton}
-                  onSubmitJumpToPage={jumpToPage}
-                  onClickPageSizeButton={changeResultsPerPage}
-                />
-              )}
+              {designResults &&
+                designResults.designs.length > 0 &&
+                !isFetchingResults && (
+                  <PageControls
+                    totalPages={pageCount}
+                    pageSizeChoices={pageSizeChoices}
+                    curItemsPerPage={designQueryParams.perPage || 0}
+                    curPageNumber={designQueryParams.pageNumber}
+                    onClickPageNumber={clickPageButton}
+                    onSubmitJumpToPage={jumpToPage}
+                    onClickPageSizeButton={changeResultsPerPage}
+                  />
+                )}
             </div>
           </div>
         </div>

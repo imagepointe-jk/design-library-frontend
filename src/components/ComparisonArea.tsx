@@ -132,7 +132,7 @@ function ComparisonDesignContainer({
         id: viewedDesign.id,
         designNumber: `${viewedDesign.designNumber}`,
         garmentColor: selectedBgColor
-          ? `#${selectedBgColor?.hexCode}`
+          ? `#${selectedBgColor.hexCode}`
           : defaultBgColor,
       },
     ]);

@@ -95,10 +95,7 @@ function CartRow({ design: { garmentColor, id } }: CartRowProps) {
               className={styles["design-image"]}
               src={design ? design.imageUrl : "none"}
               style={{
-                backgroundColor:
-                  /*getFirstHexCodeInString(garmentColor) || undefined*/ design
-                    ? design.defaultBackgroundColor.hexCode
-                    : "white",
+                backgroundColor: garmentColor,
               }}
             />
             <div>{design ? `Design #${design.designNumber}` : "Not Found"}</div>

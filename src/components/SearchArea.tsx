@@ -60,7 +60,7 @@ export function submitSearch(e: React.FormEvent<HTMLFormElement>) {
   const form = e.target as HTMLFormElement;
   const formData = new FormData(form);
   const keywords = formData.get("search");
-  if (keywords) return;
+  if (!keywords) return;
 
   const designType = tryParseDesignType(`${formData.get("design-type")}`);
   // const newParams: DesignQueryParams = {

@@ -95,7 +95,7 @@ export function parseDesignQueryParams(
   const categoryFromParams = params.get("category");
   const subcategoryFromParams = params.get("subcategory");
   const tagsFromParams = params.get("tags");
-  const keywordsFromParams = params.get("keywords");
+  const keywordsFromParams = params.get("keyword");
   const perPageFromParams = params.get("perPage");
   const pageNumberFromParams = params.get("pageNumber");
   const featuredFromParams = params.get("featured");

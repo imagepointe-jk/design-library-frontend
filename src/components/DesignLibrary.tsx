@@ -86,9 +86,15 @@ export function DesignLibrary() {
     //   allowDuplicateDesignNumbers: false,
     // };
     // window.location.href = createNavigationUrl(newParams);
-    const modifiedParams = getModifiedQueryParams(
+    let modifiedParams = getModifiedQueryParams(
       window.location.search,
-      "keywords",
+      "keyword",
+      null
+    ).stringified;
+
+    modifiedParams = getModifiedQueryParams(
+      modifiedParams,
+      "allowDuplicateDesignNumbers",
       null
     ).stringified;
     updateWindowSearchParams(modifiedParams);

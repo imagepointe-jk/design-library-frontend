@@ -1,7 +1,6 @@
 import { useRef } from "react";
-import styles from "./styles/DesignView.module.css";
 import { createNavigationUrl } from "../query";
-// import { createNavigationUrl } from "../utility";
+import styles from "./styles/DesignView.module.css";
 
 type ShareButtonProps = {
   designId: number;

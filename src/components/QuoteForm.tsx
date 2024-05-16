@@ -1,15 +1,14 @@
 import { useRef, useState } from "react";
 import { sendQuoteRequest } from "../fetch";
+import { createNavigationUrl } from "../query";
 import {
   validateEmail,
   validatePhone,
   validateQuoteRequest,
 } from "../validations";
+import { useApp } from "./AppProvider";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/QuoteForm.module.css";
-import { useApp } from "./AppProvider";
-import { createNavigationUrl } from "../query";
-// import { createNavigationUrl } from "../utility";
 
 type Status = "success" | "failure";
 type QuoteFormProps = {

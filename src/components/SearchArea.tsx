@@ -4,8 +4,6 @@ import {
   updateWindowSearchParams,
 } from "../query";
 import { designTypes } from "../sharedTypes";
-// import { DesignQueryParams } from "../types";
-// import { createNavigationUrl } from "../utility";
 import { tryParseDesignType } from "../validations";
 import styles from "./styles/SearchArea.module.css";
 
@@ -63,15 +61,6 @@ export function submitSearch(e: React.FormEvent<HTMLFormElement>) {
   if (!keywords) return;
 
   const designType = tryParseDesignType(`${formData.get("design-type")}`);
-  // const newParams: DesignQueryParams = {
-  //   designType: designType ? designType : "Screen Print",
-  //   pageNumber: 1,
-  //   keywords: keywords?.toString().split(" "),
-  //   featuredOnly: false,
-  //   allowDuplicateDesignNumbers: true,
-  // };
-
-  // window.location.href = createNavigationUrl(newParams);
   const defaultQueryParams = getDefaultQueryParams().stringified;
   const withDesignType = getModifiedQueryParams(
     defaultQueryParams,

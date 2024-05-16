@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { clamp /*getFirstHexCodeInString*/ } from "../utility";
+import { clamp } from "../utility";
 import styles from "./styles/Lightbox.module.css";
 
 export type LightboxImage = {

@@ -2,31 +2,21 @@ import { useEffect, useState } from "react";
 import { pageSizeChoices } from "../constants";
 import { getDesigns } from "../fetch";
 import {
-  /*DesignQueryParams,*/
-  DesignResults /*TempDesignResults*/,
-} from "../types";
-import {
-  /*buildDesignQueryParams,*/
-  // createNavigationUrl,
-  splitDesignCategoryHierarchy,
-} from "../utility";
-// import { parseSearchParams } from "../validations";
-import { DesignGrid } from "./DesignGrid";
-import { DesignLibraryControls } from "./DesignLibraryControls";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { PageControls } from "./PageControls";
-import { Sidebar, changeDesignType } from "./Sidebar";
-import { TopSection } from "./TopSection";
-import styles from "./styles/DesignLibrary.module.css";
-import { ToggleSwitch } from "./ToggleSwitch";
-import { DesignType } from "../sharedTypes";
-import { useApp } from "./AppProvider";
-import {
   createNavigationUrl,
   getModifiedQueryParams,
   parseDesignQueryParams,
   updateWindowSearchParams,
 } from "../query";
+import { DesignResults } from "../types";
+import { useApp } from "./AppProvider";
+import { DesignGrid } from "./DesignGrid";
+import { DesignLibraryControls } from "./DesignLibraryControls";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { PageControls } from "./PageControls";
+import { Sidebar, changeDesignType } from "./Sidebar";
+import { ToggleSwitch } from "./ToggleSwitch";
+import { TopSection } from "./TopSection";
+import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibrary() {
   const [designResults, setDesignResults] = useState<DesignResults | null>(
@@ -39,40 +29,11 @@ export function DesignLibrary() {
   const { windowWidth } = useApp();
 
   async function getDesignsToDisplay() {
-    const {
-      designType,
-      allowDuplicateDesignNumbers,
-      category,
-      subcategory,
-      pageNumber,
-      tags,
-      keywords,
-      featuredOnly,
-      similarTo,
-    } = designQueryParams;
-    // const shouldExcludePrioritized =
-    //   designType === "Screen Print" &&
-    //   !allowDuplicateDesignNumbers &&
-    //   !category &&
-    //   !subcategory &&
-    //   pageNumber === 1 &&
-    //   !tags &&
-    //   !keywords &&
-    //   !featuredOnly &&
-    //   !similarTo;
-    // const designQueryParamsToUse: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   shouldExcludePrioritized,
-    //   sortBy: "priority",
-    // };
     try {
       setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(
         window.location.search.replace("?", "")
       );
-      // const fetchedDesigns = await getDesigns(
-      //   buildDesignQueryParams(designQueryParamsToUse)
-      // );
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
     } catch (error) {
@@ -82,12 +43,6 @@ export function DesignLibrary() {
   }
 
   function clearSearch() {
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   keywords: undefined,
-    //   allowDuplicateDesignNumbers: false,
-    // };
-    // window.location.href = createNavigationUrl(newParams);
     let modifiedParams = getModifiedQueryParams(
       window.location.search,
       "keyword",
@@ -103,12 +58,6 @@ export function DesignLibrary() {
   }
 
   function clearSimilar() {
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   similarTo: undefined,
-    //   allowDuplicateDesignNumbers: false,
-    // };
-    // window.location.href = createNavigationUrl(newParams);
     const modifiedParams = getModifiedQueryParams(
       window.location.search,
       "similarTo",
@@ -117,35 +66,7 @@ export function DesignLibrary() {
     updateWindowSearchParams(modifiedParams);
   }
 
-  // function changeDesignType(newType: DesignType) {
-  //   // const newParams: DesignQueryParams = {
-  //   //   ...designQueryParams,
-  //   //   designType: newType,
-  //   //   category: undefined,
-  //   //   subcategory: undefined,
-  //   //   featuredOnly: newType === "Screen Print",
-  //   //   pageNumber: 1,
-  //   // };
-
-  //   // window.location.href = createNavigationUrl(newParams);
-  //   const modifiedParams = getModifiedQueryParams(
-  //     window.location.search,
-  //     "designType",
-  //     newType
-  //   ).stringified;
-  //   updateWindowSearchParams(modifiedParams);
-  // }
-
   function handleClickSidebarSubcategory(clickedName: string) {
-    // const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   category: hierarchySplit.category,
-    //   subcategory: hierarchySplit.subcategory,
-    //   featuredOnly: false,
-    //   pageNumber: 1,
-    // };
-    // window.location.href = createNavigationUrl(newParams);
     let modifiedParams = getModifiedQueryParams(
       window.location.search,
       "age",
@@ -179,12 +100,6 @@ export function DesignLibrary() {
   }
 
   function clickPageButton(pageNumber: number) {
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   pageNumber: pageNumber,
-    // };
-
-    // window.location.href = createNavigationUrl(newParams);
     const modifiedParams = getModifiedQueryParams(
       window.location.search,
       "pageNumber",
@@ -194,12 +109,6 @@ export function DesignLibrary() {
   }
 
   function jumpToPage(jumpToPage: number) {
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   pageNumber: +jumpToPage,
-    // };
-
-    // window.location.href = createNavigationUrl(newParams);
     const modifiedParams = getModifiedQueryParams(
       window.location.search,
       "pageNumber",
@@ -209,13 +118,6 @@ export function DesignLibrary() {
   }
 
   function changeResultsPerPage(count: number) {
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   pageNumber: 1,
-    //   perPage: count,
-    // };
-
-    // window.location.href = createNavigationUrl(newParams);
     const modifiedParams = getModifiedQueryParams(
       window.location.search,
       "perPage",

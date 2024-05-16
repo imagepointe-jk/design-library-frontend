@@ -4,9 +4,6 @@ import {
   updateWindowSearchParams,
 } from "../query";
 import { DesignType } from "../sharedTypes";
-// import { DesignQueryParams } from "../types";
-// import { createNavigationUrl } from "../utility";
-// import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { HierarchyItem, HierarchyList } from "./HierarchyList";
 import { submitSearch } from "./SearchArea";
@@ -74,14 +71,6 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
     designQueryParams.after !== undefined;
 
   function handleClearFilters() {
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   category: undefined,
-    //   subcategory: undefined,
-    //   pageNumber: 1,
-    // };
-
-    // window.location.href = createNavigationUrl(newParams);
     let modifiedParams = getModifiedQueryParams(
       window.location.search,
       "category",
@@ -158,16 +147,6 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
 }
 
 export function changeDesignType(newType: DesignType) {
-  // const newParams: DesignQueryParams = {
-  //   ...designQueryParams,
-  //   designType: newType,
-  //   category: undefined,
-  //   subcategory: undefined,
-  //   featuredOnly: newType === "Screen Print",
-  //   pageNumber: 1,
-  // };
-
-  // window.location.href = createNavigationUrl(newParams);
   const withoutCategory = getModifiedQueryParams(
     window.location.search,
     "category",

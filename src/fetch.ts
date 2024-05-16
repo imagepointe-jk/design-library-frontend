@@ -1,12 +1,10 @@
 import { QuoteRequest } from "./sharedTypes";
-import { CategoryHierarchy } from "./types";
 import {
   validateCategories,
   validateColors,
   validateDesignArrayJson,
   validateDesignResultsJson,
   validateSingleDesignJson,
-  // validateSubcategories,
 } from "./validations";
 
 const serverURL = () =>

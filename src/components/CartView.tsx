@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
-import { useApp } from "./AppProvider";
-import styles from "./styles/CartView.module.css";
-// import { TempDesign } from "../sharedTypes";
-import { getDesignById } from "../fetch";
-import { LoadingIndicator } from "./LoadingIndicator";
-import { ImageWithFallback } from "./ImageWithFallback";
-import { CartDesign /*DesignQueryParams*/ } from "../types";
-// import { createNavigationUrl /*getFirstHexCodeInString*/ } from "../utility";
-import { QuoteForm } from "./QuoteForm";
 import { Design } from "../dbSchema";
+import { getDesignById } from "../fetch";
 import { createNavigationUrl } from "../query";
+import { CartDesign } from "../types";
+import { useApp } from "./AppProvider";
+import { ImageWithFallback } from "./ImageWithFallback";
+import { LoadingIndicator } from "./LoadingIndicator";
+import { QuoteForm } from "./QuoteForm";
+import styles from "./styles/CartView.module.css";
 
 export function CartView() {
   const { cartData, emptyCart } = useApp();

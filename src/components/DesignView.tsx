@@ -1,26 +1,21 @@
 import { useEffect, useState } from "react";
+import { Color, Design } from "../dbSchema";
 import { getDesignsRelatedToId } from "../fetch";
 import {
+  createNavigationUrl,
+  getDefaultQueryParams,
+  getModifiedQueryParams,
+} from "../query";
+import {
   clamp,
-  // createNavigationUrl,
-  // getDesignCategoryHierarchies,
   getDesignDefaultBackgroundColor,
   getDesignTags,
-  // getFirstHexCodeInString,
   isDesignTransparent,
 } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
-// import { TempDesign } from "../sharedTypes";
-// import { DesignQueryParams } from "../types";
-import { Color, Design } from "../dbSchema";
-import {
-  createNavigationUrl,
-  getDefaultQueryParams,
-  getModifiedQueryParams,
-} from "../query";
 
 type DesignViewProps = {
   designId: number;
@@ -66,11 +61,7 @@ export function DesignView({ designId }: DesignViewProps) {
       //if not, check if the viewed design has transparency (and therefore had color picking options).
       //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
       //if it did, assume the user was fine with the default background color, and assign that.
-      // const colorToAddToCart =
-      //   selectedBgColor ||
-      //   (viewedDesignHasTransparency
-      //     ? viewedDesign.defaultBackgroundColor.hexCode
-      //     : "Color picking unavailable for this design.");
+
       const colorToAddToCart = selectedBgColor
         ? `#${selectedBgColor.hexCode}`
         : viewedDesignHasTransparency
@@ -98,17 +89,7 @@ export function DesignView({ designId }: DesignViewProps) {
   const selectedHexCode = selectedBgColor
     ? `#${selectedBgColor.hexCode}`
     : null;
-  // selectedBgColor && getFirstHexCodeInString(selectedBgColor);
   const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
-  // const fullColorStringToUse =
-  //   selectedBgColor ||
-  //   viewedDesign?.defaultBackgroundColor ||
-  //   "(no color selected)";
-  // const filters = viewedDesign
-  //   ? getDesignCategoryHierarchies(viewedDesign).filter(
-  //       (sub) => sub !== undefined
-  //     )
-  //   : [];
   const filters = viewedDesign
     ? viewedDesign.designSubcategories.map((sub) => sub.name)
     : [];
@@ -125,26 +106,7 @@ export function DesignView({ designId }: DesignViewProps) {
     relatedDesigns &&
     relatedDesigns[0].designType.name === "Screen Print" &&
     viewedDesignHasTransparency;
-  //!
-  //!
-  //!
-  //!
-  // const TEMP_FORCED_DESIGN_TYPE =
-  //   relatedDesigns && relatedDesigns[0].designType.name === "Embroidery"
-  //     ? "Embroidery"
-  //     : "Screen Print";
-  // const similarDesignsParams: DesignQueryParams | undefined = relatedDesigns
-  //   ? {
-  //       designType: TEMP_FORCED_DESIGN_TYPE,
-  //       featuredOnly: false,
-  //       pageNumber: 1,
-  //       similarTo: designId,
-  //     }
-  //   : undefined;
   const defaultQueryParams = getDefaultQueryParams().stringified;
-  // const similarDesignsUrl = similarDesignsParams
-  //   ? createNavigationUrl(similarDesignsParams)
-  //   : undefined;
   const similarDesignsParams = getModifiedQueryParams(
     defaultQueryParams,
     "similarTo",

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import { Design, DesignCategory, DesignSubcategory } from "../dbSchema";
 import { getDesigns } from "../fetch";
-import { CategoryData, /*DesignQueryParams,*/ SubcategoryData } from "../types";
 import {
-  // createNavigationUrl,
-  // buildDesignQueryParams,
-  getDesignDefaultBackgroundColor,
-} from "../utility";
-// import { parseSearchParams } from "../validations";
+  getDefaultQueryParams,
+  getModifiedQueryParams,
+  parseDesignQueryParams,
+  updateWindowSearchParams,
+} from "../query";
+import { getDesignDefaultBackgroundColor } from "../utility";
 import { useApp } from "./AppProvider";
 import { ErrorPage } from "./ErrorScreen";
 import { ImageWithFallback } from "./ImageWithFallback";
@@ -14,14 +15,6 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { Modal } from "./Modal";
 import { NodeScrollView } from "./NodeScrollView";
 import styles from "./styles/FilterModal.module.css";
-import { Design, DesignCategory, DesignSubcategory } from "../dbSchema";
-import {
-  getDefaultQueryParams,
-  getModifiedQueryParams,
-  parseDesignQueryParams,
-  updateWindowSearchParams,
-} from "../query";
-// import { TempDesign } from "../sharedTypes";
 
 const maxSubcategoriesBeforeScrollable = 15;
 const buttonIdPrefix = "filter-modal-filter-button-";
@@ -31,13 +24,6 @@ export function FilterModal() {
   const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
-  //the pending query params are the query the user has started building
-  //after they started clicking filter buttons.
-  //won't be submitted until apply filters is clicked.
-  // const [pendingQueryParams, setPendingQueryParams] = useState(
-  //   null as DesignQueryParams | null
-  // );
-  // const selectedSubcategoryInParams = designQueryParams.subcategory;
   const selectedNew = designQueryParams.after !== undefined;
   const selectedOld = designQueryParams.before !== undefined;
   const selectedCategoryInParams = categories
@@ -67,28 +53,12 @@ export function FilterModal() {
   );
   const [previewDesigns, setPreviewDesigns] = useState(null as Design[] | null);
   const [previewDesignsLoading, setPreviewDesignsLoading] = useState(true);
-  // const queryParamsToUse = pendingQueryParams
-  //   ? pendingQueryParams
-  //   : designQueryParams;
-  // const selectedCategoryInParams = queryParamsToUse.category;
-  // const selectedSubcategoryInParams = queryParamsToUse.subcategory;
 
   const categoriesToShow = categories
     ? categories.filter(
         (category) => category.designType.name === designQueryParams.designType
       )
     : undefined;
-  // const selectedCategory = categories?.find(
-  //   (category) => category.Name === queryParamsToUse.category
-  // );
-  // const categoriesToShow = categories
-  //   ? categories.filter(
-  //       (category) => category.DesignType === queryParamsToUse.designType
-  //     )
-  //   : [];
-  // const subcategoriesToShow = selectedCategory
-  //   ? selectedCategory.Subcategories
-  //   : [];
   const subcategoriesToShow = selectedCategory?.designSubcategories;
 
   const previewDesignImages = previewDesigns
@@ -121,17 +91,6 @@ export function FilterModal() {
     } else {
       setSelectedSubcategoryIndex(clickedIndex);
     }
-
-    // const newParams: DesignQueryParams = { ...queryParamsToUse };
-    // if (buttonType === "Category") {
-    //   newParams.category = value || undefined;
-    //   newParams.subcategory = undefined;
-    // } else {
-    //   newParams.subcategory = value || undefined;
-    // }
-    // newParams.featuredOnly = false;
-    // newParams.pageNumber = 1;
-    // setPendingQueryParams(newParams);
   }
 
   function applyFilters() {
@@ -162,9 +121,6 @@ export function FilterModal() {
     }
 
     updateWindowSearchParams(params);
-
-    // if (!pendingQueryParams) return;
-    // window.location.href = createNavigationUrl(pendingQueryParams);
   }
 
   async function getPreviewDesigns() {
@@ -200,34 +156,6 @@ export function FilterModal() {
       setPreviewDesigns(null);
     }
     setPreviewDesignsLoading(false);
-    // if (
-    //   queryParamsToUse.category === undefined &&
-    //   queryParamsToUse.subcategory === undefined
-    // ) {
-    //   setPreviewDesigns(null);
-    //   setPreviewDesignsLoading(false);
-    //   return;
-    // }
-    // const previewDesignsQueryParams: DesignQueryParams = {
-    //   ...queryParamsToUse,
-    //   pageNumber: 1,
-    //   perPage: 5,
-    // };
-    // const previewDesignsQueryString = buildDesignQueryParams(
-    //   previewDesignsQueryParams
-    // );
-    // try {
-    //   setPreviewDesignsLoading(true);
-    //   const results = await getDesigns(previewDesignsQueryString);
-    //   if (!results)
-    //     throw new Error("No design found for the filter selection.");
-    //   setPreviewDesigns(results.designs);
-    //   setPreviewDesignsLoading(false);
-    // } catch (error) {
-    //   console.error("Couldn't get preview designs: ", error);
-    //   setPreviewDesigns(null);
-    //   setPreviewDesignsLoading(false);
-    // }
   }
 
   useEffect(() => {
@@ -246,7 +174,6 @@ export function FilterModal() {
       <div className={styles["main-flex"]}>
         <ParentCategories
           categoriesToShow={categoriesToShow}
-          // selectedCategory={selectedCategoryInParams}
           selectedCategory={selectedCategory?.name}
           onClickFilterButton={clickFilterButton}
         />
@@ -286,7 +213,6 @@ export function FilterModal() {
 }
 
 type ParentCategoriesProps = {
-  // categoriesToShow: CategoryData[] | null;
   categoriesToShow: DesignCategory[] | undefined;
   selectedCategory: string | undefined;
   onClickFilterButton: (

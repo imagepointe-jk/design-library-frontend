@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
+import { Color, Design } from "../dbSchema";
 import { getDesignsRelatedToId } from "../fetch";
-// import { TempDesign } from "../sharedTypes";
+import { createNavigationUrl } from "../query";
 import {
   clamp,
-  // createNavigationUrl,
   getDesignDefaultBackgroundColor,
-  // getFirstHexCodeInString,
   isDesignTransparent,
 } from "../utility";
 import { useApp } from "./AppProvider";
@@ -13,8 +12,6 @@ import { DesignScrollView } from "./DesignScrollView";
 import { BackgroundColorChanger } from "./DesignView";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonArea.module.css";
-import { Color, Design } from "../dbSchema";
-import { createNavigationUrl } from "../query";
 
 export function ComparisonArea() {
   const { compareModeData } = useApp();
@@ -103,12 +100,10 @@ function ComparisonDesignContainer({
     (item) => item.id === viewedDesign.id
   );
   const defaultBgColor = getDesignDefaultBackgroundColor(viewedDesign);
-  let bgColorToUse =
-    /*getFirstHexCodeInString(selectedBgColor || "");*/ selectedBgColor
-      ? `#${selectedBgColor.hexCode}`
-      : undefined;
-  if (!bgColorToUse)
-    bgColorToUse = /*getFirstHexCodeInString(defaultBgColor);*/ defaultBgColor;
+  let bgColorToUse = selectedBgColor
+    ? `#${selectedBgColor.hexCode}`
+    : undefined;
+  if (!bgColorToUse) bgColorToUse = defaultBgColor;
   if (!bgColorToUse) bgColorToUse = "#000000";
 
   async function getDesignsToDisplay() {

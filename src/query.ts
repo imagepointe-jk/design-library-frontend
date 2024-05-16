@@ -17,45 +17,6 @@ export function getDefaultQueryParams() {
   };
 }
 
-// type Delete = "DELETE";
-// function getModifiedQueryParams(curSearchParams: string, modifications: {
-//   designType: DesignType;
-//   category?: string | Delete;
-//   subcategory?: string | Delete;
-//   tags?: string[] | Delete;
-//   keywords?: string[] | Delete;
-//   perPage?: number;
-//   pageNumber?: number;
-//   featuredOnly?: boolean;
-//   allowDuplicateDesignNumbers?: boolean;
-//   sortBy?: string | Delete;
-//   shouldExcludePrioritized?: boolean;
-//   similarTo?: number | Delete;
-//   age?: "new" | "old" | Delete;
-// }) {
-//   const curParams = parseSearchParams(new URLSearchParams(curSearchParams));
-//   const defaultParams = getDefaultQueryParams();
-//   const newParams = {...defaultParams, ...curParams};
-
-//   for (const [key, value] of Object.entries(modifications)) {
-//     if (key === "age") {
-//         const twoYearsAgo = getTimeStampYearsAgo(2)
-//         if (value === "new") {
-//             newParams.after = twoYearsAgo
-//         } else if (value === "old") {
-//             newParams.before = twoYearsAgo;
-//         } else if (value === "DELETE") {
-//             newParams.after = undefined;
-//             newParams.before = undefined;
-//         }
-//         continue;
-//     }
-//     //make sure the function parameters above match DesignQueryParams keys!
-//     const coercedKey = key as keyof DesignQueryParams;
-//     if (value === "DELETE")
-//   }
-// }
-
 //TODO: Refactor this so that we can pass multiple modifications in one function call
 //calling the function multiple times to make multiple modifications is inefficient
 export function getModifiedQueryParams(
@@ -63,9 +24,6 @@ export function getModifiedQueryParams(
   key: string,
   valueToSet: string | null
 ) {
-  //   const curParams = parseSearchParams(new URLSearchParams(curSearchParams));
-  //   const defaultParams = getDefaultQueryParams();
-  //   const newParams = {...defaultParams, ...curParams};
   const params = new URLSearchParams(curSearchParams);
 
   if (key === "age") {
@@ -140,11 +98,6 @@ export function parseDesignQueryParams(
 
 function buildDesignQueryParams(params: DesignQueryParams) {
   const tagsParam = params.tags ? `tags=${params.tags.join(",")}` : undefined;
-  // const isAgeSubcategory =
-  //   params.subcategory &&
-  //   ["new designs", "classics"].includes(
-  //     params.subcategory.toLocaleLowerCase()
-  //   );
   const subcategoryParam = params.subcategory
     ? `subcategory=${encodeURIComponent(params.subcategory)}` //this will be a comma separated list if we decide to allow multiple subcategories
     : undefined;
@@ -231,17 +184,6 @@ export function createNavigationUrl(
   } else if (designIdOrPage === "compare") {
     newSearchParams.set("viewCompare", "true");
   }
-  /*else {
-      const defaultParams: DesignQueryParams = {
-        designType: "Screen Print",
-        featuredOnly: false,
-        pageNumber: 1,
-      };
-      const paramsToUse = params === "home" ? defaultParams : params;
-      newSearchParams = new URLSearchParams(
-        `${newSearchParams.toString()}&${buildDesignQueryParams(paramsToUse)}`
-      );
-    }*/
 
   return `${window.location.origin}${
     window.location.pathname

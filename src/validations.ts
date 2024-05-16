@@ -1,21 +1,11 @@
 import { z } from "zod";
+import { colorSchema, designCategorySchema, designSchema } from "./dbSchema";
+import { designTypeSchema, quoteRequestSchema } from "./sharedTypes";
 import {
-  designTypeSchema,
-  quoteRequestSchema,
-  // tempDesignSchema,
-} from "./sharedTypes";
-import {
-  // DesignQueryParams,
   cartDataSchema,
-  // categoryDataSchema,
   compareModeDataSchema,
   designResultsSchema,
-  subcategoryDataSchema,
-  // tempDesignResultsSchema,
 } from "./types";
-import { makeStringTitleCase } from "./utility";
-import { colorSchema, designCategorySchema, designSchema } from "./dbSchema";
-import { pageSizeChoices } from "./constants";
 
 export function validateDesignResultsJson(json: any) {
   return designResultsSchema.parse(json);
@@ -32,10 +22,6 @@ export function validateDesignArrayJson(json: any) {
 export function validateCategories(json: any) {
   return z.array(designCategorySchema).parse(json);
 }
-
-// export function validateSubcategories(json: any) {
-//   return z.array(subcategoryDataSchema).parse(json);
-// }
 
 export function validateColors(json: any) {
   return z.array(colorSchema).parse(json);

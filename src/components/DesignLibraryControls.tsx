@@ -1,6 +1,3 @@
-// import { DesignQueryParams } from "../types";
-// import { createNavigationUrl, getTimeStampYearsAgo } from "../utility";
-// import { parseSearchParams } from "../validations";
 import {
   createNavigationUrl,
   getDefaultQueryParams,
@@ -14,9 +11,6 @@ import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibraryControls() {
   const { setModalDisplay, compareModeData, setCompareModeActive } = useApp();
-  // const designQueryParams = parseSearchParams(
-  //   new URLSearchParams(window.location.search)
-  // );
   const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
@@ -31,29 +25,6 @@ export function DesignLibraryControls() {
     filterName: string
   ) {
     const isChecked = e.target.checked;
-    // const newParams: DesignQueryParams = {
-    //   ...designQueryParams,
-    //   pageNumber: 1,
-    // };
-
-    // if (filterName === "All Designs") {
-    //   newParams.category = undefined;
-    //   newParams.subcategory = undefined;
-    //   newParams.after = undefined;
-    //   newParams.before = undefined;
-    //   newParams.featuredOnly = !isChecked;
-    // } else if (filterName === "New Designs") {
-    //   newParams.category = undefined;
-    //   newParams.subcategory = undefined;
-    //   newParams.featuredOnly = !isChecked;
-    //   newParams.after = getTimeStampYearsAgo(2);
-    // } else {
-    //   newParams.category = isChecked ? "Quick Search" : undefined;
-    //   newParams.subcategory = isChecked ? filterName : undefined;
-    //   newParams.featuredOnly = !isChecked;
-    // }
-
-    // window.location.href = createNavigationUrl(newParams);
 
     let params = getDefaultQueryParams().stringified;
     if (filterName === "All Designs") {

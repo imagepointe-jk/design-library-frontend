@@ -1,14 +1,13 @@
 import { useRef } from "react";
-// import { createNavigationUrl } from "../utility";
-import { useApp } from "./AppProvider";
-import { ImageWithFallback } from "./ImageWithFallback";
-import { DesignModalDisplay } from "./Modal";
-import styles from "./styles/DesignGrid.module.css";
 import {
   maxComparisonDesigns,
   maxComparisonDesignsErrorMessageDuration,
 } from "../constants";
 import { createNavigationUrl } from "../query";
+import { useApp } from "./AppProvider";
+import { ImageWithFallback } from "./ImageWithFallback";
+import { DesignModalDisplay } from "./Modal";
+import styles from "./styles/DesignGrid.module.css";
 
 type DesignCardProps = {
   designId: number;

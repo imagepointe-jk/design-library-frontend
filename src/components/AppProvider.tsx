@@ -5,13 +5,8 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getCategories, getColors /*getSubcategories*/ } from "../fetch";
-import {
-  CartData,
-  CartDesign,
-  // CategoryHierarchy,
-  CompareModeData,
-} from "../types";
+import { getCategories, getColors } from "../fetch";
+import { CartData, CartDesign, CompareModeData } from "../types";
 import { DesignModalDisplay } from "./Modal";
 import { LightboxData } from "./Lightbox";
 import { validateCartData, validateCompareModeData } from "../validations";
@@ -201,20 +196,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   async function fetchCategories() {
     try {
       const categories = await getCategories();
-      // const subcategories = await getSubcategories();
-      // const categoriesWithHierarchy: CategoryHierarchy[] = categories.map(
-      //   (category) => {
-      //     const categoryHierarchy: CategoryHierarchy = {
-      //       DesignType: category.DesignType,
-      //       Name: category.Name,
-      //       Subcategories: subcategories.filter(
-      //         (subcategory) => subcategory.ParentCategory === category.Name
-      //       ),
-      //     };
-      //     return categoryHierarchy;
-      //   }
-      // );
-      // setCategories(categoriesWithHierarchy);
       setCategories(categories);
       setCategoriesLoading(false);
     } catch (error) {

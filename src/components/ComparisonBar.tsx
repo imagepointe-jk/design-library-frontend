@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import { maxComparisonDesigns } from "../constants";
+import { Design } from "../dbSchema";
 import { getDesignById } from "../fetch";
-// import { TempDesign } from "../sharedTypes";
+import { createNavigationUrl } from "../query";
+import { getDesignDefaultBackgroundColor } from "../utility";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { LoadingIndicator } from "./LoadingIndicator";
-import styles from "./styles/ComparisonBar.module.css";
 import { DesignModalDisplay } from "./Modal";
-import {
-  // createNavigationUrl,
-  getDesignDefaultBackgroundColor,
-} from "../utility";
-import { Design } from "../dbSchema";
-import { createNavigationUrl } from "../query";
+import styles from "./styles/ComparisonBar.module.css";
 
 export function ComparisonBar() {
   const {
@@ -87,8 +83,6 @@ function ComparisonSquare({ designId }: { designId?: number }) {
   }, [designId]);
 
   if (!removeComparisonId || !setModalDisplay) return <></>;
-
-  const defined = design && designId;
 
   return (
     <div className={styles["image-container"]}>

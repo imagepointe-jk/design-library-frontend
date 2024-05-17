@@ -106,5 +106,5 @@ export async function sendQuoteRequest(quoteRequest: QuoteRequest) {
     body: raw,
   };
 
-  return fetch(`${serverURL()}/quote-request`, requestOptions);
+  return fetch(`${serverURL()}/designs/quoteRequest`, requestOptions);
 }

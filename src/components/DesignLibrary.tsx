@@ -15,6 +15,9 @@ import { PageControls } from "./PageControls";
 import { Sidebar } from "./Sidebar";
 import { TopSection } from "./TopSection";
 import styles from "./styles/DesignLibrary.module.css";
+import { ToggleSwitch } from "./ToggleSwitch";
+import { DesignType } from "../sharedTypes";
+import { useApp } from "./AppProvider";
 
 export function DesignLibrary() {
   const [designResults, setDesignResults] = useState<TempDesignResults | null>(
@@ -24,6 +27,7 @@ export function DesignLibrary() {
     new URLSearchParams(window.location.search)
   );
   const [isFetchingResults, setIsFetchingResults] = useState(true);
+  const { windowWidth } = useApp();
 
   async function getDesignsToDisplay() {
     const {
@@ -83,6 +87,19 @@ export function DesignLibrary() {
     window.location.href = createNavigationUrl(newParams);
   }
 
+  function changeDesignType(newType: DesignType) {
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      designType: newType,
+      category: undefined,
+      subcategory: undefined,
+      featuredOnly: newType === "Screen Print",
+      pageNumber: 1,
+    };
+
+    window.location.href = createNavigationUrl(newParams);
+  }
+
   function handleClickSidebarSubcategory(hierarchy: string) {
     const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);
 
@@ -137,6 +154,8 @@ export function DesignLibrary() {
     ? Math.ceil(designResults.total / designResults.perPage)
     : 0;
 
+  const showSidebar = windowWidth && windowWidth > 1200;
+
   return (
     <>
       <div className={styles["bg"]}>
@@ -177,19 +196,49 @@ export function DesignLibrary() {
             <h2 className={styles["library-name"]}>
               {designQueryParams.designType} Designs
             </h2>
-            {designQueryParams.designType === "Embroidery" && (
-              <p className={styles["library-subtext"]}>
-                The inspiration library shows current embroidery designs we've
-                done for unions and organizations to help you envision and
-                choose your next design. Design work is done in-house by our
-                experienced Art Team.{" "}
-              </p>
-            )}
+            <h2 className={styles["choose-library"]}>Choose Library</h2>
           </div>
+          {!showSidebar && (
+            <div className={styles["toggle-switch-container"]}>
+              <ToggleSwitch
+                className={styles["toggle-switch"]}
+                option1={{
+                  id: "Screen Print",
+                  label: "Screen Print",
+                }}
+                option2={{
+                  id: "Embroidery",
+                  label: "Embroidery",
+                }}
+                name="Library"
+                stacked={false}
+                checked={
+                  designQueryParams.designType === "Screen Print"
+                    ? "one"
+                    : "two"
+                }
+                onClick={(clicked) =>
+                  changeDesignType(
+                    clicked === "one" ? "Screen Print" : "Embroidery"
+                  )
+                }
+              />
+            </div>
+          )}
+          {designQueryParams.designType === "Embroidery" && (
+            <p className={styles["library-subtext"]}>
+              The inspiration library shows current embroidery designs we've
+              done for unions and organizations to help you envision and choose
+              your next design. Design work is done in-house by our experienced
+              Art Team.{" "}
+            </p>
+          )}
           <div className={styles["main-flex"]}>
-            <Sidebar
-              onClickSidebarSubcategory={handleClickSidebarSubcategory}
-            />
+            {showSidebar && (
+              <Sidebar
+                onClickSidebarSubcategory={handleClickSidebarSubcategory}
+              />
+            )}
             <div>
               <div className={styles["search-container"]}>
                 <DesignLibraryControls />

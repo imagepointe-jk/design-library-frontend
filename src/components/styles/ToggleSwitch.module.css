@@ -1,0 +1,35 @@
+.main {
+  background-color: gray;
+  border-radius: 10px;
+  display: inline-flex;
+  padding: 10px;
+  gap: 10px;
+  justify-content: center;
+  -webkit-box-shadow: inset 0px 9px 10px 0px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: inset 0px 9px 10px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0px 9px 10px 0px rgba(0, 0, 0, 0.15);
+}
+
+.main.stacked {
+  flex-direction: column;
+}
+
+.main label {
+  display: block;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px;
+  font-weight: bold;
+  color: white;
+  font-size: initial;
+}
+
+.main input[type="radio"] {
+  display: none;
+}
+
+.main input[type="radio"]:checked + label {
+  background-color: lightgray;
+  color: black;
+}

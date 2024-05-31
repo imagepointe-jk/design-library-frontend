@@ -1,14 +1,11 @@
 .main {
   flex: 3;
+  max-width: 500px;
 }
 
-.main .back {
-  background: none;
-  color: black;
-}
-
-.back i {
-  margin-right: 5px;
+.main h3 {
+  font-size: 1.5rem;
+  margin-bottom: 24px !important; /*fighting wordpress styles*/
 }
 
 .main label {
@@ -22,13 +19,43 @@
 .main form {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .main .horz-inputs {
   display: flex;
+  gap: 10px;
 }
 
 .main .horz-inputs input {
   width: 50%;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 10px;
+}
+
+.submit-container,
+.buttons-container button,
+.buttons-container a {
+  flex: 1;
+}
+
+.buttons-container a {
+  background: none;
+  color: var(--color-alpha);
+  border: 2px solid;
+}
+
+@media screen and (max-width: 480px) {
+  .buttons-container {
+    gap: 0;
+  }
+
+  .buttons-container button,
+  .buttons-container a {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

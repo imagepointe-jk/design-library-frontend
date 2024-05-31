@@ -26,6 +26,11 @@
   background: none;
 }
 
+.main.max-height-730 {
+  max-height: 730px;
+  overflow: scroll;
+}
+
 @media screen and (max-width: 1000px) {
   .main {
     left: 0;
@@ -33,6 +38,10 @@
     top: 0;
     bottom: 0;
     overflow: scroll;
+  }
+
+  .main.max-height-730 {
+    max-height: initial;
   }
 }
 

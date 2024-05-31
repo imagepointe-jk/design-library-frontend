@@ -10,6 +10,13 @@
   position: relative;
 }
 
+.single-img-container {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  aspect-ratio: 1;
+}
+
 .bg-color-backdrop {
   position: absolute;
   left: 0;

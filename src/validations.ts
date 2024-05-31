@@ -6,7 +6,9 @@ import {
 } from "./sharedTypes";
 import {
   DesignQueryParams,
+  cartDataSchema,
   categoryDataSchema,
+  compareModeDataSchema,
   subcategoryDataSchema,
   tempDesignResultsSchema,
 } from "./types";
@@ -98,4 +100,14 @@ export function validateEmail(str: string) {
 
 export function validatePhone(phone: number) {
   if (`${phone}`.length !== 10) throw new Error();
+}
+
+export function validateCompareModeData(jsonString: string) {
+  const json = JSON.parse(jsonString);
+  return compareModeDataSchema.parse(json);
+}
+
+export function validateCartData(jsonString: string) {
+  const json = JSON.parse(jsonString);
+  return cartDataSchema.parse(json);
 }

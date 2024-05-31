@@ -234,35 +234,37 @@ function Subcategories({
   onClickFilterButton,
 }: SubcategoriesProps) {
   return (
-    <div
-      className={styles["subcategories-container"]}
-      style={{
-        overflowY:
-          subcategories.length > maxSubcategoriesBeforeScrollable
-            ? "scroll"
-            : undefined,
-      }}
-    >
-      {subcategories.map((subcategory) => (
-        <>
-          <input
-            className="text-styled-checkbox"
-            type="checkbox"
-            name="subcategory"
-            id={`${buttonIdPrefix}${subcategory.Name}`}
-            onChange={(e) =>
-              onClickFilterButton(
-                "Subcategory",
-                e.target.checked ? subcategory.Name : null
-              )
-            }
-            checked={subcategory.Name === selectedSubcategory}
-          />
-          <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>
-            {subcategory.Name}
-          </label>
-        </>
-      ))}
+    <div>
+      <h3>Subcategories</h3>
+      <div
+        className={styles["subcategories-container"]}
+        style={{
+          overflowY:
+            subcategories.length > maxSubcategoriesBeforeScrollable
+              ? "scroll"
+              : undefined,
+        }}
+      >
+        {subcategories.map((subcategory) => (
+          <>
+            <label htmlFor={`${buttonIdPrefix}${subcategory.Name}`}>
+              <input
+                type="checkbox"
+                name="subcategory"
+                id={`${buttonIdPrefix}${subcategory.Name}`}
+                onChange={(e) =>
+                  onClickFilterButton(
+                    "Subcategory",
+                    e.target.checked ? subcategory.Name : null
+                  )
+                }
+                checked={subcategory.Name === selectedSubcategory}
+              />
+              {subcategory.Name}
+            </label>
+          </>
+        ))}
+      </div>
     </div>
   );
 }

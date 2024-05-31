@@ -7,26 +7,20 @@ import {
 } from "../validations";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/QuoteForm.module.css";
-
-type QuoteFormProps = {
-  designId: number;
-  designNumber: string;
-  garmentColor: string;
-  onClickBack: () => void;
-};
+import { useApp } from "./AppProvider";
+import { createNavigationUrl } from "../utility";
 
 type Status = "success" | "failure";
+type QuoteFormProps = {
+  onSuccess: () => void;
+};
 
-export function QuoteForm({
-  designId,
-  designNumber,
-  garmentColor,
-  onClickBack,
-}: QuoteFormProps) {
+export function QuoteForm({ onSuccess }: QuoteFormProps) {
   const [submittingRequest, setSubmittingRequest] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [invalidPhone, setInvalidPhone] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null as Status | null);
+  const { cartData } = useApp();
   const phoneField = useRef(null as HTMLInputElement | null);
 
   function checkEmail(email: string) {
@@ -61,6 +55,7 @@ export function QuoteForm({
   //TODO: Require phone number to be 9 digits
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!cartData) return;
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -74,7 +69,7 @@ export function QuoteForm({
       const union = formData.get("union");
       const local = formData.get("local");
       const unionWithLocal = `${union} (Local ${local})`;
-      const comments = formData.get("comments") || "";
+      const comments = formData.get("comments") || "(no comments)";
 
       const quoteRequest = validateQuoteRequest({
         firstName,
@@ -82,10 +77,8 @@ export function QuoteForm({
         email,
         phone,
         union: unionWithLocal,
-        designId,
+        designs: cartData.designs,
         comments,
-        designNumber,
-        garmentColor,
       });
       setSubmittingRequest(true);
       const response = await sendQuoteRequest(quoteRequest);
@@ -95,6 +88,7 @@ export function QuoteForm({
       }
       setSubmittingRequest(false);
       setSubmitStatus("success");
+      onSuccess();
     } catch (error) {
       console.error(error);
       setSubmitStatus("failure");
@@ -102,13 +96,14 @@ export function QuoteForm({
     }
   }
 
+  const waitingForSubmitClick =
+    !submittingRequest && submitStatus !== "success";
+  const submitSuccess = !submittingRequest && submitStatus === "success";
+  const submitFailure = !submittingRequest && submitStatus === "failure";
+
   return (
     <div className={styles["main"]}>
-      <h2>Request Quote</h2>
-      <button className={styles["back"]} onClick={onClickBack}>
-        <i className="fa-solid fa-arrow-left"></i>
-        Back
-      </button>
+      <h3>Contact Info</h3>
       <form onSubmit={submit}>
         <div className={styles["horz-inputs"]}>
           <input
@@ -176,17 +171,26 @@ export function QuoteForm({
           rows={10}
           placeholder="Comments (Please specify garment type, sizes, quantities, etc.)"
         ></textarea>
-        {!submittingRequest && submitStatus !== "success" && (
-          <button type="submit">Submit Request</button>
-        )}
-        {submittingRequest && <LoadingIndicator />}
-        {!submittingRequest && submitStatus === "success" && (
+        <div className={styles["buttons-container"]}>
+          {waitingForSubmitClick && (
+            <button type="submit" disabled={cartData?.designs.length === 0}>
+              Submit Request
+            </button>
+          )}
+          {submittingRequest && (
+            <div className={styles["submit-container"]}>
+              <LoadingIndicator />
+            </div>
+          )}
+          <a href={createNavigationUrl("home")}>Add More</a>
+        </div>
+        {submitSuccess && (
           <div>
             <i className="fa-solid fa-circle-check"></i>Request submitted. A
             salesperson will reach out in 1-2 business days.
           </div>
         )}
-        {!submittingRequest && submitStatus === "failure" && (
+        {submitFailure && (
           <div>
             <i className="fa-solid fa-triangle-exclamation"></i>We're sorry,
             there was an error submitting your request. Feel free to{" "}

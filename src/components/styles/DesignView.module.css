@@ -23,21 +23,20 @@
   padding: 15px;
 }
 
-.main-flex .try-design-button {
-  margin: auto;
+.main-flex .add-to-quote-button,
+.main-flex .request-quote-button,
+.main-flex .request-quote-button span {
   padding: 15px;
-  margin-bottom: 12px;
+  font-size: 1rem;
 }
 
 .main-flex .similar-designs-button {
-  margin: auto;
-  margin-top: 5px;
   background: none;
   border: 2px solid var(--color-alpha);
   color: var(--color-alpha);
-  padding: 10px;
+  padding: 13px;
   max-width: 200px;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .main-flex .similar-designs-button i {
@@ -51,7 +50,6 @@
 .details-area {
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
   flex: 3;
 }
 
@@ -141,6 +139,10 @@
   font-weight: 700;
 }
 
+.filters-tags-container {
+  font-size: 0.9rem;
+}
+
 .filters-tags-container div {
   margin: 10px 0;
 }
@@ -148,6 +150,13 @@
 .filters-tags-container p {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .quote-info {
@@ -185,5 +194,10 @@
 
   .main-flex .gizmos-container {
     justify-content: center;
+  }
+
+  .buttons-container {
+    flex-direction: column;
+    gap: 10px;
   }
 }

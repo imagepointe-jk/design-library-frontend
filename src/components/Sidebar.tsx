@@ -1,9 +1,11 @@
+import { DesignType } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { createNavigationUrl } from "../utility";
 import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { HierarchyItem, HierarchyList } from "./HierarchyList";
 import { submitSearch } from "./SearchArea";
+import { ToggleSwitch } from "./ToggleSwitch";
 import "./styles/Sidebar.css";
 import styles from "./styles/Sidebar.module.css";
 
@@ -51,6 +53,19 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
     window.location.href = createNavigationUrl(newParams);
   }
 
+  function changeDesignType(newType: DesignType) {
+    const newParams: DesignQueryParams = {
+      ...designQueryParams,
+      designType: newType,
+      category: undefined,
+      subcategory: undefined,
+      featuredOnly: newType === "Screen Print",
+      pageNumber: 1,
+    };
+
+    window.location.href = createNavigationUrl(newParams);
+  }
+
   return (
     <div className={styles["main"]}>
       <form onSubmit={submitSearch}>
@@ -62,6 +77,27 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
         />
         <button type="submit">Search</button>
       </form>
+      <div>
+        <h2>Choose Library</h2>
+        <ToggleSwitch
+          option1={{
+            id: "Screen Print",
+            label: "Screen Print",
+          }}
+          option2={{
+            id: "Embroidery",
+            label: "Embroidery",
+          }}
+          name="Library"
+          stacked={true}
+          checked={
+            designQueryParams.designType === "Screen Print" ? "one" : "two"
+          }
+          onClick={(clicked) =>
+            changeDesignType(clicked === "one" ? "Screen Print" : "Embroidery")
+          }
+        />
+      </div>
       <i className="fa-solid fa-sliders"></i>
       <h2 className={styles["filters-heading"]}>Filters</h2>
       {filtersActive && (

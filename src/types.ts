@@ -24,6 +24,22 @@ export const tempDesignResultsSchema = z.object({
   designs: z.array(tempDesignSchema),
 });
 
+export const compareModeDataSchema = z.object({
+  active: z.boolean(),
+  expanded: z.boolean(),
+  selectedIds: z.array(z.number()),
+});
+
+export const cartDesignSchema = z.object({
+  id: z.number(),
+  designNumber: z.string(),
+  garmentColor: z.string(),
+});
+
+export const cartDataSchema = z.object({
+  designs: z.array(cartDesignSchema),
+});
+
 export type DesignQueryParams = {
   designType: DesignType;
   category?: string;
@@ -43,3 +59,6 @@ export type CategoryData = z.infer<typeof categoryDataSchema>;
 export type SubcategoryData = z.infer<typeof subcategoryDataSchema>;
 export type CategoryHierarchy = z.infer<typeof categoryHierarchySchema>;
 export type TempDesignResults = z.infer<typeof tempDesignResultsSchema>;
+export type CompareModeData = z.infer<typeof compareModeDataSchema>;
+export type CartData = z.infer<typeof cartDataSchema>;
+export type CartDesign = z.infer<typeof cartDesignSchema>;

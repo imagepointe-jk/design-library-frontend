@@ -7,10 +7,10 @@ import {
   getDesignDefaultBackgroundColor,
   getDesignTags,
   getFirstHexCodeInString,
+  isDesignTransparent,
 } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
-import { QuoteForm } from "./QuoteForm";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
 import { TempDesign } from "../sharedTypes";
@@ -26,8 +26,7 @@ export function DesignView({ designId }: DesignViewProps) {
   );
   const [viewedIndex, setViewedIndex] = useState(0);
   const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
-  const [showQuoteForm, setShowQuoteForm] = useState(false);
-  const { setLightboxData } = useApp();
+  const { setLightboxData, cartData, addDesignsToCart } = useApp();
 
   async function getDesignsToDisplay() {
     try {
@@ -52,6 +51,31 @@ export function DesignView({ designId }: DesignViewProps) {
 
   function onClickColor(clickedColor: string) {
     setSelectedBgColor(clickedColor);
+  }
+
+  function clickQuoteButton() {
+    if (!addDesignsToCart || !relatedDesigns) return;
+
+    if (!isDesignInCart) {
+      const viewedDesign = relatedDesigns[viewedIndex];
+      //if they actually clicked a non-default color, use that.
+      //if not, check if the viewed design has transparency (and therefore had color picking options).
+      //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
+      //if it did, assume the user was fine with the default background color, and assign that.
+      const colorToAddToCart =
+        selectedBgColor ||
+        (viewedDesignHasTransparency
+          ? viewedDesign.DefaultBackgroundColor
+          : "Color picking unavailable for this design.");
+      addDesignsToCart([
+        {
+          id: viewedDesign.Id,
+          designNumber: viewedDesign.DesignNumber,
+          garmentColor: colorToAddToCart,
+        },
+      ]);
+      window.location.href = createNavigationUrl("cart");
+    } else console.log("go to cart");
   }
 
   useEffect(() => {
@@ -80,9 +104,9 @@ export function DesignView({ designId }: DesignViewProps) {
   const images = relatedDesigns
     ? relatedDesigns.map((design) => design.ImageURL || "")
     : [];
-  //assume for now that all .pngs are transparent
-  const viewedDesignHasTransparency =
-    viewedDesign?.ImageURL?.endsWith(".png") || false;
+  const viewedDesignHasTransparency = viewedDesign
+    ? isDesignTransparent(viewedDesign)
+    : false;
   const showColorChangeSection =
     relatedDesigns &&
     relatedDesigns[0].DesignType === "Screen Print" &&
@@ -98,6 +122,9 @@ export function DesignView({ designId }: DesignViewProps) {
   const similarDesignsUrl = similarDesignsParams
     ? createNavigationUrl(similarDesignsParams)
     : undefined;
+  const isDesignInCart = cartData?.designs.find(
+    (design) => viewedDesign?.Id === design.id
+  );
 
   return (
     <>
@@ -137,62 +164,46 @@ export function DesignView({ designId }: DesignViewProps) {
                 viewedIndex={viewedIndex}
                 setViewedIndex={setViewedIndex}
                 backgroundColor={bgColorToUse}
-                showArrowButtons={!showQuoteForm && !singleDesign}
-                showNavGallery={!showQuoteForm && !singleDesign}
+                showArrowButtons={!singleDesign}
+                showNavGallery={!singleDesign}
               />
             </div>
-            {!showQuoteForm && (
-              <div className={styles["details-area"]}>
-                <div>
-                  <h2
-                    className={`${styles["heading"]} ${styles["desktop-only"]}`}
-                  >{`#${viewedDesign.DesignNumber}`}</h2>
-                  <p className={styles["description"]}>
-                    {viewedDesign.Description}
-                  </p>
-                </div>
-                <div>
-                  {showColorChangeSection && (
-                    <BackgroundColorChanger
-                      selectedColor={selectedBgColor}
-                      onClickColor={onClickColor}
-                    />
+            <div className={styles["details-area"]}>
+              <div>
+                <h2
+                  className={`${styles["heading"]} ${styles["desktop-only"]}`}
+                >{`#${viewedDesign.DesignNumber}`}</h2>
+                <p className={styles["description"]}>
+                  {viewedDesign.Description}
+                </p>
+              </div>
+              <div>
+                {showColorChangeSection && (
+                  <BackgroundColorChanger
+                    selectedColor={selectedBgColor}
+                    onClickColor={onClickColor}
+                  />
+                )}
+                <p className={styles["quote-info"]}>
+                  Request a quote to see this design customized for your union!
+                </p>
+                <div className={styles["buttons-container"]}>
+                  {!isDesignInCart && (
+                    <button
+                      className={styles["add-to-quote-button"]}
+                      onClick={clickQuoteButton}
+                    >
+                      ADD TO QUOTE
+                    </button>
                   )}
-                  <div className={styles["filters-tags-container"]}>
-                    <div>
-                      <p className="bold">Filters</p>
-                      <p>
-                        {filters.length > 0 &&
-                          filters.map((sub, i, array) => {
-                            const onlySubcategory = sub && sub.split(" > ")[1];
-                            const comma = i < array.length - 1;
-                            return `${onlySubcategory}${comma ? ", " : ""}`;
-                          })}
-                        {filters.length === 0 && "No filters"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="bold">Search Tags</p>
-                      <p>
-                        {tags.length > 0 &&
-                          tags.map((sub, i, array) => {
-                            const comma = i < array.length - 1;
-                            return `${sub}${comma ? ", " : ""}`;
-                          })}
-                        {tags.length === 0 && "No tags"}
-                      </p>
-                    </div>
-                  </div>
-                  <p className={styles["quote-info"]}>
-                    Get a quote to view more garment color options and see this
-                    design customized for your union!
-                  </p>
-                  <button
-                    className={styles["try-design-button"]}
-                    onClick={() => setShowQuoteForm(true)}
-                  >
-                    REQUEST QUOTE
-                  </button>
+                  {isDesignInCart && (
+                    <a
+                      href={createNavigationUrl("cart")}
+                      className={styles["request-quote-button"]}
+                    >
+                      REQUEST QUOTE
+                    </a>
+                  )}
                   <a
                     href={similarDesignsUrl}
                     className={styles["similar-designs-button"]}
@@ -200,16 +211,33 @@ export function DesignView({ designId }: DesignViewProps) {
                     Similar Designs<i className={"fa-solid fa-arrow-right"}></i>
                   </a>
                 </div>
+                <div className={styles["filters-tags-container"]}>
+                  <div>
+                    <p className="bold">Filters</p>
+                    <p>
+                      {filters.length > 0 &&
+                        filters.map((sub, i, array) => {
+                          const onlySubcategory = sub && sub.split(" > ")[1];
+                          const comma = i < array.length - 1;
+                          return `${onlySubcategory}${comma ? ", " : ""}`;
+                        })}
+                      {filters.length === 0 && "No filters"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="bold">Search Tags</p>
+                    <p>
+                      {tags.length > 0 &&
+                        tags.map((sub, i, array) => {
+                          const comma = i < array.length - 1;
+                          return `${sub}${comma ? ", " : ""}`;
+                        })}
+                      {tags.length === 0 && "No tags"}
+                    </p>
+                  </div>
+                </div>
               </div>
-            )}
-            {showQuoteForm && (
-              <QuoteForm
-                designId={viewedDesign.Id}
-                designNumber={viewedDesign.DesignNumber}
-                garmentColor={fullColorStringToUse}
-                onClickBack={() => setShowQuoteForm(false)}
-              />
-            )}
+            </div>
           </div>
         </>
       )}
@@ -222,7 +250,7 @@ type BackgroundColorChangerProps = {
   onClickColor: (clickedColor: string) => void;
 };
 
-function BackgroundColorChanger({
+export function BackgroundColorChanger({
   onClickColor,
   selectedColor,
 }: BackgroundColorChangerProps) {

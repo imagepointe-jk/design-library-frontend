@@ -13,6 +13,7 @@ type DesignScrollViewProps = {
   backgroundColor?: string;
   showArrowButtons?: boolean;
   showNavGallery?: boolean;
+  mainImgContainerClassName?: string;
 };
 
 export function DesignScrollView({
@@ -23,6 +24,7 @@ export function DesignScrollView({
   backgroundColor,
   showArrowButtons,
   showNavGallery,
+  mainImgContainerClassName,
 }: DesignScrollViewProps) {
   const navImages = imageUrls
     ? imageUrls.map((url, i) => (
@@ -37,11 +39,19 @@ export function DesignScrollView({
       ))
     : [];
   const mainImages = imageUrls
-    ? imageUrls.map((url) => <ImageWithFallback src={url} />)
+    ? imageUrls.map((url) => (
+        <div className={styles["single-img-container"]}>
+          <ImageWithFallback src={url} />
+        </div>
+      ))
     : [];
   return (
     <div className={styles["main"]}>
-      <div className={styles["main-img-container"]}>
+      <div
+        className={`${styles["main-img-container"]} ${
+          mainImgContainerClassName || ""
+        }`}
+      >
         <div
           className={styles["bg-color-backdrop"]}
           style={{ backgroundColor: backgroundColor || "white" }}

@@ -26,3 +26,71 @@
   width: 320px;
   height: 320px;
 }
+
+.design-card-parent {
+  position: relative;
+}
+
+.multiselect-container {
+  background-color: transparent;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+}
+
+.multiselect-container:hover {
+  border: 5px solid var(--color-alpha);
+}
+
+.multiselect-checkbox {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  border: 3px solid var(--color-alpha);
+  border-radius: 5px;
+  background-color: white;
+}
+
+.multiselect-checkbox i {
+  display: block;
+  color: var(--color-alpha);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  scale: 180%;
+}
+
+.max-select-message {
+  position: absolute;
+  background-color: var(--color-danger);
+  color: white;
+  width: 200px;
+  z-index: 10;
+  left: 0;
+  top: 50%;
+  translate: -110% -50%;
+  padding: 5px;
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.max-select-message::before {
+  width: 0;
+  height: 0px;
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  translate: 14px -50%;
+  border-style: solid;
+  border-width: 5px;
+  border-color: var(--color-danger) transparent transparent transparent;
+  scale: 200%;
+  rotate: -90deg;
+}

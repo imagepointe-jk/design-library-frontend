@@ -7,6 +7,7 @@
   justify-content: center;
   gap: 5px;
   margin-top: 20px;
+  align-items: start;
 }
 
 .library-text {
@@ -19,6 +20,15 @@
 
 .library-name {
   font-size: 1.825rem;
+}
+
+.library-info-container .choose-library {
+  display: none;
+}
+
+.toggle-switch-container {
+  text-align: center;
+  margin: 10px 0;
 }
 
 .library-subtext {
@@ -35,12 +45,17 @@
   max-width: 1024px;
 }
 
+.mobile-search-container {
+  display: none;
+}
+
 .settings-container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
-  flex-wrap: wrap;
   row-gap: 5px;
+  position: relative;
 }
 
 .settings-subcontainer {
@@ -60,12 +75,41 @@
   margin: 5px;
 }
 
-.settings-subcontainer .settings-button {
+.settings-subcontainer .settings-button,
+.settings-subcontainer .control-button {
   padding: 10px;
   font-size: var(--size-16);
-  display: none;
   gap: 5px;
   cursor: pointer;
+}
+
+.settings-subcontainer .control-button {
+  display: flex;
+  align-items: center;
+}
+
+.settings-subcontainer .control-button span i {
+  margin-right: 5px;
+}
+
+.settings-container .compare-button.stop {
+  background-color: white;
+  color: var(--color-alpha);
+  border: 2px solid var(--color-alpha);
+  font-weight: bold;
+  padding: 9px;
+}
+
+.settings-subcontainer .settings-button {
+  display: none;
+}
+
+.settings-subcontainer .quote-button {
+  background-color: black;
+}
+
+.settings-subcontainer .quote-button:hover {
+  background-color: var(--color-alpha);
 }
 
 .searching-for-keywords {
@@ -92,6 +136,20 @@
 }
 
 @media screen and (max-width: 1200px) {
+  .mobile-search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+  }
+
+  .mobile-search-container input {
+    width: 250px;
+  }
+
+  .mobile-search-container .mobile-search-button {
+    display: inline;
+  }
+
   .settings-subcontainer .settings-button {
     display: flex;
   }
@@ -99,9 +157,33 @@
   .library-info-container {
     margin-left: initial;
   }
+
+  .library-info-container .library-name {
+    display: none;
+  }
+
+  .library-info-container .choose-library {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .settings-container {
+    flex-direction: column;
+  }
 }
 
 @media screen and (max-width: 480px) {
+  .settings-subcontainer {
+    gap: 0;
+  }
+
+  .settings-container .settings-subcontainer,
+  .settings-container .settings-subcontainer button,
+  .settings-container .settings-subcontainer a {
+    font-size: 0.8rem;
+  }
+
   .searching-for-area {
     flex-direction: column;
     gap: 0;

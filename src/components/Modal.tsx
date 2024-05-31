@@ -5,10 +5,16 @@ import styles from "./styles/Modal.module.css";
 type ModalProps = {
   children: ReactNode;
   windowClassName?: string;
+  maxHeight?: number;
   heightType?: "short" | "medium" | "tall"; //helps make different modal sizes scrollable on vertically short displays
 };
 
-export function Modal({ children, windowClassName, heightType }: ModalProps) {
+export function Modal({
+  children,
+  windowClassName,
+  maxHeight,
+  heightType,
+}: ModalProps) {
   const { setModalDisplay } = useApp();
   return (
     <div
@@ -20,7 +26,7 @@ export function Modal({ children, windowClassName, heightType }: ModalProps) {
       <div
         className={`${styles["main"]} ${windowClassName || ""} ${
           heightType ? styles[heightType] : ""
-        }`}
+        } ${maxHeight ? styles[`max-height-${maxHeight}`] : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

@@ -1,0 +1,115 @@
+.main {
+  background-color: white;
+  width: 800px;
+  padding: 30px;
+  padding-top: 40px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  translate: -40% 85%;
+  transition: 0.3s;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  z-index: 20;
+  border: 1px solid var(--color-alpha);
+}
+
+.main .close-x {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  padding: 5px;
+  background: none;
+  color: black;
+}
+
+.expanded {
+  translate: -40% 0;
+}
+
+.images-parent-container {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.image-container {
+  width: 115px;
+  height: 115px;
+  border: 4px dashed var(--color-alpha);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.comparison-image {
+  width: 100%;
+  cursor: pointer;
+}
+
+.main .expand-retract-button {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 0;
+  background: none;
+  color: var(--color-alpha);
+}
+
+.expand-retract-button i {
+  scale: 70%;
+}
+
+.image-container .remove-button {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  font-size: 1rem;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-danger);
+}
+
+.image-container .remove-button:hover {
+  scale: 110%;
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+}
+
+.buttons-container a i {
+  margin-right: 5px;
+}
+
+@media screen and (max-width: 1200px) {
+  .main {
+    translate: -50% 85%;
+  }
+
+  .expanded {
+    translate: -50% 0;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .main {
+    left: 0;
+    right: 0;
+    translate: 0 90%;
+    width: initial;
+  }
+
+  .expanded {
+    translate: 0 0;
+  }
+}

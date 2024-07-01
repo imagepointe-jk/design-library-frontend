@@ -122,7 +122,7 @@ export function DesignLibraryControls() {
           </button>
           <a
             href={createNavigationUrl("cart")}
-            className={styles["control-button"]}
+            className={`${styles["control-button"]} ${styles["quote-button"]}`}
           >
             <span>
               <i className="fa-solid fa-cart-shopping"></i>

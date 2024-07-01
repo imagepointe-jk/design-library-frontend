@@ -7,6 +7,7 @@
   justify-content: center;
   gap: 5px;
   margin-top: 20px;
+  align-items: start;
 }
 
 .library-text {
@@ -101,6 +102,14 @@
 
 .settings-subcontainer .settings-button {
   display: none;
+}
+
+.settings-subcontainer .quote-button {
+  background-color: black;
+}
+
+.settings-subcontainer .quote-button:hover {
+  background-color: var(--color-alpha);
 }
 
 .searching-for-keywords {

@@ -31,7 +31,7 @@ export const colorSchema = z.object({
 
 export const designSchema = z.object({
   id: z.number(),
-  designNumber: z.number(),
+  designNumber: z.string(),
   name: z.union([z.string(), z.null()]),
   description: z.union([z.string(), z.null()]),
   featured: z.boolean(),

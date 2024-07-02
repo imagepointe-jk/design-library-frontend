@@ -14,6 +14,7 @@ type DesignCardProps = {
   designNumber: string;
   imgUrl: string;
   backgroundColor: string;
+  variationCount: number;
 };
 
 export function DesignCard({
@@ -21,6 +22,7 @@ export function DesignCard({
   imgUrl,
   designId,
   backgroundColor,
+  variationCount,
 }: DesignCardProps) {
   const {
     setModalDisplay,
@@ -74,6 +76,11 @@ export function DesignCard({
         </div>
         <div className={styles["design-card-id"]}>{designNumber}</div>
       </a>
+      {variationCount > 0 && (
+        <div className={styles["variations-message"]}>
+          {variationCount + 1} variations
+        </div>
+      )}
       {compareModeData?.active && tryAddComparisonId && (
         <>
           <div className={styles["multiselect-checkbox"]}>

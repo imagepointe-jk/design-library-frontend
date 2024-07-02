@@ -94,3 +94,15 @@
   scale: 200%;
   rotate: -90deg;
 }
+
+.variations-message {
+  color: white;
+  background-color: var(--color-alpha);
+  border-radius: 100px;
+  padding: 5px 10px;
+  position: absolute;
+  right: 0;
+  bottom: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}

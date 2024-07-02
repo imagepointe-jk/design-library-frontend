@@ -29,6 +29,15 @@ export const colorSchema = z.object({
   hexCode: z.string(),
 });
 
+const designVariationSchema = z.object({
+  id: z.number(),
+  parentDesignId: z.number(),
+  color: colorSchema,
+  imageUrl: z.string(),
+  designSubcategories: z.array(designSubcategorySchema),
+  designTags: z.array(designTagSchema),
+});
+
 export const designSchema = z.object({
   id: z.number(),
   designNumber: z.string(),
@@ -42,6 +51,7 @@ export const designSchema = z.object({
   designTags: z.array(designTagSchema),
   designType: designTypeSchema,
   defaultBackgroundColor: colorSchema,
+  variations: z.array(designVariationSchema),
 });
 
 export type Design = z.infer<typeof designSchema>;

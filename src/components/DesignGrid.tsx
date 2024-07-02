@@ -17,6 +17,7 @@ export function DesignGrid({ designs }: DesignGridProps) {
           designId={design.id}
           imgUrl={design.imageUrl}
           backgroundColor={getDesignDefaultBackgroundColor(design) || "#000000"}
+          variationCount={design.variations.length}
         />
       ))}
     </div>

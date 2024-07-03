@@ -6,8 +6,9 @@ export const designTypeSchema = z.enum(designTypes);
 const designStatuses = ["Published", "Draft"] as const;
 export const designStatusSchema = z.enum(designStatuses);
 
-const quoteRequestDesignSchema = z.object({
-  id: z.number(),
+const quoteRequestItemSchema = z.object({
+  designId: z.number(),
+  variationId: z.number().optional(),
   designNumber: z.string(),
   garmentColor: z.string(),
 });
@@ -19,7 +20,7 @@ export const quoteRequestSchema = z.object({
   phone: z.number(),
   union: z.string(),
   comments: z.string(),
-  designs: z.array(quoteRequestDesignSchema),
+  items: z.array(quoteRequestItemSchema),
 });
 
 export type DesignType = z.infer<typeof designTypeSchema>;

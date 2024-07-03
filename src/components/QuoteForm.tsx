@@ -77,7 +77,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         email,
         phone,
         union: unionWithLocal,
-        designs: cartData.designs,
+        items: cartData.items,
         comments,
       });
       setSubmittingRequest(true);

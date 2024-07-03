@@ -47,7 +47,10 @@ function App() {
       <DesignLibrary />
       {modalDisplay instanceof DesignModalDisplay && (
         <Modal heightType="tall">
-          <DesignView designId={modalDisplay.designId} />
+          <DesignView
+            designId={modalDisplay.designId}
+            variationId={modalDisplay.variationId}
+          />
         </Modal>
       )}
       {modalDisplay === "search" && (

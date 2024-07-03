@@ -105,7 +105,11 @@ function ComparisonSquare({
               variation ? variation.imageUrl : design ? design.imageUrl : "none"
             }
             className={styles["comparison-image"]}
-            onClick={() => setModalDisplay(new DesignModalDisplay(designId))}
+            onClick={() =>
+              setModalDisplay(
+                new DesignModalDisplay(data.designId, data.variationId)
+              )
+            }
             style={{
               backgroundColor: variation
                 ? `#${variation.color.hexCode}`

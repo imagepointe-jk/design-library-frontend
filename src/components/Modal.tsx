@@ -45,8 +45,10 @@ export function Modal({
 
 export class DesignModalDisplay {
   public readonly designId;
+  public readonly variationId;
 
-  constructor(designId: number) {
+  constructor(designId: number, variationId?: number) {
     this.designId = designId;
+    this.variationId = variationId;
   }
 }

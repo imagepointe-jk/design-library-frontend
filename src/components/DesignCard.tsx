@@ -40,7 +40,7 @@ export function DesignCard({
     if (!setModalDisplay) return;
 
     e.preventDefault();
-    setModalDisplay(new DesignModalDisplay(designId));
+    setModalDisplay(new DesignModalDisplay(designId, variationId));
   }
 
   function showMultiselectError() {

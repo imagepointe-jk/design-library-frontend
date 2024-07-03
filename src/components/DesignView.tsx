@@ -14,9 +14,10 @@ import styles from "./styles/DesignView.module.css";
 
 type DesignViewProps = {
   designId: number;
+  variationId?: number;
 };
 
-export function DesignView({ designId }: DesignViewProps) {
+export function DesignView({ designId, variationId }: DesignViewProps) {
   // const [relatedDesigns, setRelatedDesigns] = useState<Design[] | null>(null);
   const [parentDesign, setParentDesign] = useState<Design | null>(null);
   const [viewedIndex, setViewedIndex] = useState(-1); //view the parent design when index is -1
@@ -97,9 +98,18 @@ export function DesignView({ designId }: DesignViewProps) {
       const variationsSorted = [...design.variations];
       variationsSorted.sort((a, b) => a.id - b.id);
       design.variations = variationsSorted;
+      const indexOfVariation = design.variations.findIndex(
+        (variation) => variation.id === variationId
+      );
+      if (variationId !== undefined && indexOfVariation === -1)
+        throw new Error(
+          `Variation id ${variationId} not found for design ${designId}.`
+        );
+
+      setViewedIndex(indexOfVariation);
       setParentDesign(design);
     } catch (error) {
-      console.error("Error getting related designs: ", error);
+      console.error("Error getting design: ", error);
     }
   }
 

@@ -9,12 +9,14 @@ import { ImageWithFallback } from "./ImageWithFallback";
 import { DesignModalDisplay } from "./Modal";
 import styles from "./styles/DesignGrid.module.css";
 
-type DesignCardProps = {
+export type DesignCardProps = {
   designId: number;
   designNumber: string;
   imgUrl: string;
   backgroundColor: string;
-  variationCount: number;
+  variationId?: number;
+  variationMessage?: string;
+  onClickVariationMessage?: () => void;
 };
 
 export function DesignCard({
@@ -22,7 +24,8 @@ export function DesignCard({
   imgUrl,
   designId,
   backgroundColor,
-  variationCount,
+  variationMessage,
+  onClickVariationMessage,
 }: DesignCardProps) {
   const {
     setModalDisplay,
@@ -76,9 +79,12 @@ export function DesignCard({
         </div>
         <div className={styles["design-card-id"]}>{designNumber}</div>
       </a>
-      {variationCount > 0 && (
-        <div className={styles["variations-message"]}>
-          {variationCount + 1} variations
+      {variationMessage && (
+        <div
+          className={styles["variations-message"]}
+          onClick={onClickVariationMessage}
+        >
+          {variationMessage}
         </div>
       )}
       {compareModeData?.active && tryAddComparisonId && (

@@ -105,4 +105,5 @@
   bottom: 10px;
   cursor: pointer;
   font-size: 0.9rem;
+  z-index: 1;
 }

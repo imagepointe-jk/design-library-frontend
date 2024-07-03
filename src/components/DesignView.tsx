@@ -84,7 +84,11 @@ export function DesignView({ designId, variationId }: DesignViewProps) {
     `${designId}`
   ).stringified;
   const similarDesignsUrl = `${window.location.origin}${window.location.pathname}?${similarDesignsParams}`;
-  const isDesignInCart = false; //temporary
+  const isDesignInCart = cartData?.items.find((item) =>
+    viewedVariation
+      ? item.variationId === viewedVariation.id
+      : item.designId === parentDesign?.id
+  );
   // const isDesignInCart = cartData?.designs.find(
   //   (design) => viewedDesign?.id === design.id
   // );
@@ -129,30 +133,32 @@ export function DesignView({ designId, variationId }: DesignViewProps) {
   }
 
   function clickQuoteButton() {
-    console.log("add to quote");
-    // if (!addDesignsToCart || !parentDesign) return;
+    if (!addDesignsToCart || !parentDesign) return;
 
-    // if (!isDesignInCart) {
-    // const viewedDesign = relatedDesigns[viewedIndex];
-    //if they actually clicked a non-default color, use that.
-    //if not, check if the viewed design has transparency (and therefore had color picking options).
-    //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
-    //if it did, assume the user was fine with the default background color, and assign that.
+    if (!isDesignInCart) {
+      // const viewedDesign = relatedDesigns[viewedIndex];
+      //if they actually clicked a non-default color, use that.
+      //if not, check if the viewed design has transparency (and therefore had color picking options).
+      //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
+      //if it did, assume the user was fine with the default background color, and assign that.
 
-    //   const colorToAddToCart = selectedBgColor
-    //     ? `#${selectedBgColor.hexCode}`
-    //     : viewedDesignHasTransparency
-    //     ? `#${viewedDesign.defaultBackgroundColor.hexCode}`
-    //     : "Color picking unavailable for this design.";
-    //   addDesignsToCart([
-    //     {
-    //       id: viewedDesign.id,
-    //       designNumber: `${viewedDesign.designNumber}`,
-    //       garmentColor: colorToAddToCart,
-    //     },
-    //   ]);
-    //   window.location.href = createNavigationUrl("cart");
-    // } else console.log("go to cart");
+      const colorToAddToCart = selectedBgColor
+        ? `#${selectedBgColor.hexCode}`
+        : viewedDesignHasTransparency && viewedVariation
+        ? `#${viewedVariation.color.hexCode}`
+        : viewedDesignHasTransparency
+        ? `#${parentDesign.defaultBackgroundColor.hexCode}`
+        : "Color picking unavailable for this design.";
+      addDesignsToCart([
+        {
+          designId: parentDesign.id,
+          designNumber: `${parentDesign.designNumber}`,
+          garmentColor: colorToAddToCart,
+          variationId: viewedVariation ? viewedVariation.id : undefined,
+        },
+      ]);
+      window.location.href = createNavigationUrl("cart");
+    } else console.log("go to cart");
   }
 
   useEffect(() => {

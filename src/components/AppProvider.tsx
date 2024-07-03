@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { getCategories, getColors } from "../fetch";
-import { CartData, CartDesign, CompareModeData } from "../types";
+import { CartData, CartItem, CompareModeData } from "../types";
 import { DesignModalDisplay } from "./Modal";
 import { LightboxData } from "./Lightbox";
 import { validateCartData, validateCompareModeData } from "../validations";
@@ -34,8 +34,8 @@ type AppContextType = {
   setCompareModeActive: (state: boolean) => void;
   setCompareModeExpanded: (state: boolean) => void;
   cartData: CartData;
-  addDesignsToCart: (designs: CartDesign[]) => void;
-  removeDesignFromCart: (designId: number) => void;
+  addItemsToCart: (designs: CartItem[]) => void;
+  removeItemFromCart: (designId: number, variationId?: number) => void;
   emptyCart: () => void;
   windowWidth: number;
 };
@@ -58,8 +58,8 @@ export function useApp() {
     setCompareModeActive: context?.setCompareModeActive,
     setCompareModeExpanded: context?.setCompareModeExpanded,
     cartData: context?.cartData,
-    addDesignsToCart: context?.addDesignsToCart,
-    removeDesignFromCart: context?.removeDesignFromCart,
+    addDesignsToCart: context?.addItemsToCart,
+    removeDesignFromCart: context?.removeItemFromCart,
     emptyCart: context?.emptyCart,
     windowWidth: context?.windowWidth,
   };
@@ -89,7 +89,7 @@ function getInitialCartData() {
     return parsed;
   } catch (_) {
     const initialCartData: CartData = {
-      designs: [],
+      items: [],
     };
     return initialCartData;
   }
@@ -158,33 +158,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateCompareModeData(newCompareModeData);
   }
 
-  function addDesignsToCart(designs: CartDesign[]) {
-    const designsNotInCart = designs.filter(
-      (incomingDesign) =>
-        !cartData.designs.find(
-          (designInCart) => designInCart.id === incomingDesign.id
+  function addItemsToCart(designs: CartItem[]) {
+    const itemsNotInCart = designs.filter(
+      (incomingItem) =>
+        !cartData.items.find(
+          (item) =>
+            item.designId === incomingItem.designId &&
+            item.variationId === incomingItem.variationId
         )
     );
-    const newArr = [...cartData.designs, ...designsNotInCart];
+    const newArr = [...cartData.items, ...itemsNotInCart];
     const newCartData = {
       ...cartData,
-      designs: newArr,
+      items: newArr,
     };
     updateCartData(newCartData);
   }
 
-  function removeDesignFromCart(designId: number) {
+  function removeItemFromCart(designId: number, variationId?: number) {
     const newCartData = {
       ...cartData,
-      designs: cartData.designs.filter((design) => design.id !== designId),
+      items: cartData.items.filter(
+        (item) =>
+          !(item.designId === designId && item.variationId === variationId)
+      ),
     };
+    console.log("new cart data", newCartData);
     updateCartData(newCartData);
   }
 
   function emptyCart() {
     const newCartData: CartData = {
       ...cartData,
-      designs: [],
+      items: [],
     };
     updateCartData(newCartData);
   }
@@ -238,8 +244,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setCompareModeActive,
         setCompareModeExpanded,
         cartData,
-        addDesignsToCart,
-        removeDesignFromCart,
+        addItemsToCart,
+        removeItemFromCart,
         emptyCart,
         windowWidth,
       }}

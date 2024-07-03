@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Design } from "../dbSchema";
 import { getDesignById } from "../fetch";
 import { createNavigationUrl } from "../query";
-import { CartDesign } from "../types";
+import { CartItem } from "../types";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { LoadingIndicator } from "./LoadingIndicator";
@@ -12,6 +12,7 @@ import styles from "./styles/CartView.module.css";
 export function CartView() {
   const { cartData, emptyCart } = useApp();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  console.log(cartData);
 
   if (!cartData) return <></>;
   if (showSuccessMessage)
@@ -44,11 +45,14 @@ export function CartView() {
       </a>
       <div className={styles["main-flex"]}>
         <div className={styles["items-container"]}>
-          {cartData.designs.length > 0 &&
-            cartData.designs.map((design) => (
-              <CartRow design={design} key={design.id} />
+          {cartData.items.length > 0 &&
+            cartData.items.map((item) => (
+              <CartRow
+                item={item}
+                key={`design-${item.designId}-variation-${item.variationId}`}
+              />
             ))}
-          {cartData.designs.length === 0 && (
+          {cartData.items.length === 0 && (
             <div className={styles["empty-cart-message"]}>(No designs)</div>
           )}
         </div>
@@ -59,24 +63,32 @@ export function CartView() {
 }
 
 type CartRowProps = {
-  design: CartDesign;
+  item: CartItem;
 };
 
-function CartRow({ design: { garmentColor, id } }: CartRowProps) {
+function CartRow({
+  item: { garmentColor, designId, variationId },
+}: CartRowProps) {
   const [loading, setLoading] = useState(true);
   const [design, setDesign] = useState(null as Design | null);
   const { removeDesignFromCart } = useApp();
 
+  const variation = design
+    ? design.variations.find((variation) => variation.id === variationId)
+    : undefined;
+  const foundVariation = variation !== undefined;
+  const requestedVariation = variationId !== undefined;
+
   async function getDesignToView() {
     try {
-      const design = await getDesignById(id);
+      const design = await getDesignById(designId);
       setDesign(design);
     } catch (_) {}
     setLoading(false);
   }
 
   function clickRemoveDesign() {
-    if (removeDesignFromCart) removeDesignFromCart(id);
+    if (removeDesignFromCart) removeDesignFromCart(designId, variationId);
   }
 
   useEffect(() => {
@@ -91,12 +103,22 @@ function CartRow({ design: { garmentColor, id } }: CartRowProps) {
           <div className={styles["design-row-image-container"]}>
             <ImageWithFallback
               className={styles["design-image"]}
-              src={design ? design.imageUrl : "none"}
+              src={
+                variation
+                  ? variation.imageUrl
+                  : design
+                  ? design.imageUrl
+                  : "none"
+              }
               style={{
                 backgroundColor: garmentColor,
               }}
             />
-            <div>{design ? `Design #${design.designNumber}` : "Not Found"}</div>
+            <div>
+              {design && foundVariation === requestedVariation
+                ? `Design #${design.designNumber}`
+                : "Not Found"}
+            </div>
           </div>
           <button
             className={styles["remove-button"]}

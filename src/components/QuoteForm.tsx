@@ -173,7 +173,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         ></textarea>
         <div className={styles["buttons-container"]}>
           {waitingForSubmitClick && (
-            <button type="submit" disabled={cartData?.designs.length === 0}>
+            <button type="submit" disabled={cartData?.items.length === 0}>
               Submit Request
             </button>
           )}

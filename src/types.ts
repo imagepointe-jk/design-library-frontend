@@ -36,14 +36,15 @@ export const compareModeDataSchema = z.object({
   ),
 });
 
-export const cartDesignSchema = z.object({
-  id: z.number(),
+export const cartItemSchema = z.object({
+  designId: z.number(),
+  variationId: z.number().optional(),
   designNumber: z.string(),
   garmentColor: z.string(),
 });
 
 export const cartDataSchema = z.object({
-  designs: z.array(cartDesignSchema),
+  items: z.array(cartItemSchema),
 });
 
 export type CategoryData = z.infer<typeof categoryDataSchema>;
@@ -52,4 +53,4 @@ export type CategoryHierarchy = z.infer<typeof categoryHierarchySchema>;
 export type DesignResults = z.infer<typeof designResultsSchema>;
 export type CompareModeData = z.infer<typeof compareModeDataSchema>;
 export type CartData = z.infer<typeof cartDataSchema>;
-export type CartDesign = z.infer<typeof cartDesignSchema>;
+export type CartItem = z.infer<typeof cartItemSchema>;

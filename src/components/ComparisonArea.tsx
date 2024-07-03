@@ -78,7 +78,6 @@ function ComparisonDesignContainer({
     getDesignsToDisplay();
   }, []);
 
-  console.log("viewed index 1", viewedIndex);
   if (!design)
     return (
       <div>
@@ -98,12 +97,15 @@ function ComparisonDesignContainer({
         {loadingStatus === "loading" && <LoadingIndicator />}
       </div>
     );
-  console.log("viewed index 2", viewedIndex);
 
   const showColorChanger = isImageTransparent(
     viewedVariation ? viewedVariation.imageUrl : design.imageUrl
   );
-  const isInCart = !!cartData?.designs.find((item) => item.id === design.id);
+  const isInCart = !!cartData?.items.find((item) =>
+    viewedVariation
+      ? item.variationId === viewedVariation.id
+      : item.designId === design.id
+  );
   const defaultBgColor = viewedVariation
     ? `#${viewedVariation.color.hexCode}`
     : `#${design.defaultBackgroundColor.hexCode}`;
@@ -140,11 +142,12 @@ function ComparisonDesignContainer({
 
     addDesignsToCart([
       {
-        id: design.id,
+        designId: design.id,
         designNumber: `${design.designNumber}`,
         garmentColor: selectedBgColor
           ? `#${selectedBgColor.hexCode}`
           : defaultBgColor,
+        variationId: viewedVariation?.id,
       },
     ]);
   }
@@ -189,7 +192,8 @@ function ComparisonDesignContainer({
             <button
               className={styles["remove-from-cart"]}
               onClick={() => {
-                if (removeDesignFromCart) removeDesignFromCart(design.id);
+                if (removeDesignFromCart)
+                  removeDesignFromCart(design.id, viewedVariation?.id);
               }}
             >
               Remove

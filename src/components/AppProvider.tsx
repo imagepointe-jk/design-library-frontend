@@ -132,10 +132,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   function removeComparisonId(designId: number, variationId?: number) {
     const newCompareModeData: CompareModeData = {
       ...compareModeData,
-      selectedItems: compareModeData.selectedItems.filter((thisItem) =>
-        variationId === undefined
-          ? thisItem.designId !== designId
-          : thisItem.variationId !== variationId
+      selectedItems: compareModeData.selectedItems.filter(
+        (thisItem) =>
+          !(
+            thisItem.designId === designId &&
+            thisItem.variationId === variationId
+          )
       ),
     };
     updateCompareModeData(newCompareModeData);
@@ -183,7 +185,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
           !(item.designId === designId && item.variationId === variationId)
       ),
     };
-    console.log("new cart data", newCartData);
     updateCartData(newCartData);
   }
 

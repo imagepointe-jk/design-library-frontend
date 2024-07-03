@@ -12,7 +12,6 @@ import styles from "./styles/CartView.module.css";
 export function CartView() {
   const { cartData, emptyCart } = useApp();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  console.log(cartData);
 
   if (!cartData) return <></>;
   if (showSuccessMessage)

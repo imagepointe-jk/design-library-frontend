@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Color, Design } from "../dbSchema";
-import { getDesignsRelatedToId } from "../fetch";
+// import { getDesignsRelatedToId } from "../fetch";
 import { createNavigationUrl } from "../query";
 import {
   clamp,
   getDesignDefaultBackgroundColor,
-  isDesignTransparent,
+  // isDesignTransparent,
 } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";

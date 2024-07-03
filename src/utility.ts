@@ -41,7 +41,7 @@ export function splitDesignCategoryHierarchy(hierarchy: string) {
   };
 }
 
-export function isDesignTransparent(design: Design) {
+export function isImageTransparent(imageUrl: string) {
   //assume for now that all PNGs are transparent
-  return design.imageUrl.endsWith(".png");
+  return imageUrl.endsWith(".png");
 }

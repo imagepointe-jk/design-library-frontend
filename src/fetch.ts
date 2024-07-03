@@ -42,19 +42,6 @@ export async function getDesignById(designId: number) {
   return validateSingleDesignJson(json);
 }
 
-export async function getDesignsRelatedToId(designId: number) {
-  const response = await fetch(`${serverURL()}/designs/${designId}/related`);
-  const json = await response.json();
-  if (!response.ok) {
-    console.error(
-      `Error ${response.status} while retrieving designs. Message: ${json.message}`
-    );
-    throw new Error();
-  }
-
-  return validateDesignArrayJson(json);
-}
-
 export async function getCategories() {
   var requestOptions = {
     method: "GET",

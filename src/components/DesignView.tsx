@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
 import { Color, Design } from "../dbSchema";
-import { getDesignsRelatedToId } from "../fetch";
+import { getDesignById } from "../fetch";
 import {
   createNavigationUrl,
   getDefaultQueryParams,
   getModifiedQueryParams,
 } from "../query";
-import {
-  clamp,
-  getDesignDefaultBackgroundColor,
-  getDesignTags,
-  isDesignTransparent,
-} from "../utility";
+import { clamp, isImageTransparent } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
 import { ShareButton } from "./ShareButton";
@@ -22,16 +17,87 @@ type DesignViewProps = {
 };
 
 export function DesignView({ designId }: DesignViewProps) {
-  const [relatedDesigns, setRelatedDesigns] = useState<Design[] | null>(null);
-  const [viewedIndex, setViewedIndex] = useState(0);
+  // const [relatedDesigns, setRelatedDesigns] = useState<Design[] | null>(null);
+  const [parentDesign, setParentDesign] = useState<Design | null>(null);
+  const [viewedIndex, setViewedIndex] = useState(-1); //view the parent design when index is -1
   const [selectedBgColor, setSelectedBgColor] = useState(null as Color | null); //the color the user has selected to override design's default color
   const { setLightboxData, cartData, addDesignsToCart } = useApp();
 
-  async function getDesignsToDisplay() {
+  const singleDesign = parentDesign && parentDesign.variations.length === 0;
+  // const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
+  const viewedVariation = parentDesign
+    ? parentDesign.variations[viewedIndex]
+    : null;
+  const viewedBgColor = viewedVariation
+    ? `#${viewedVariation.color.hexCode}`
+    : parentDesign
+    ? `#${parentDesign.defaultBackgroundColor.hexCode}`
+    : "white";
+  // (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
+  const selectedHexCode = selectedBgColor
+    ? `#${selectedBgColor.hexCode}`
+    : null;
+  const bgColorToUse = selectedHexCode ? selectedHexCode : viewedBgColor;
+  // const filters = viewedDesign
+  //   ? viewedDesign.designSubcategories.map((sub) => sub.name)
+  //   : [];
+  const filters = viewedVariation
+    ? viewedVariation.designSubcategories.map((sub) => sub.name)
+    : parentDesign
+    ? parentDesign.designSubcategories.map((sub) => sub.name)
+    : [];
+  const tags = viewedVariation
+    ? viewedVariation.designTags.map((tag) => tag.name)
+    : parentDesign
+    ? parentDesign.designTags.map((tag) => tag.name)
+    : [];
+  // const tags = viewedDesign
+  //   ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
+  //   : [];
+  const images = parentDesign
+    ? [
+        parentDesign.imageUrl,
+        ...parentDesign.variations.map((variation) => variation.imageUrl),
+      ]
+    : [];
+  const viewedDesignHasTransparency = viewedVariation
+    ? isImageTransparent(viewedVariation.imageUrl)
+    : parentDesign
+    ? isImageTransparent(parentDesign.imageUrl)
+    : false;
+  // const viewedDesignHasTransparency = viewedDesign
+  //   ? isDesignTransparent(viewedDesign)
+  //   : false;
+  const showColorChangeSection =
+    parentDesign &&
+    parentDesign.designType.name === "Screen Print" &&
+    viewedDesignHasTransparency;
+  // const showColorChangeSection =
+  //   relatedDesigns &&
+  //   relatedDesigns[0].designType.name === "Screen Print" &&
+  //   viewedDesignHasTransparency;
+  const defaultQueryParams = getDefaultQueryParams().stringified;
+  const similarDesignsParams = getModifiedQueryParams(
+    defaultQueryParams,
+    "similarTo",
+    `${designId}`
+  ).stringified;
+  const similarDesignsUrl = `${window.location.origin}${window.location.pathname}?${similarDesignsParams}`;
+  const isDesignInCart = false; //temporary
+  // const isDesignInCart = cartData?.designs.find(
+  //   (design) => viewedDesign?.id === design.id
+  // );
+
+  async function getDesignWithVariations() {
     try {
-      const related = await getDesignsRelatedToId(designId);
-      related.sort((a) => (a.id === designId ? -1 : 1));
-      setRelatedDesigns(related);
+      // const related = await getDesignsRelatedToId(designId);
+      // related.sort((a) => (a.id === designId ? -1 : 1));
+      // setRelatedDesigns(related);
+      const design = await getDesignById(designId);
+      const variationsSorted = [...design.variations];
+      variationsSorted.sort((a, b) => a.id - b.id);
+      design.variations = variationsSorted;
+      setParentDesign(design);
     } catch (error) {
       console.error("Error getting related designs: ", error);
     }
@@ -41,7 +107,7 @@ export function DesignView({ designId }: DesignViewProps) {
     const increment = direction === "left" ? -1 : 1;
     const clampedViewedIndex = clamp(
       viewedIndex + increment,
-      0,
+      -1,
       maxScrollIndex
     );
     setViewedIndex(clampedViewedIndex);
@@ -53,73 +119,39 @@ export function DesignView({ designId }: DesignViewProps) {
   }
 
   function clickQuoteButton() {
-    if (!addDesignsToCart || !relatedDesigns) return;
+    console.log("add to quote");
+    // if (!addDesignsToCart || !parentDesign) return;
 
-    if (!isDesignInCart) {
-      const viewedDesign = relatedDesigns[viewedIndex];
-      //if they actually clicked a non-default color, use that.
-      //if not, check if the viewed design has transparency (and therefore had color picking options).
-      //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
-      //if it did, assume the user was fine with the default background color, and assign that.
+    // if (!isDesignInCart) {
+    // const viewedDesign = relatedDesigns[viewedIndex];
+    //if they actually clicked a non-default color, use that.
+    //if not, check if the viewed design has transparency (and therefore had color picking options).
+    //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
+    //if it did, assume the user was fine with the default background color, and assign that.
 
-      const colorToAddToCart = selectedBgColor
-        ? `#${selectedBgColor.hexCode}`
-        : viewedDesignHasTransparency
-        ? `#${viewedDesign.defaultBackgroundColor.hexCode}`
-        : "Color picking unavailable for this design.";
-      addDesignsToCart([
-        {
-          id: viewedDesign.id,
-          designNumber: `${viewedDesign.designNumber}`,
-          garmentColor: colorToAddToCart,
-        },
-      ]);
-      window.location.href = createNavigationUrl("cart");
-    } else console.log("go to cart");
+    //   const colorToAddToCart = selectedBgColor
+    //     ? `#${selectedBgColor.hexCode}`
+    //     : viewedDesignHasTransparency
+    //     ? `#${viewedDesign.defaultBackgroundColor.hexCode}`
+    //     : "Color picking unavailable for this design.";
+    //   addDesignsToCart([
+    //     {
+    //       id: viewedDesign.id,
+    //       designNumber: `${viewedDesign.designNumber}`,
+    //       garmentColor: colorToAddToCart,
+    //     },
+    //   ]);
+    //   window.location.href = createNavigationUrl("cart");
+    // } else console.log("go to cart");
   }
 
   useEffect(() => {
-    getDesignsToDisplay();
+    getDesignWithVariations();
   }, []);
-
-  const singleDesign = relatedDesigns && relatedDesigns.length === 1;
-  const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
-  const viewedDesignBgColor =
-    (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
-  const selectedHexCode = selectedBgColor
-    ? `#${selectedBgColor.hexCode}`
-    : null;
-  const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
-  const filters = viewedDesign
-    ? viewedDesign.designSubcategories.map((sub) => sub.name)
-    : [];
-  const tags = viewedDesign
-    ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
-    : [];
-  const images = relatedDesigns
-    ? relatedDesigns.map((design) => design.imageUrl || "")
-    : [];
-  const viewedDesignHasTransparency = viewedDesign
-    ? isDesignTransparent(viewedDesign)
-    : false;
-  const showColorChangeSection =
-    relatedDesigns &&
-    relatedDesigns[0].designType.name === "Screen Print" &&
-    viewedDesignHasTransparency;
-  const defaultQueryParams = getDefaultQueryParams().stringified;
-  const similarDesignsParams = getModifiedQueryParams(
-    defaultQueryParams,
-    "similarTo",
-    `${designId}`
-  ).stringified;
-  const similarDesignsUrl = `${window.location.origin}${window.location.pathname}?${similarDesignsParams}`;
-  const isDesignInCart = cartData?.designs.find(
-    (design) => viewedDesign?.id === design.id
-  );
 
   return (
     <>
-      {viewedDesign && (
+      {parentDesign && (
         <>
           <h3 className={styles["customize-notice"]}>
             This design is customizable to your union and local.
@@ -127,22 +159,24 @@ export function DesignView({ designId }: DesignViewProps) {
           <div className={styles["main-flex"]}>
             <h2
               className={`${styles["heading"]} ${styles["mobile-only"]}`}
-            >{`#${viewedDesign.designNumber}`}</h2>
+            >{`#${parentDesign.designNumber}`}</h2>
             <div className={styles["gallery-container"]}>
               <div className={styles["gizmos-container"]}>
-                <ShareButton designId={viewedDesign.id} />
+                {/* temp share button id */}
+                <ShareButton designId={999999999999999999} />
                 <button
                   className={styles["zoom-button"]}
                   onClick={() => {
-                    if (setLightboxData) {
-                      setLightboxData({
-                        images: relatedDesigns.map((design) => ({
-                          url: design.imageUrl || "",
-                          backgroundColor: `#${design.defaultBackgroundColor.hexCode}`,
-                        })),
-                        initialIndex: viewedIndex,
-                      });
-                    }
+                    console.log("lightbox stuff");
+                    // if (setLightboxData) {
+                    //   setLightboxData({
+                    //     images: relatedDesigns.map((design) => ({
+                    //       url: design.imageUrl || "",
+                    //       backgroundColor: `#${design.defaultBackgroundColor.hexCode}`,
+                    //     })),
+                    //     initialIndex: viewedIndex,
+                    //   });
+                    // }
                   }}
                 >
                   <span>Enlarge</span>
@@ -152,8 +186,8 @@ export function DesignView({ designId }: DesignViewProps) {
               <DesignScrollView
                 imageUrls={images}
                 onScrollFn={onScrollFn}
-                viewedIndex={viewedIndex}
-                setViewedIndex={setViewedIndex}
+                viewedIndex={viewedIndex + 1}
+                setViewedIndex={(i) => setViewedIndex(i - 1)}
                 backgroundColor={bgColorToUse}
                 showArrowButtons={!singleDesign}
                 showNavGallery={!singleDesign}
@@ -163,9 +197,9 @@ export function DesignView({ designId }: DesignViewProps) {
               <div>
                 <h2
                   className={`${styles["heading"]} ${styles["desktop-only"]}`}
-                >{`#${viewedDesign.designNumber}`}</h2>
+                >{`#${parentDesign.designNumber}`}</h2>
                 <p className={styles["description"]}>
-                  {viewedDesign.description}
+                  {parentDesign.description}
                 </p>
               </div>
               <div>

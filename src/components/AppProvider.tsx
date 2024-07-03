@@ -29,8 +29,8 @@ type AppContextType = {
   lightboxData: LightboxData | null;
   setLightboxData: (data: LightboxData | null) => void;
   compareModeData: CompareModeData;
-  tryAddComparisonId: (id: number) => boolean;
-  removeComparisonId: (id: number) => void;
+  tryAddComparisonId: (designId: number, variationId?: number) => boolean;
+  removeComparisonId: (designId: number, variationId?: number) => void;
   setCompareModeActive: (state: boolean) => void;
   setCompareModeExpanded: (state: boolean) => void;
   cartData: CartData;
@@ -76,7 +76,7 @@ function getInitialCompareModeData() {
     const initialCompareModeData: CompareModeData = {
       active: false,
       expanded: true,
-      selectedIds: [],
+      selectedItems: [],
     };
     return initialCompareModeData;
   }
@@ -115,22 +115,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
     scmd(data);
   }
 
-  function tryAddComparisonId(id: number) {
-    if (compareModeData.selectedIds.length >= maxComparisonDesigns)
+  function tryAddComparisonId(designId: number, variationId?: number) {
+    if (compareModeData.selectedItems.length >= maxComparisonDesigns)
       return false;
     const newCompareModeData: CompareModeData = {
       ...compareModeData,
-      selectedIds: [...compareModeData.selectedIds, id],
+      selectedItems: [
+        ...compareModeData.selectedItems,
+        { designId, variationId },
+      ],
     };
     updateCompareModeData(newCompareModeData);
     return true;
   }
 
-  function removeComparisonId(id: number) {
+  function removeComparisonId(designId: number, variationId?: number) {
     const newCompareModeData: CompareModeData = {
       ...compareModeData,
-      selectedIds: compareModeData.selectedIds.filter(
-        (thisId) => thisId !== id
+      selectedItems: compareModeData.selectedItems.filter((thisItem) =>
+        variationId === undefined
+          ? thisItem.designId !== designId
+          : thisItem.variationId !== variationId
       ),
     };
     updateCompareModeData(newCompareModeData);

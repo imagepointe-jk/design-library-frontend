@@ -25,6 +25,7 @@ export function DesignCard({
   designId,
   backgroundColor,
   variationMessage,
+  variationId,
   onClickVariationMessage,
 }: DesignCardProps) {
   const {
@@ -54,14 +55,18 @@ export function DesignCard({
 
   function handleMultiselect() {
     if (!tryAddComparisonId || !removeComparisonId) return;
-    if (isSelectedForCompare) removeComparisonId(designId);
+    if (isSelectedForCompare) removeComparisonId(designId, variationId);
     else {
-      const added = tryAddComparisonId(designId);
+      const added = tryAddComparisonId(designId, variationId);
       if (!added) showMultiselectError();
     }
   }
 
-  const isSelectedForCompare = compareModeData?.selectedIds.includes(designId);
+  const isSelectedForCompare = !!compareModeData?.selectedItems.find((item) =>
+    variationId === undefined
+      ? item.designId === designId && item.variationId === undefined
+      : item.variationId === variationId
+  );
 
   return (
     <div className={styles["design-card-parent"]}>

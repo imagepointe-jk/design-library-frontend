@@ -28,7 +28,12 @@ export const designResultsSchema = z.object({
 export const compareModeDataSchema = z.object({
   active: z.boolean(),
   expanded: z.boolean(),
-  selectedIds: z.array(z.number()),
+  selectedItems: z.array(
+    z.object({
+      designId: z.number(),
+      variationId: z.number().optional(),
+    })
+  ),
 });
 
 export const cartDesignSchema = z.object({

@@ -183,16 +183,21 @@ export function DesignView({ designId, variationId }: DesignViewProps) {
                 <button
                   className={styles["zoom-button"]}
                   onClick={() => {
-                    console.log("lightbox stuff");
-                    // if (setLightboxData) {
-                    //   setLightboxData({
-                    //     images: relatedDesigns.map((design) => ({
-                    //       url: design.imageUrl || "",
-                    //       backgroundColor: `#${design.defaultBackgroundColor.hexCode}`,
-                    //     })),
-                    //     initialIndex: viewedIndex,
-                    //   });
-                    // }
+                    if (setLightboxData) {
+                      setLightboxData({
+                        images: [
+                          {
+                            url: parentDesign.imageUrl,
+                            backgroundColor: `#${parentDesign.defaultBackgroundColor.hexCode}`,
+                          },
+                          ...parentDesign.variations.map((variation) => ({
+                            url: variation.imageUrl,
+                            backgroundColor: `#${variation.color.hexCode}`,
+                          })),
+                        ],
+                        initialIndex: viewedIndex + 1,
+                      });
+                    }
                   }}
                 >
                   <span>Enlarge</span>

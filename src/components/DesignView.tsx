@@ -84,10 +84,10 @@ export function DesignView({ designId, variationId }: DesignViewProps) {
     `${designId}`
   ).stringified;
   const similarDesignsUrl = `${window.location.origin}${window.location.pathname}?${similarDesignsParams}`;
-  const isDesignInCart = cartData?.items.find((item) =>
-    viewedVariation
-      ? item.variationId === viewedVariation.id
-      : item.designId === parentDesign?.id
+  const isDesignInCart = cartData?.items.find(
+    (item) =>
+      item.designId === parentDesign?.id &&
+      item.variationId === viewedVariation?.id
   );
   // const isDesignInCart = cartData?.designs.find(
   //   (design) => viewedDesign?.id === design.id

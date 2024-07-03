@@ -16,6 +16,7 @@ function App() {
     useApp();
   const searchParams = new URLSearchParams(window.location.search);
   const viewDesign = searchParams.get("viewDesign");
+  const viewVariation = searchParams.get("viewVariation");
   const viewCart = searchParams.get("viewCart");
   const viewCompare = searchParams.get("viewCompare");
   if (viewCart === "true")
@@ -33,7 +34,10 @@ function App() {
   if (viewDesign && !isNaN(+viewDesign))
     return (
       <div className="root">
-        <DesignPage designId={+viewDesign} />
+        <DesignPage
+          designId={+viewDesign}
+          variationId={viewVariation ? +viewVariation : undefined}
+        />
         {lightboxData && setLightboxData && (
           <Lightbox
             data={lightboxData}

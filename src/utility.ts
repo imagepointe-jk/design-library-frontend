@@ -45,3 +45,8 @@ export function isImageTransparent(imageUrl: string) {
   //assume for now that all PNGs are transparent
   return imageUrl.endsWith(".png");
 }
+
+export function getFirstHexCodeInString(str: string) {
+  const match = str.match(/#[a-zA-Z\d]{6}/g);
+  return match ? match[0] : null;
+}

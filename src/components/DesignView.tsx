@@ -143,11 +143,11 @@ export function DesignView({ designId, variationId }: DesignViewProps) {
       //if it did, assume the user was fine with the default background color, and assign that.
 
       const colorToAddToCart = selectedBgColor
-        ? `#${selectedBgColor.hexCode}`
+        ? `#${selectedBgColor.hexCode} - ${selectedBgColor.name}`
         : viewedDesignHasTransparency && viewedVariation
-        ? `#${viewedVariation.color.hexCode}`
+        ? `#${viewedVariation.color.hexCode} - ${viewedVariation.color.name}`
         : viewedDesignHasTransparency
-        ? `#${parentDesign.defaultBackgroundColor.hexCode}`
+        ? `#${parentDesign.defaultBackgroundColor.hexCode} - ${parentDesign.defaultBackgroundColor.name}`
         : "Color picking unavailable for this design.";
       addDesignsToCart([
         {

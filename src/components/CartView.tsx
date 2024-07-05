@@ -8,6 +8,7 @@ import { ImageWithFallback } from "./ImageWithFallback";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { QuoteForm } from "./QuoteForm";
 import styles from "./styles/CartView.module.css";
+import { getFirstHexCodeInString } from "../utility";
 
 export function CartView() {
   const { cartData, emptyCart } = useApp();
@@ -110,7 +111,8 @@ function CartRow({
                   : "none"
               }
               style={{
-                backgroundColor: garmentColor,
+                backgroundColor:
+                  getFirstHexCodeInString(garmentColor) || "white",
               }}
             />
             <div>

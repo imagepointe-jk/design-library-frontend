@@ -101,10 +101,9 @@ function ComparisonDesignContainer({
   const showColorChanger = isImageTransparent(
     viewedVariation ? viewedVariation.imageUrl : design.imageUrl
   );
-  const isInCart = !!cartData?.items.find((item) =>
-    viewedVariation
-      ? item.variationId === viewedVariation.id
-      : item.designId === design.id
+  const isInCart = !!cartData?.items.find(
+    (item) =>
+      item.designId === design.id && item.variationId === viewedVariation?.id
   );
   const defaultBgColor = viewedVariation
     ? `#${viewedVariation.color.hexCode}`
@@ -145,8 +144,10 @@ function ComparisonDesignContainer({
         designId: design.id,
         designNumber: `${design.designNumber}`,
         garmentColor: selectedBgColor
-          ? `#${selectedBgColor.hexCode}`
-          : defaultBgColor,
+          ? `#${selectedBgColor.hexCode} - ${selectedBgColor.name}`
+          : viewedVariation
+          ? `#${viewedVariation.color.hexCode} - ${viewedVariation.color.name}`
+          : `#${design.defaultBackgroundColor.hexCode} - ${design.defaultBackgroundColor.name}`,
         variationId: viewedVariation?.id,
       },
     ]);

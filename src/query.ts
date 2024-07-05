@@ -167,7 +167,8 @@ type DesignQueryParams = {
 };
 
 export function createNavigationUrl(
-  designIdOrPage: number | "cart" | "compare" | "home"
+  designIdOrPage: number | "cart" | "compare" | "home",
+  variationId?: number
 ) {
   //preserve previous search params; this allows the app to work on WordPress draft pages
   const existingSearchParams = new URLSearchParams(window.location.search);
@@ -179,6 +180,7 @@ export function createNavigationUrl(
 
   if (typeof designIdOrPage === "number") {
     newSearchParams.set("viewDesign", `${designIdOrPage}`);
+    if (variationId) newSearchParams.set("viewVariation", `${variationId}`);
   } else if (designIdOrPage === "cart") {
     newSearchParams.set("viewCart", "true");
   } else if (designIdOrPage === "compare") {

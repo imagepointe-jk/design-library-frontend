@@ -179,7 +179,10 @@ export function DesignView({ designId, variationId }: DesignViewProps) {
             <div className={styles["gallery-container"]}>
               <div className={styles["gizmos-container"]}>
                 {/* temp share button id */}
-                <ShareButton designId={999999999999999999} />
+                <ShareButton
+                  designId={parentDesign.id}
+                  variationId={viewedVariation?.id}
+                />
                 <button
                   className={styles["zoom-button"]}
                   onClick={() => {

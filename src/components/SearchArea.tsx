@@ -1,4 +1,4 @@
-import { designTypes } from "../sharedTypes";
+import { DesignType, designTypes } from "../sharedTypes";
 import { DesignQueryParams } from "../types";
 import { createNavigationUrl } from "../utility";
 import { tryParseDesignType } from "../validations";
@@ -55,9 +55,17 @@ export function submitSearch(e: React.FormEvent<HTMLFormElement>) {
   const form = e.target as HTMLFormElement;
   const formData = new FormData(form);
   const keywords = formData.get("search");
-  const designType = tryParseDesignType(`${formData.get("design-type")}`);
+  const designTypeFromForm = tryParseDesignType(
+    `${formData.get("design-type")}`
+  );
+  const designTypeFromParams: DesignType =
+    `${new URLSearchParams(window.location.search).get(
+      "designtype"
+    )}`.toLocaleLowerCase() === "embroidery"
+      ? "Embroidery"
+      : "Screen Print";
   const newParams: DesignQueryParams = {
-    designType: designType ? designType : "Screen Print",
+    designType: designTypeFromForm ? designTypeFromForm : designTypeFromParams,
     pageNumber: 1,
     keywords: keywords?.toString().split(" "),
     featuredOnly: false,

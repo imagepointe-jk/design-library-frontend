@@ -63,7 +63,7 @@ export async function getCategories() {
 }
 
 export async function getColors() {
-  const response = await fetch(`${serverURL()}/colors`);
+  const response = await fetch(`${serverURL()}/designs/colors`);
   const json = await response.json();
   if (!response.ok) {
     console.error(

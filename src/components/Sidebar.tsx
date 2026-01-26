@@ -1,7 +1,9 @@
+import {
+  getModifiedQueryParams,
+  parseDesignQueryParams,
+  updateWindowSearchParams,
+} from "../query";
 import { DesignType } from "../sharedTypes";
-import { DesignQueryParams } from "../types";
-import { createNavigationUrl } from "../utility";
-import { parseSearchParams } from "../validations";
 import { useApp } from "./AppProvider";
 import { HierarchyItem, HierarchyList } from "./HierarchyList";
 import { submitSearch } from "./SearchArea";
@@ -15,55 +17,76 @@ type SidebarProps = {
 
 export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
   const { categories } = useApp();
-  const designQueryParams = parseSearchParams(
+  const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
+  let selectedParentCategory = categories?.find(
+    (cat) =>
+      !!cat.designSubcategories.find(
+        (sub) => sub.name === designQueryParams.subcategory
+      ) && cat.designType.name === designQueryParams.designType
+  )?.name;
+  if (selectedParentCategory === "Event/Awareness")
+    selectedParentCategory = "Event / Awareness";
+  //assume for now that the "after" param will only be set to a value corresponding to "new" designs
+  const newDesignsButtonChecked = designQueryParams.after !== undefined;
+  //assume for now that the "before" param will only be set to a value corresponding to "classic" designs
+  const classicsButtonChecked = designQueryParams.before !== undefined;
+  if (newDesignsButtonChecked || classicsButtonChecked)
+    selectedParentCategory = "Quick Search";
+
   const filterSidebarHierarchy: HierarchyItem[] = categories
     ? categories
         .filter(
-          (category) => category.DesignType === designQueryParams.designType
+          (category) =>
+            category.designType.name.toLocaleLowerCase() ===
+            designQueryParams.designType.toLocaleLowerCase()
         )
         .map((category) => ({
           parentName:
-            category.Name === "Event/Awareness"
+            category.name === "Event/Awareness"
               ? "Event / Awareness"
-              : category.Name,
-          selected: designQueryParams.category === category.Name,
-          children: category.Subcategories.map((subcategory) => ({
-            childName: subcategory.Name,
-            selected: subcategory.Name === designQueryParams.subcategory,
-            onClickChild: () =>
-              onClickSidebarSubcategory(subcategory.Hierarchy),
+              : category.name,
+          selected:
+            selectedParentCategory === category.name ||
+            (category.name === "Quick Search" && newDesignsButtonChecked) ||
+            (category.name === "Classics" && classicsButtonChecked) ||
+            (category.name === "Event/Awareness" &&
+              selectedParentCategory === "Event / Awareness"),
+          children: category.designSubcategories.map((subcategory) => ({
+            childName: subcategory.name,
+            selected:
+              subcategory.name === designQueryParams.subcategory ||
+              (subcategory.name === "New Designs" && newDesignsButtonChecked) ||
+              (subcategory.name === "Classics" && classicsButtonChecked),
+            onClickChild: () => onClickSidebarSubcategory(subcategory.name),
           })),
         }))
     : [];
 
   const filtersActive =
     designQueryParams.category !== undefined ||
-    designQueryParams.subcategory !== undefined;
+    designQueryParams.subcategory !== undefined ||
+    designQueryParams.before !== undefined ||
+    designQueryParams.after !== undefined;
 
   function handleClearFilters() {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      category: undefined,
-      subcategory: undefined,
-      pageNumber: 1,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
-  }
-
-  function changeDesignType(newType: DesignType) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      designType: newType,
-      category: undefined,
-      subcategory: undefined,
-      featuredOnly: newType === "Screen Print",
-      pageNumber: 1,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
+    let modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "category",
+      null
+    ).stringified;
+    modifiedParams = getModifiedQueryParams(
+      modifiedParams,
+      "subcategory",
+      null
+    ).stringified;
+    modifiedParams = getModifiedQueryParams(
+      modifiedParams,
+      "age",
+      null
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   return (
@@ -91,7 +114,9 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
           name="Library"
           stacked={true}
           checked={
-            designQueryParams.designType === "Screen Print" ? "one" : "two"
+            designQueryParams.designType.toLocaleLowerCase() === "screen print"
+              ? "one"
+              : "two"
           }
           onClick={(clicked) =>
             changeDesignType(clicked === "one" ? "Screen Print" : "Embroidery")
@@ -110,7 +135,7 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
       )}
       <HierarchyList
         hierarchy={filterSidebarHierarchy}
-        defaultExpandedParent={designQueryParams.category}
+        defaultExpandedParent={selectedParentCategory}
         parentClassName={styles["filter-parent"]}
         parentSelectedClassName={styles["filter-parent-selected"]}
         parentExpandedClassName={styles["filter-parent-expanded"]}
@@ -119,4 +144,29 @@ export function Sidebar({ onClickSidebarSubcategory }: SidebarProps) {
       />
     </div>
   );
+}
+
+export function changeDesignType(newType: DesignType) {
+  const withoutCategory = getModifiedQueryParams(
+    window.location.search,
+    "category",
+    null
+  ).stringified;
+  const withoutSubcategory = getModifiedQueryParams(
+    withoutCategory,
+    "subcategory",
+    null
+  ).stringified;
+  const withPageNumber = getModifiedQueryParams(
+    withoutSubcategory,
+    "pageNumber",
+    "1"
+  ).stringified;
+  const withNewType = getModifiedQueryParams(
+    withPageNumber,
+    "designType",
+    newType
+  ).stringified;
+
+  updateWindowSearchParams(withNewType);
 }

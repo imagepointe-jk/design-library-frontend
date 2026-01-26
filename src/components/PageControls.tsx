@@ -170,7 +170,9 @@ function getPageControlNumbers(
   currentPage: number
 ): number[] {
   if (currentPage < 1 || currentPage > totalPages) {
-    console.error("The current page must be between 1 and totalPages.");
+    console.error(
+      `Page ${currentPage} out of ${totalPages} is invalid. The current page must be between 1 and totalPages.`
+    );
     return [];
   }
 

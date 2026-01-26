@@ -1,65 +1,38 @@
 import { useEffect, useState } from "react";
 import { pageSizeChoices } from "../constants";
 import { getDesigns } from "../fetch";
-import { DesignQueryParams, TempDesignResults } from "../types";
 import {
-  buildDesignQueryParams,
   createNavigationUrl,
-  splitDesignCategoryHierarchy,
-} from "../utility";
-import { parseSearchParams } from "../validations";
+  getModifiedQueryParams,
+  parseDesignQueryParams,
+  updateWindowSearchParams,
+} from "../query";
+import { DesignResults } from "../types";
+import { useApp } from "./AppProvider";
 import { DesignGrid } from "./DesignGrid";
 import { DesignLibraryControls } from "./DesignLibraryControls";
 import { LoadingIndicator } from "./LoadingIndicator";
 import { PageControls } from "./PageControls";
-import { Sidebar } from "./Sidebar";
+import { Sidebar, changeDesignType } from "./Sidebar";
+import { ToggleSwitch } from "./ToggleSwitch";
 import { TopSection } from "./TopSection";
 import styles from "./styles/DesignLibrary.module.css";
-import { ToggleSwitch } from "./ToggleSwitch";
-import { DesignType } from "../sharedTypes";
-import { useApp } from "./AppProvider";
 
 export function DesignLibrary() {
-  const [designResults, setDesignResults] = useState<TempDesignResults | null>(
+  const [designResults, setDesignResults] = useState<DesignResults | null>(
     null
   );
-  const designQueryParams = parseSearchParams(
+  const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
   const [isFetchingResults, setIsFetchingResults] = useState(true);
   const { windowWidth } = useApp();
 
   async function getDesignsToDisplay() {
-    const {
-      designType,
-      allowDuplicateDesignNumbers,
-      category,
-      subcategory,
-      pageNumber,
-      tags,
-      keywords,
-      featuredOnly,
-      similarTo,
-    } = designQueryParams;
-    const shouldExcludePrioritized =
-      designType === "Screen Print" &&
-      !allowDuplicateDesignNumbers &&
-      !category &&
-      !subcategory &&
-      pageNumber === 1 &&
-      !tags &&
-      !keywords &&
-      !featuredOnly &&
-      !similarTo;
-    const designQueryParamsToUse: DesignQueryParams = {
-      ...designQueryParams,
-      shouldExcludePrioritized,
-      sortBy: "priority",
-    };
     try {
       setIsFetchingResults(true);
       const fetchedDesigns = await getDesigns(
-        buildDesignQueryParams(designQueryParamsToUse)
+        window.location.search.replace("?", "")
       );
       setIsFetchingResults(false);
       setDesignResults(fetchedDesigns);
@@ -70,76 +43,87 @@ export function DesignLibrary() {
   }
 
   function clearSearch() {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      keywords: undefined,
-      allowDuplicateDesignNumbers: false,
-    };
-    window.location.href = createNavigationUrl(newParams);
+    let modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "keyword",
+      null
+    ).stringified;
+
+    modifiedParams = getModifiedQueryParams(
+      modifiedParams,
+      "allowDuplicateDesignNumbers",
+      null
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function clearSimilar() {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      similarTo: undefined,
-      allowDuplicateDesignNumbers: false,
-    };
-    window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "similarTo",
+      null
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
-  function changeDesignType(newType: DesignType) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      designType: newType,
-      category: undefined,
-      subcategory: undefined,
-      featuredOnly: newType === "Screen Print",
-      pageNumber: 1,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
-  }
-
-  function handleClickSidebarSubcategory(hierarchy: string) {
-    const hierarchySplit = splitDesignCategoryHierarchy(hierarchy);
-
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      category: hierarchySplit.category,
-      subcategory: hierarchySplit.subcategory,
-      featuredOnly: false,
-      pageNumber: 1,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
+  function handleClickSidebarSubcategory(clickedName: string) {
+    let modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "age",
+      null
+    ).stringified;
+    modifiedParams = getModifiedQueryParams(
+      modifiedParams,
+      "subcategory",
+      null
+    ).stringified;
+    if (clickedName === "New Designs") {
+      modifiedParams = getModifiedQueryParams(
+        modifiedParams,
+        "age",
+        "new"
+      ).stringified;
+    } else if (clickedName === "Classics") {
+      modifiedParams = getModifiedQueryParams(
+        modifiedParams,
+        "age",
+        "old"
+      ).stringified;
+    } else {
+      modifiedParams = getModifiedQueryParams(
+        modifiedParams,
+        "subcategory",
+        clickedName
+      ).stringified;
+    }
+    updateWindowSearchParams(modifiedParams);
   }
 
   function clickPageButton(pageNumber: number) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      pageNumber: pageNumber,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "pageNumber",
+      `${pageNumber}`
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function jumpToPage(jumpToPage: number) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      pageNumber: +jumpToPage,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "pageNumber",
+      `${jumpToPage}`
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   function changeResultsPerPage(count: number) {
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      pageNumber: 1,
-      countPerPage: count,
-    };
-
-    window.location.href = createNavigationUrl(newParams);
+    const modifiedParams = getModifiedQueryParams(
+      window.location.search,
+      "perPage",
+      `${count}`
+    ).stringified;
+    updateWindowSearchParams(modifiedParams);
   }
 
   useEffect(() => {
@@ -151,7 +135,7 @@ export function DesignLibrary() {
       ? designQueryParams.keywords.join(" ")
       : undefined;
   const pageCount = designResults
-    ? Math.ceil(designResults.total / designResults.perPage)
+    ? Math.ceil(designResults.totalResults / designResults.perPage)
     : 0;
 
   const showSidebar = windowWidth && windowWidth > 1200;
@@ -179,9 +163,7 @@ export function DesignLibrary() {
               <h2>
                 Similar to{" "}
                 <a
-                  href={createNavigationUrl({
-                    designId: designQueryParams.similarTo,
-                  })}
+                  href={createNavigationUrl(designQueryParams.similarTo)}
                   className="normal-link"
                 >
                   #{designQueryParams.similarTo}
@@ -243,24 +225,27 @@ export function DesignLibrary() {
               <div className={styles["search-container"]}>
                 <DesignLibraryControls />
                 {isFetchingResults && <LoadingIndicator />}
-                {!designResults && !isFetchingResults && <h3>No results</h3>}
+                {(!designResults || designResults.totalResults === 0) &&
+                  !isFetchingResults && <h3>No results</h3>}
                 {designResults &&
                   designResults.designs.length > 0 &&
                   !isFetchingResults && (
                     <DesignGrid designs={designResults.designs} />
                   )}
               </div>
-              {designResults && !isFetchingResults && (
-                <PageControls
-                  totalPages={pageCount}
-                  pageSizeChoices={pageSizeChoices}
-                  curItemsPerPage={designQueryParams.countPerPage || 0}
-                  curPageNumber={designQueryParams.pageNumber}
-                  onClickPageNumber={clickPageButton}
-                  onSubmitJumpToPage={jumpToPage}
-                  onClickPageSizeButton={changeResultsPerPage}
-                />
-              )}
+              {designResults &&
+                designResults.designs.length > 0 &&
+                !isFetchingResults && (
+                  <PageControls
+                    totalPages={pageCount}
+                    pageSizeChoices={pageSizeChoices}
+                    curItemsPerPage={designQueryParams.perPage || 0}
+                    curPageNumber={designQueryParams.pageNumber}
+                    onClickPageNumber={clickPageButton}
+                    onSubmitJumpToPage={jumpToPage}
+                    onClickPageSizeButton={changeResultsPerPage}
+                  />
+                )}
             </div>
           </div>
         </div>

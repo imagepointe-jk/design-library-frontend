@@ -1,40 +1,119 @@
 import { useEffect, useState } from "react";
-import { getDesignsRelatedToId } from "../fetch";
+import { Color, Design } from "../dbSchema";
+import { getDesignById } from "../fetch";
 import {
-  clamp,
   createNavigationUrl,
-  getDesignCategoryHierarchies,
-  getDesignDefaultBackgroundColor,
-  getDesignTags,
-  getFirstHexCodeInString,
-  isDesignTransparent,
-} from "../utility";
+  getDefaultQueryParams,
+  getModifiedQueryParams,
+} from "../query";
+import { clamp, isImageTransparent } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
 import { ShareButton } from "./ShareButton";
 import styles from "./styles/DesignView.module.css";
-import { TempDesign } from "../sharedTypes";
-import { DesignQueryParams } from "../types";
 
 type DesignViewProps = {
   designId: number;
+  variationId?: number;
 };
 
-export function DesignView({ designId }: DesignViewProps) {
-  const [relatedDesigns, setRelatedDesigns] = useState<TempDesign[] | null>(
-    null
-  );
-  const [viewedIndex, setViewedIndex] = useState(0);
-  const [selectedBgColor, setSelectedBgColor] = useState(null as string | null); //the color the user has selected to override design's default color
+export function DesignView({ designId, variationId }: DesignViewProps) {
+  // const [relatedDesigns, setRelatedDesigns] = useState<Design[] | null>(null);
+  const [parentDesign, setParentDesign] = useState<Design | null>(null);
+  const [viewedIndex, setViewedIndex] = useState(-1); //view the parent design when index is -1
+  const [selectedBgColor, setSelectedBgColor] = useState(null as Color | null); //the color the user has selected to override design's default color
   const { setLightboxData, cartData, addDesignsToCart } = useApp();
 
-  async function getDesignsToDisplay() {
+  const singleDesign = parentDesign && parentDesign.variations.length === 0;
+  // const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
+  const viewedVariation = parentDesign
+    ? parentDesign.variations[viewedIndex]
+    : null;
+  const viewedBgColor = viewedVariation
+    ? `#${viewedVariation.color.hexCode}`
+    : parentDesign
+    ? `#${parentDesign.defaultBackgroundColor.hexCode}`
+    : "white";
+  // (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
+  const selectedHexCode = selectedBgColor
+    ? `#${selectedBgColor.hexCode}`
+    : null;
+  const bgColorToUse = selectedHexCode ? selectedHexCode : viewedBgColor;
+  // const filters = viewedDesign
+  //   ? viewedDesign.designSubcategories.map((sub) => sub.name)
+  //   : [];
+  const filters = viewedVariation
+    ? viewedVariation.designSubcategories.map((sub) => sub.name)
+    : parentDesign
+    ? parentDesign.designSubcategories.map((sub) => sub.name)
+    : [];
+  const tags = viewedVariation
+    ? viewedVariation.designTags.map((tag) => tag.name)
+    : parentDesign
+    ? parentDesign.designTags.map((tag) => tag.name)
+    : [];
+  // const tags = viewedDesign
+  //   ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
+  //   : [];
+  const images = parentDesign
+    ? [
+        parentDesign.imageUrl,
+        ...parentDesign.variations.map((variation) => variation.imageUrl),
+      ]
+    : [];
+  const viewedDesignHasTransparency = viewedVariation
+    ? isImageTransparent(viewedVariation.imageUrl)
+    : parentDesign
+    ? isImageTransparent(parentDesign.imageUrl)
+    : false;
+  // const viewedDesignHasTransparency = viewedDesign
+  //   ? isDesignTransparent(viewedDesign)
+  //   : false;
+  const showColorChangeSection =
+    parentDesign &&
+    parentDesign.designType.name === "Screen Print" &&
+    viewedDesignHasTransparency;
+  // const showColorChangeSection =
+  //   relatedDesigns &&
+  //   relatedDesigns[0].designType.name === "Screen Print" &&
+  //   viewedDesignHasTransparency;
+  const defaultQueryParams = getDefaultQueryParams().stringified;
+  const similarDesignsParams = getModifiedQueryParams(
+    defaultQueryParams,
+    "similarTo",
+    `${designId}`
+  ).stringified;
+  const similarDesignsUrl = `${window.location.origin}${window.location.pathname}?${similarDesignsParams}`;
+  const isDesignInCart = cartData?.items.find(
+    (item) =>
+      item.designId === parentDesign?.id &&
+      item.variationId === viewedVariation?.id
+  );
+  // const isDesignInCart = cartData?.designs.find(
+  //   (design) => viewedDesign?.id === design.id
+  // );
+
+  async function getDesignWithVariations() {
     try {
-      const related = await getDesignsRelatedToId(designId);
-      related.sort((a) => (a.Id === designId ? -1 : 1));
-      setRelatedDesigns(related);
+      // const related = await getDesignsRelatedToId(designId);
+      // related.sort((a) => (a.id === designId ? -1 : 1));
+      // setRelatedDesigns(related);
+      const design = await getDesignById(designId);
+      const variationsSorted = [...design.variations];
+      variationsSorted.sort((a, b) => a.id - b.id);
+      design.variations = variationsSorted;
+      const indexOfVariation = design.variations.findIndex(
+        (variation) => variation.id === variationId
+      );
+      if (variationId !== undefined && indexOfVariation === -1)
+        throw new Error(
+          `Variation id ${variationId} not found for design ${designId}.`
+        );
+
+      setViewedIndex(indexOfVariation);
+      setParentDesign(design);
     } catch (error) {
-      console.error("Error getting related designs: ", error);
+      console.error("Error getting design: ", error);
     }
   }
 
@@ -42,36 +121,40 @@ export function DesignView({ designId }: DesignViewProps) {
     const increment = direction === "left" ? -1 : 1;
     const clampedViewedIndex = clamp(
       viewedIndex + increment,
-      0,
+      -1,
       maxScrollIndex
     );
     setViewedIndex(clampedViewedIndex);
     setSelectedBgColor(null);
   }
 
-  function onClickColor(clickedColor: string) {
+  function onClickColor(clickedColor: Color) {
     setSelectedBgColor(clickedColor);
   }
 
   function clickQuoteButton() {
-    if (!addDesignsToCart || !relatedDesigns) return;
+    if (!addDesignsToCart || !parentDesign) return;
 
     if (!isDesignInCart) {
-      const viewedDesign = relatedDesigns[viewedIndex];
+      // const viewedDesign = relatedDesigns[viewedIndex];
       //if they actually clicked a non-default color, use that.
       //if not, check if the viewed design has transparency (and therefore had color picking options).
       //if it didn't, don't assume the user wanted the background color that was displayed to them. Assign a message accordingly.
       //if it did, assume the user was fine with the default background color, and assign that.
-      const colorToAddToCart =
-        selectedBgColor ||
-        (viewedDesignHasTransparency
-          ? viewedDesign.DefaultBackgroundColor
-          : "Color picking unavailable for this design.");
+
+      const colorToAddToCart = selectedBgColor
+        ? `#${selectedBgColor.hexCode} - ${selectedBgColor.name}`
+        : viewedDesignHasTransparency && viewedVariation
+        ? `#${viewedVariation.color.hexCode} - ${viewedVariation.color.name}`
+        : viewedDesignHasTransparency
+        ? `#${parentDesign.defaultBackgroundColor.hexCode} - ${parentDesign.defaultBackgroundColor.name}`
+        : "Color picking unavailable for this design.";
       addDesignsToCart([
         {
-          id: viewedDesign.Id,
-          designNumber: viewedDesign.DesignNumber,
+          designId: parentDesign.id,
+          designNumber: `${parentDesign.designNumber}`,
           garmentColor: colorToAddToCart,
+          variationId: viewedVariation ? viewedVariation.id : undefined,
         },
       ]);
       window.location.href = createNavigationUrl("cart");
@@ -79,56 +162,12 @@ export function DesignView({ designId }: DesignViewProps) {
   }
 
   useEffect(() => {
-    getDesignsToDisplay();
+    getDesignWithVariations();
   }, []);
-
-  const singleDesign = relatedDesigns && relatedDesigns.length === 1;
-  const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
-  const viewedDesignBgColor =
-    (viewedDesign && getDesignDefaultBackgroundColor(viewedDesign)) || "white";
-  const selectedHexCode =
-    selectedBgColor && getFirstHexCodeInString(selectedBgColor);
-  const bgColorToUse = selectedHexCode ? selectedHexCode : viewedDesignBgColor;
-  const fullColorStringToUse =
-    selectedBgColor ||
-    viewedDesign?.DefaultBackgroundColor ||
-    "(no color selected)";
-  const filters = viewedDesign
-    ? getDesignCategoryHierarchies(viewedDesign).filter(
-        (sub) => sub !== undefined
-      )
-    : [];
-  const tags = viewedDesign
-    ? getDesignTags(viewedDesign).filter((sub) => sub !== undefined)
-    : [];
-  const images = relatedDesigns
-    ? relatedDesigns.map((design) => design.ImageURL || "")
-    : [];
-  const viewedDesignHasTransparency = viewedDesign
-    ? isDesignTransparent(viewedDesign)
-    : false;
-  const showColorChangeSection =
-    relatedDesigns &&
-    relatedDesigns[0].DesignType === "Screen Print" &&
-    viewedDesignHasTransparency;
-  const similarDesignsParams: DesignQueryParams | undefined = relatedDesigns
-    ? {
-        designType: relatedDesigns[0].DesignType,
-        featuredOnly: false,
-        pageNumber: 1,
-        similarTo: designId,
-      }
-    : undefined;
-  const similarDesignsUrl = similarDesignsParams
-    ? createNavigationUrl(similarDesignsParams)
-    : undefined;
-  const isDesignInCart = cartData?.designs.find(
-    (design) => viewedDesign?.Id === design.id
-  );
 
   return (
     <>
-      {viewedDesign && (
+      {parentDesign && (
         <>
           <h3 className={styles["customize-notice"]}>
             This design is customizable to your union and local.
@@ -136,20 +175,30 @@ export function DesignView({ designId }: DesignViewProps) {
           <div className={styles["main-flex"]}>
             <h2
               className={`${styles["heading"]} ${styles["mobile-only"]}`}
-            >{`#${viewedDesign.DesignNumber}`}</h2>
+            >{`#${parentDesign.designNumber}`}</h2>
             <div className={styles["gallery-container"]}>
               <div className={styles["gizmos-container"]}>
-                <ShareButton designId={viewedDesign.Id} />
+                {/* temp share button id */}
+                <ShareButton
+                  designId={parentDesign.id}
+                  variationId={viewedVariation?.id}
+                />
                 <button
                   className={styles["zoom-button"]}
                   onClick={() => {
                     if (setLightboxData) {
                       setLightboxData({
-                        images: relatedDesigns.map((design) => ({
-                          url: design.ImageURL || "",
-                          backgroundColor: design.DefaultBackgroundColor,
-                        })),
-                        initialIndex: viewedIndex,
+                        images: [
+                          {
+                            url: parentDesign.imageUrl,
+                            backgroundColor: `#${parentDesign.defaultBackgroundColor.hexCode}`,
+                          },
+                          ...parentDesign.variations.map((variation) => ({
+                            url: variation.imageUrl,
+                            backgroundColor: `#${variation.color.hexCode}`,
+                          })),
+                        ],
+                        initialIndex: viewedIndex + 1,
                       });
                     }
                   }}
@@ -161,8 +210,8 @@ export function DesignView({ designId }: DesignViewProps) {
               <DesignScrollView
                 imageUrls={images}
                 onScrollFn={onScrollFn}
-                viewedIndex={viewedIndex}
-                setViewedIndex={setViewedIndex}
+                viewedIndex={viewedIndex + 1}
+                setViewedIndex={(i) => setViewedIndex(i - 1)}
                 backgroundColor={bgColorToUse}
                 showArrowButtons={!singleDesign}
                 showNavGallery={!singleDesign}
@@ -172,9 +221,9 @@ export function DesignView({ designId }: DesignViewProps) {
               <div>
                 <h2
                   className={`${styles["heading"]} ${styles["desktop-only"]}`}
-                >{`#${viewedDesign.DesignNumber}`}</h2>
+                >{`#${parentDesign.designNumber}`}</h2>
                 <p className={styles["description"]}>
-                  {viewedDesign.Description}
+                  {parentDesign.description}
                 </p>
               </div>
               <div>
@@ -217,9 +266,8 @@ export function DesignView({ designId }: DesignViewProps) {
                     <p>
                       {filters.length > 0 &&
                         filters.map((sub, i, array) => {
-                          const onlySubcategory = sub && sub.split(" > ")[1];
                           const comma = i < array.length - 1;
-                          return `${onlySubcategory}${comma ? ", " : ""}`;
+                          return `${sub}${comma ? ", " : ""}`;
                         })}
                       {filters.length === 0 && "No filters"}
                     </p>
@@ -246,8 +294,8 @@ export function DesignView({ designId }: DesignViewProps) {
 }
 
 type BackgroundColorChangerProps = {
-  selectedColor: string | null;
-  onClickColor: (clickedColor: string) => void;
+  selectedColor: Color | null;
+  onClickColor: (clickedColor: Color) => void;
 };
 
 export function BackgroundColorChanger({
@@ -256,7 +304,8 @@ export function BackgroundColorChanger({
 }: BackgroundColorChangerProps) {
   const { colors } = useApp();
 
-  const selectedColorName = selectedColor?.split(" - ")[1];
+  // const selectedColorName = selectedColor?.split(" - ")[1];
+  const selectedColorName = selectedColor?.name;
 
   return (
     <div className={styles["bg-color-container"]}>
@@ -267,10 +316,13 @@ export function BackgroundColorChanger({
           colors.map((color) => (
             <div
               className={`${styles["color-picker-swatch"]} ${
-                color === selectedColor ? styles["selected-swatch"] : ""
+                color.name === selectedColor?.name
+                  ? styles["selected-swatch"]
+                  : ""
               }`}
               style={{
-                backgroundColor: getFirstHexCodeInString(color) || "white",
+                // backgroundColor: getFirstHexCodeInString(color) || "white",
+                backgroundColor: `#${color.hexCode}`,
               }}
               onClick={() => onClickColor(color)}
             ></div>

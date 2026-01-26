@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { maxComparisonDesigns } from "../constants";
+import { Design } from "../dbSchema";
 import { getDesignById } from "../fetch";
-import { TempDesign } from "../sharedTypes";
+import { createNavigationUrl } from "../query";
+import { getDesignDefaultBackgroundColor } from "../utility";
 import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
 import { LoadingIndicator } from "./LoadingIndicator";
-import styles from "./styles/ComparisonBar.module.css";
 import { DesignModalDisplay } from "./Modal";
-import {
-  createNavigationUrl,
-  getDesignDefaultBackgroundColor,
-} from "../utility";
+import styles from "./styles/ComparisonBar.module.css";
 
 export function ComparisonBar() {
   const {
@@ -28,7 +26,7 @@ export function ComparisonBar() {
     return <></>;
 
   const arr = Array.from({ length: maxComparisonDesigns }, () => 0);
-  const { expanded, selectedIds: ids } = compareModeData;
+  const { expanded, selectedItems } = compareModeData;
 
   function clickExpandRetract() {
     if (setCompareModeExpanded) setCompareModeExpanded(!expanded);
@@ -38,7 +36,9 @@ export function ComparisonBar() {
     <div className={`${styles["main"]} ${expanded ? styles["expanded"] : ""}`}>
       <div className={styles["images-parent-container"]}>
         {arr.map((_, i) => (
-          <ComparisonSquare designId={ids.length > i ? ids[i] : undefined} />
+          <ComparisonSquare
+            data={selectedItems.length > i ? selectedItems[i] : undefined}
+          />
         ))}
       </div>
       <div className={styles["buttons-container"]}>
@@ -63,18 +63,22 @@ export function ComparisonBar() {
   );
 }
 
-function ComparisonSquare({ designId }: { designId?: number }) {
-  const [design, setDesign] = useState(null as TempDesign | null);
+function ComparisonSquare({
+  data,
+}: {
+  data?: { designId: number; variationId?: number };
+}) {
+  const [design, setDesign] = useState(null as Design | null);
   const [loading, setLoading] = useState(false);
   const { removeComparisonId, setModalDisplay } = useApp();
 
   async function getDesignToView() {
     setDesign(null);
-    if (!designId) return;
+    if (!data) return;
 
     setLoading(true);
     try {
-      const design = await getDesignById(designId);
+      const design = await getDesignById(data.designId);
       setDesign(design);
     } catch (_) {}
     setLoading(false);
@@ -82,24 +86,41 @@ function ComparisonSquare({ designId }: { designId?: number }) {
 
   useEffect(() => {
     getDesignToView();
-  }, [designId]);
+  }, [data]);
 
-  const defined = design && designId && removeComparisonId && setModalDisplay;
+  if (!removeComparisonId || !setModalDisplay) return <></>;
+
+  const variation =
+    design && data
+      ? design.variations.find((variation) => variation.id === data.variationId)
+      : undefined;
 
   return (
     <div className={styles["image-container"]}>
       {loading && <LoadingIndicator />}
-      {defined && (
+      {data && (
         <>
           <ImageWithFallback
-            src={design.ImageURL}
+            src={
+              variation ? variation.imageUrl : design ? design.imageUrl : "none"
+            }
             className={styles["comparison-image"]}
-            onClick={() => setModalDisplay(new DesignModalDisplay(designId))}
-            style={{ backgroundColor: getDesignDefaultBackgroundColor(design) }}
+            onClick={() =>
+              setModalDisplay(
+                new DesignModalDisplay(data.designId, data.variationId)
+              )
+            }
+            style={{
+              backgroundColor: variation
+                ? `#${variation.color.hexCode}`
+                : design
+                ? `#${design.defaultBackgroundColor.hexCode}`
+                : "white",
+            }}
           />
           <button
             className={styles["remove-button"]}
-            onClick={() => removeComparisonId(designId)}
+            onClick={() => removeComparisonId(data.designId, data.variationId)}
           >
             <i className="fa-solid fa-xmark"></i>
           </button>

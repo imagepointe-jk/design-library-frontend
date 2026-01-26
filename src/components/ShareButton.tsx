@@ -1,22 +1,23 @@
 import { useRef } from "react";
+import { createNavigationUrl } from "../query";
 import styles from "./styles/DesignView.module.css";
-import { createNavigationUrl } from "../utility";
 
 type ShareButtonProps = {
   designId: number;
+  variationId?: number;
 };
 
 const toastUpClassName = "share-button-toast-up";
 const toastDisplaySeconds = 1.25;
 
-export function ShareButton({ designId }: ShareButtonProps) {
+export function ShareButton({ designId, variationId }: ShareButtonProps) {
   const toastRef = useRef(null as HTMLDivElement | null);
 
   function handleClick() {
     const toast = toastRef.current;
     if (!toast) return;
 
-    const link = createNavigationUrl({ designId });
+    const link = createNavigationUrl(designId, variationId);
     navigator.clipboard.writeText(link);
     toast.classList.remove(styles[toastUpClassName]);
     toast.style.transition = "0s";

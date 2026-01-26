@@ -1,19 +1,22 @@
 import { useRef } from "react";
-import { createNavigationUrl } from "../utility";
-import { useApp } from "./AppProvider";
-import { ImageWithFallback } from "./ImageWithFallback";
-import { DesignModalDisplay } from "./Modal";
-import styles from "./styles/DesignGrid.module.css";
 import {
   maxComparisonDesigns,
   maxComparisonDesignsErrorMessageDuration,
 } from "../constants";
+import { createNavigationUrl } from "../query";
+import { useApp } from "./AppProvider";
+import { ImageWithFallback } from "./ImageWithFallback";
+import { DesignModalDisplay } from "./Modal";
+import styles from "./styles/DesignGrid.module.css";
 
-type DesignCardProps = {
+export type DesignCardProps = {
   designId: number;
   designNumber: string;
   imgUrl: string;
   backgroundColor: string;
+  variationId?: number;
+  variationMessage?: string;
+  onClickVariationMessage?: () => void;
 };
 
 export function DesignCard({
@@ -21,6 +24,9 @@ export function DesignCard({
   imgUrl,
   designId,
   backgroundColor,
+  variationMessage,
+  variationId,
+  onClickVariationMessage,
 }: DesignCardProps) {
   const {
     setModalDisplay,
@@ -34,7 +40,7 @@ export function DesignCard({
     if (!setModalDisplay) return;
 
     e.preventDefault();
-    setModalDisplay(new DesignModalDisplay(designId));
+    setModalDisplay(new DesignModalDisplay(designId, variationId));
   }
 
   function showMultiselectError() {
@@ -49,20 +55,24 @@ export function DesignCard({
 
   function handleMultiselect() {
     if (!tryAddComparisonId || !removeComparisonId) return;
-    if (isSelectedForCompare) removeComparisonId(designId);
+    if (isSelectedForCompare) removeComparisonId(designId, variationId);
     else {
-      const added = tryAddComparisonId(designId);
+      const added = tryAddComparisonId(designId, variationId);
       if (!added) showMultiselectError();
     }
   }
 
-  const isSelectedForCompare = compareModeData?.selectedIds.includes(designId);
+  const isSelectedForCompare = !!compareModeData?.selectedItems.find((item) =>
+    variationId === undefined
+      ? item.designId === designId && item.variationId === undefined
+      : item.variationId === variationId
+  );
 
   return (
     <div className={styles["design-card-parent"]}>
       <a
         className={styles["design-card"]}
-        href={createNavigationUrl({ designId })}
+        href={createNavigationUrl(designId)}
         onClick={handleClickCard}
       >
         <div className={styles["img-container"]} style={{ backgroundColor }}>
@@ -74,6 +84,14 @@ export function DesignCard({
         </div>
         <div className={styles["design-card-id"]}>{designNumber}</div>
       </a>
+      {variationMessage && (
+        <div
+          className={styles["variations-message"]}
+          onClick={onClickVariationMessage}
+        >
+          {variationMessage}
+        </div>
+      )}
       {compareModeData?.active && tryAddComparisonId && (
         <>
           <div className={styles["multiselect-checkbox"]}>

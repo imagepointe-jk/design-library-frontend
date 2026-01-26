@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
-import { getDesignsRelatedToId } from "../fetch";
-import { TempDesign } from "../sharedTypes";
-import {
-  clamp,
-  createNavigationUrl,
-  getDesignDefaultBackgroundColor,
-  getFirstHexCodeInString,
-  isDesignTransparent,
-} from "../utility";
+import { Color, Design } from "../dbSchema";
+import { createNavigationUrl } from "../query";
+import { clamp, isImageTransparent } from "../utility";
 import { useApp } from "./AppProvider";
 import { DesignScrollView } from "./DesignScrollView";
 import { BackgroundColorChanger } from "./DesignView";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/ComparisonArea.module.css";
+import { getDesignById } from "../fetch";
 
 export function ComparisonArea() {
   const { compareModeData } = useApp();
-  const designIds = compareModeData?.selectedIds;
+  const items = compareModeData?.selectedItems;
 
   return (
     <div className={styles["main"]}>
@@ -36,11 +31,15 @@ export function ComparisonArea() {
         <h2>Design Comparison</h2>
       </div>
       <div className={styles["cards-container"]}>
-        {designIds &&
-          designIds.map((id) => (
-            <ComparisonDesignContainer key={id} designId={id} />
+        {items &&
+          items.map((item) => (
+            <ComparisonDesignContainer
+              key={`design-${item.designId}-variation-${item.variationId}`}
+              designId={item.designId}
+              variationId={item.variationId}
+            />
           ))}
-        {designIds && designIds.length === 0 && (
+        {items && items.length === 0 && (
           <div className={styles["no-designs"]}>No Designs</div>
         )}
       </div>
@@ -53,18 +52,18 @@ export function ComparisonArea() {
 
 type ComparisonDesignContainerProps = {
   designId: number;
+  variationId?: number;
 };
 function ComparisonDesignContainer({
   designId,
+  variationId,
 }: ComparisonDesignContainerProps) {
-  const [relatedDesigns, setRelatedDesigns] = useState(
-    null as TempDesign[] | null
-  );
+  const [design, setDesign] = useState(null as Design | null);
   const [loadingStatus, setLoadingStatus] = useState(
     "loading" as "loading" | "error" | "success"
   );
-  const [viewedIndex, setViewedIndex] = useState(0);
-  const [selectedBgColor, setSelectedBgColor] = useState(null as string | null);
+  const [viewedIndex, setViewedIndex] = useState(-1); //index of -1 means view the parent design
+  const [selectedBgColor, setSelectedBgColor] = useState(null as Color | null);
   const {
     cartData,
     addDesignsToCart,
@@ -72,51 +71,84 @@ function ComparisonDesignContainer({
     removeDesignFromCart,
   } = useApp();
 
-  const viewedDesign = relatedDesigns && relatedDesigns[viewedIndex];
-  const multipleDesigns = relatedDesigns ? relatedDesigns.length > 1 : false;
+  const viewedVariation = design ? design.variations[viewedIndex] : undefined;
+  const multipleDesigns = design ? design.variations.length > 0 : false;
 
   useEffect(() => {
     getDesignsToDisplay();
   }, []);
 
-  if (!viewedDesign)
+  if (!design)
     return (
       <div>
-        {loadingStatus === "error" && "Error"}
+        {loadingStatus !== "loading" && (
+          <div>
+            <p>Error.</p>
+            <button
+              onClick={() => {
+                if (removeComparisonId)
+                  removeComparisonId(designId, variationId);
+              }}
+            >
+              Remove
+            </button>
+          </div>
+        )}
         {loadingStatus === "loading" && <LoadingIndicator />}
       </div>
     );
 
-  const showColorChanger = isDesignTransparent(viewedDesign);
-  const isInCart = !!cartData?.designs.find(
-    (item) => item.id === viewedDesign.Id
+  const showColorChanger = isImageTransparent(
+    viewedVariation ? viewedVariation.imageUrl : design.imageUrl
   );
-  const defaultBgColor = getDesignDefaultBackgroundColor(viewedDesign);
-  let bgColorToUse = getFirstHexCodeInString(selectedBgColor || "");
-  if (!bgColorToUse) bgColorToUse = getFirstHexCodeInString(defaultBgColor);
-  if (!bgColorToUse) bgColorToUse = "#000000";
+  const isInCart = !!cartData?.items.find(
+    (item) =>
+      item.designId === design.id && item.variationId === viewedVariation?.id
+  );
+  const defaultBgColor = viewedVariation
+    ? `#${viewedVariation.color.hexCode}`
+    : `#${design.defaultBackgroundColor.hexCode}`;
+  let bgColorToUse = selectedBgColor
+    ? `#${selectedBgColor.hexCode}`
+    : defaultBgColor;
 
   async function getDesignsToDisplay() {
     setLoadingStatus("loading");
     try {
-      const related = await getDesignsRelatedToId(designId);
-      related.sort((a) => (a.Id === designId ? -1 : 1));
-      setRelatedDesigns(related);
+      const design = await getDesignById(designId);
+      const variationsSorted = [...design.variations];
+      variationsSorted.sort((a, b) => a.id - b.id);
+      design.variations = variationsSorted;
+      const indexOfVariation = design.variations.findIndex(
+        (variation) => variation.id === variationId
+      );
+      if (variationId !== undefined && indexOfVariation === -1)
+        throw new Error(
+          `Variation id ${variationId} not found for design ${designId}.`
+        );
+
+      setViewedIndex(indexOfVariation);
+      setDesign(design);
       setLoadingStatus("success");
     } catch (error) {
-      console.error("Error getting related designs: ", error);
+      console.error("Error getting design: ", error);
       setLoadingStatus("error");
     }
   }
 
   function clickAddToCart() {
-    if (!addDesignsToCart || !viewedDesign) return;
+    if (!addDesignsToCart || !design) return;
 
     addDesignsToCart([
       {
-        id: viewedDesign.Id,
-        designNumber: viewedDesign.DesignNumber,
-        garmentColor: selectedBgColor ? selectedBgColor : defaultBgColor,
+        designId: design.id,
+        designNumber: `${design.designNumber}`,
+        garmentColor: selectedBgColor
+          ? `#${selectedBgColor.hexCode} - ${selectedBgColor.name}`
+          : viewedVariation
+          ? `#${viewedVariation.color.hexCode} - ${viewedVariation.color.name}`
+          : `#${design.defaultBackgroundColor.hexCode} - ${design.defaultBackgroundColor.name}`,
+        variationId: viewedVariation?.id,
       },
     ]);
   }
@@ -125,7 +157,7 @@ function ComparisonDesignContainer({
     const increment = direction === "left" ? -1 : 1;
     const clampedViewedIndex = clamp(
       viewedIndex + increment,
-      0,
+      -1,
       maxScrollIndex
     );
     setViewedIndex(clampedViewedIndex);
@@ -135,17 +167,18 @@ function ComparisonDesignContainer({
   return (
     <div className={styles["card"]}>
       <DesignScrollView
-        imageUrls={relatedDesigns.map(
-          (design) => design.ImageURL || "no image"
-        )}
+        imageUrls={[
+          design.imageUrl,
+          ...design.variations.map((variation) => variation.imageUrl),
+        ]}
         backgroundColor={bgColorToUse}
         onScrollFn={onScrollFn}
-        viewedIndex={viewedIndex}
+        viewedIndex={viewedIndex + 1}
         showArrowButtons={multipleDesigns}
         showNavGallery={false}
         mainImgContainerClassName={styles["scroll-view-container"]}
       />
-      <h3>#{viewedDesign.DesignNumber}</h3>
+      <h3>#{design.designNumber}</h3>
       {showColorChanger && (
         <BackgroundColorChanger
           onClickColor={(color) => setSelectedBgColor(color)}
@@ -160,7 +193,8 @@ function ComparisonDesignContainer({
             <button
               className={styles["remove-from-cart"]}
               onClick={() => {
-                if (removeDesignFromCart) removeDesignFromCart(viewedDesign.Id);
+                if (removeDesignFromCart)
+                  removeDesignFromCart(design.id, viewedVariation?.id);
               }}
             >
               Remove
@@ -171,7 +205,7 @@ function ComparisonDesignContainer({
       <button
         className={styles["remove-x"]}
         onClick={() => {
-          if (removeComparisonId) removeComparisonId(viewedDesign.Id);
+          if (removeComparisonId) removeComparisonId(designId, variationId);
         }}
       >
         X

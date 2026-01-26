@@ -1,18 +1,16 @@
 import { QuoteRequest } from "./sharedTypes";
-import { CategoryHierarchy } from "./types";
 import {
   validateCategories,
   validateColors,
   validateDesignArrayJson,
   validateDesignResultsJson,
   validateSingleDesignJson,
-  validateSubcategories,
 } from "./validations";
 
 const serverURL = () =>
   //@ts-ignore
   import.meta.env.MODE === "development"
-    ? "http://localhost:3000"
+    ? "http://localhost:3000/api"
     : //@ts-ignore
       import.meta.env.VITE_SERVER_URL;
 
@@ -44,44 +42,15 @@ export async function getDesignById(designId: number) {
   return validateSingleDesignJson(json);
 }
 
-export async function getDesignsRelatedToId(designId: number) {
-  const response = await fetch(
-    `${serverURL()}/designs/${designId}?getRelatedToId=true`
-  );
-  const json = await response.json();
-  if (!response.ok) {
-    console.error(
-      `Error ${response.status} while retrieving designs. Message: ${json.message}`
-    );
-    throw new Error();
-  }
-
-  return validateDesignArrayJson(json);
-}
-
-export async function getSubcategories() {
-  var requestOptions = {
-    method: "GET",
-  };
-
-  const response = await fetch(`${serverURL()}/subcategories`, requestOptions);
-  const json = await response.json();
-  if (!response.ok) {
-    console.error(
-      `Error ${response.status} while retrieving subcategories. Message: ${json.message}`
-    );
-    throw new Error();
-  }
-
-  return validateSubcategories(json);
-}
-
 export async function getCategories() {
   var requestOptions = {
     method: "GET",
   };
 
-  const response = await fetch(`${serverURL()}/categories`, requestOptions);
+  const response = await fetch(
+    `${serverURL()}/designs/categories`,
+    requestOptions
+  );
   const json = await response.json();
   if (!response.ok) {
     console.error(
@@ -93,27 +62,8 @@ export async function getCategories() {
   return validateCategories(json);
 }
 
-export async function getCategoriesWithHierarchy() {
-  const categories = await getCategories();
-  const subcategories = await getSubcategories();
-  const categoriesWithHierarchy: CategoryHierarchy[] = categories.map(
-    (category) => {
-      const categoryHierarchy: CategoryHierarchy = {
-        DesignType: category.DesignType,
-        Name: category.Name,
-        Subcategories: subcategories.filter(
-          (subcategory) => subcategory.ParentCategory === category.Name
-        ),
-      };
-      return categoryHierarchy;
-    }
-  );
-
-  return categoriesWithHierarchy;
-}
-
 export async function getColors() {
-  const response = await fetch(`${serverURL()}/colors`);
+  const response = await fetch(`${serverURL()}/designs/colors`);
   const json = await response.json();
   if (!response.ok) {
     console.error(
@@ -143,5 +93,5 @@ export async function sendQuoteRequest(quoteRequest: QuoteRequest) {
     body: raw,
   };
 
-  return fetch(`${serverURL()}/quote-request`, requestOptions);
+  return fetch(`${serverURL()}/designs/quoteRequest`, requestOptions);
 }

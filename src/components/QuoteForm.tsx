@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
 import { sendQuoteRequest } from "../fetch";
+import { createNavigationUrl } from "../query";
 import {
   validateEmail,
   validatePhone,
   validateQuoteRequest,
 } from "../validations";
+import { useApp } from "./AppProvider";
 import { LoadingIndicator } from "./LoadingIndicator";
 import styles from "./styles/QuoteForm.module.css";
-import { useApp } from "./AppProvider";
-import { createNavigationUrl } from "../utility";
 
 type Status = "success" | "failure";
 type QuoteFormProps = {
@@ -77,7 +77,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         email,
         phone,
         union: unionWithLocal,
-        designs: cartData.designs,
+        items: cartData.items,
         comments,
       });
       setSubmittingRequest(true);
@@ -173,7 +173,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         ></textarea>
         <div className={styles["buttons-container"]}>
           {waitingForSubmitClick && (
-            <button type="submit" disabled={cartData?.designs.length === 0}>
+            <button type="submit" disabled={cartData?.items.length === 0}>
               Submit Request
             </button>
           )}

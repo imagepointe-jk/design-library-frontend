@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { useApp } from "./AppProvider";
-import styles from "./styles/CartView.module.css";
-import { TempDesign } from "../sharedTypes";
+import { Design } from "../dbSchema";
 import { getDesignById } from "../fetch";
-import { LoadingIndicator } from "./LoadingIndicator";
+import { createNavigationUrl } from "../query";
+import { CartItem } from "../types";
+import { useApp } from "./AppProvider";
 import { ImageWithFallback } from "./ImageWithFallback";
-import { CartDesign, DesignQueryParams } from "../types";
-import { createNavigationUrl, getFirstHexCodeInString } from "../utility";
+import { LoadingIndicator } from "./LoadingIndicator";
 import { QuoteForm } from "./QuoteForm";
+import styles from "./styles/CartView.module.css";
+import { getFirstHexCodeInString } from "../utility";
 
 export function CartView() {
   const { cartData, emptyCart } = useApp();
@@ -44,11 +45,14 @@ export function CartView() {
       </a>
       <div className={styles["main-flex"]}>
         <div className={styles["items-container"]}>
-          {cartData.designs.length > 0 &&
-            cartData.designs.map((design) => (
-              <CartRow design={design} key={design.id} />
+          {cartData.items.length > 0 &&
+            cartData.items.map((item) => (
+              <CartRow
+                item={item}
+                key={`design-${item.designId}-variation-${item.variationId}`}
+              />
             ))}
-          {cartData.designs.length === 0 && (
+          {cartData.items.length === 0 && (
             <div className={styles["empty-cart-message"]}>(No designs)</div>
           )}
         </div>
@@ -59,24 +63,32 @@ export function CartView() {
 }
 
 type CartRowProps = {
-  design: CartDesign;
+  item: CartItem;
 };
 
-function CartRow({ design: { garmentColor, id } }: CartRowProps) {
+function CartRow({
+  item: { garmentColor, designId, variationId },
+}: CartRowProps) {
   const [loading, setLoading] = useState(true);
-  const [design, setDesign] = useState(null as TempDesign | null);
+  const [design, setDesign] = useState(null as Design | null);
   const { removeDesignFromCart } = useApp();
+
+  const variation = design
+    ? design.variations.find((variation) => variation.id === variationId)
+    : undefined;
+  const foundVariation = variation !== undefined;
+  const requestedVariation = variationId !== undefined;
 
   async function getDesignToView() {
     try {
-      const design = await getDesignById(id);
+      const design = await getDesignById(designId);
       setDesign(design);
     } catch (_) {}
     setLoading(false);
   }
 
   function clickRemoveDesign() {
-    if (removeDesignFromCart) removeDesignFromCart(id);
+    if (removeDesignFromCart) removeDesignFromCart(designId, variationId);
   }
 
   useEffect(() => {
@@ -86,18 +98,28 @@ function CartRow({ design: { garmentColor, id } }: CartRowProps) {
   return (
     <div className={styles["design-row"]}>
       {loading && <LoadingIndicator />}
-      {!loading && design && (
+      {!loading && (
         <>
           <div className={styles["design-row-image-container"]}>
             <ImageWithFallback
               className={styles["design-image"]}
-              src={design.ImageURL}
+              src={
+                variation
+                  ? variation.imageUrl
+                  : design
+                  ? design.imageUrl
+                  : "none"
+              }
               style={{
                 backgroundColor:
-                  getFirstHexCodeInString(garmentColor) || undefined,
+                  getFirstHexCodeInString(garmentColor) || "white",
               }}
             />
-            <div>Design #{design.DesignNumber}</div>
+            <div>
+              {design && foundVariation === requestedVariation
+                ? `Design #${design.designNumber}`
+                : "Not Found"}
+            </div>
           </div>
           <button
             className={styles["remove-button"]}

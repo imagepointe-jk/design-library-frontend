@@ -1,40 +1,59 @@
-import { DesignQueryParams } from "../types";
-import { createNavigationUrl } from "../utility";
-import { parseSearchParams } from "../validations";
+import {
+  createNavigationUrl,
+  getDefaultQueryParams,
+  getModifiedQueryParams,
+  parseDesignQueryParams,
+  updateWindowSearchParams,
+} from "../query";
 import { useApp } from "./AppProvider";
 import { submitSearch } from "./SearchArea";
 import styles from "./styles/DesignLibrary.module.css";
 
 export function DesignLibraryControls() {
   const { setModalDisplay, compareModeData, setCompareModeActive } = useApp();
-  const designQueryParams = parseSearchParams(
+  const designQueryParams = parseDesignQueryParams(
     new URLSearchParams(window.location.search)
   );
   const buttonIdPrefix = "library-page-filter-button-";
   const checkboxButtons = ["All Designs", "New Designs", "Best Sellers"];
-  const selectedSubcategory = designQueryParams.subcategory;
+  const selectedSubcategory = designQueryParams.subcategory
+    ? decodeURIComponent(designQueryParams.subcategory)
+    : undefined;
 
   function clickQuickFilterButton(
     e: React.ChangeEvent<HTMLInputElement>,
     filterName: string
   ) {
     const isChecked = e.target.checked;
-    const newParams: DesignQueryParams = {
-      ...designQueryParams,
-      pageNumber: 1,
-    };
 
+    let params = getDefaultQueryParams().stringified;
     if (filterName === "All Designs") {
-      newParams.category = undefined;
-      newParams.subcategory = undefined;
-      newParams.featuredOnly = !isChecked;
-    } else {
-      newParams.category = isChecked ? "Quick Search" : undefined;
-      newParams.subcategory = isChecked ? filterName : undefined;
-      newParams.featuredOnly = !isChecked;
+      if (!isChecked) {
+        params = getModifiedQueryParams(params, "featured", "true").stringified;
+      }
+    } else if (filterName === "New Designs") {
+      if (isChecked) {
+        params = getModifiedQueryParams(params, "age", "new").stringified;
+      } else {
+        params = getModifiedQueryParams(params, "age", null).stringified;
+      }
+    } else if (filterName === "Best Sellers") {
+      if (isChecked) {
+        params = getModifiedQueryParams(
+          params,
+          "subcategory",
+          "Best Sellers"
+        ).stringified;
+      } else {
+        params = getModifiedQueryParams(
+          params,
+          "subcategory",
+          null
+        ).stringified;
+      }
     }
 
-    window.location.href = createNavigationUrl(newParams);
+    updateWindowSearchParams(params);
   }
 
   function clickCompareButton() {
@@ -46,7 +65,11 @@ export function DesignLibraryControls() {
     designQueryParams &&
     !designQueryParams.featuredOnly &&
     !designQueryParams.category &&
-    !designQueryParams.subcategory;
+    !designQueryParams.subcategory &&
+    !designQueryParams.before &&
+    !designQueryParams.after;
+  //assume for now that the "after" param will only be set to a value corresponding to "new" designs
+  const newDesignsButtonChecked = designQueryParams.after !== undefined;
 
   return (
     <>
@@ -69,6 +92,7 @@ export function DesignLibraryControls() {
                 id={`${buttonIdPrefix}${button}`}
                 checked={
                   (button === "All Designs" && allDesignsButtonChecked) ||
+                  (button === "New Designs" && newDesignsButtonChecked) ||
                   button === selectedSubcategory
                 }
                 onChange={(e) => clickQuickFilterButton(e, button)}

@@ -1,6 +1,9 @@
 import styles from "./styles/TopSection.module.css";
 
 export function TopSection() {
+  const search = new URLSearchParams(window.location.search);
+  search.set("subcategory", "St. Patrick's Day");
+
   return (
     <div
       className={styles["main"]}
@@ -19,7 +22,7 @@ export function TopSection() {
         </p>
       </div>
       <a
-        href={`${window.location.origin}/?subcategory=${encodeURIComponent("St. Patrick's Day")}`}
+        href={`${window.location.origin}${window.location.pathname}?${search}`}
         style={{
           background: "none",
           display: "flex",

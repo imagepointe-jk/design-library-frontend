@@ -1,8 +1,8 @@
 import styles from "./styles/TopSection.module.css";
 
 export function TopSection() {
-  const search = new URLSearchParams(window.location.search);
-  search.set("subcategory", "St. Patrick's Day");
+  // const search = new URLSearchParams(window.location.search);
+  // search.set("subcategory", "St. Patrick's Day");
 
   return (
     <div
@@ -21,7 +21,7 @@ export function TopSection() {
           colors, union and local.
         </p>
       </div>
-      <a
+      {/* <a
         href={`${window.location.origin}${window.location.pathname}?${search}`}
         style={{
           background: "none",
@@ -45,7 +45,7 @@ export function TopSection() {
         >
           View Designs
         </div>
-      </a>
+      </a> */}
     </div>
   );
 }

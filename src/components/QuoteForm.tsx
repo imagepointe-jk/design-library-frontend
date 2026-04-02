@@ -52,6 +52,18 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
     phoneField.current.value = formatted;
   }
 
+  function gtmNotify() {
+    //notify Google Tag Manager of the form submission; it will take care of tracking from there
+
+    //@ts-expect-error dataLayer is not recognized by typescript
+    const dataLayer = window.dataLayer;
+    if (dataLayer === undefined) {
+      console.error("dataLayer not found for GTM");
+      return;
+    }
+    dataLayer.push({ event: "ip_design_library_quote_request" });
+  }
+
   //TODO: Require phone number to be 9 digits
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -80,6 +92,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         items: cartData.items,
         comments,
       });
+      gtmNotify();
       setSubmittingRequest(true);
       const response = await sendQuoteRequest(quoteRequest);
       if (!response.ok) {

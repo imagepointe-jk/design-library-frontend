@@ -92,7 +92,6 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         items: cartData.items,
         comments,
       });
-      gtmNotify();
       setSubmittingRequest(true);
       const response = await sendQuoteRequest(quoteRequest);
       if (!response.ok) {
@@ -100,6 +99,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         throw new Error(json.message);
       }
       setSubmittingRequest(false);
+      gtmNotify();
       setSubmitStatus("success");
       onSuccess();
     } catch (error) {

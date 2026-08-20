@@ -80,6 +80,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
       const lastName = formData.get("last-name");
       const union = formData.get("union");
       const local = formData.get("local");
+      const state = formData.get("state");
       const unionWithLocal = `${union} (Local ${local})`;
       const comments = formData.get("comments") || "(no comments)";
 
@@ -89,6 +90,7 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
         email,
         phone,
         union: unionWithLocal,
+        state,
         items: cartData.items,
         comments,
       });
@@ -170,13 +172,22 @@ export function QuoteForm({ onSuccess }: QuoteFormProps) {
           placeholder="Union/Organization Name"
           required
         />
-        <input
-          type="text"
-          name="local"
-          id="local"
-          placeholder="Union Local"
-          required
-        />
+        <div className={styles["horz-inputs"]}>
+          <input
+            type="text"
+            name="local"
+            id="local"
+            placeholder="Union Local"
+            required
+          />
+          <input
+            type="text"
+            name="state"
+            id="state"
+            placeholder="State/Region"
+            required
+          />
+        </div>
         <textarea
           name="comments"
           id="comments"
